@@ -21,7 +21,7 @@ This is a No.1 Android Based Note from HITSZ.
 	- private int getRes()
 
 4. **comment** style: Java style
-'''
+'''java
 	/*
 	*this is the command
 	*/
