@@ -4,9 +4,10 @@
 ---
 > Next Time: **2020-09-21**
 > ArrangeMent:
-	- Check if everyone In team had known about MVVM, data binding
-	- Check if everyone has learned Git
-	- Give a blueprint of Project
+	
+- Check if everyone In team had known about MVVM, data binding
+- Check if everyone has learned Git
+- Give a blueprint of Project
 
 ## MileStone
 ### 2020-09-14 ~ 2020-09-29
