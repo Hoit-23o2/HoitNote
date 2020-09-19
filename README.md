@@ -24,7 +24,7 @@ This is a No.1 Android Based Note from HITSZ.
 	```java
 	/*
 	*this is the command
-	*/
+	* */
 	```
 
 	> **Note: In Android Studio, press "ctrl + Shift + /" to generate the comment style**
