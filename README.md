@@ -13,7 +13,7 @@ This is a No.1 Android Based Note from HITSZ.
 	- public static class DataBaseHelper{}
 	- public interface IComman{}
 
-	**Note: interface must start with "I", such as: IOnButtonClickEvent...**
+> **Note: interface must start with "I", such as: IOnButtonClickEvent...**
 
 3. **method** name: start with lower case, the Camel Stayle
 
@@ -27,7 +27,7 @@ This is a No.1 Android Based Note from HITSZ.
 	*/
 ```
 
-	**Note: In Android Studio, press "ctrl + Shift + /" to generate the comment style**
+> **Note: In Android Studio, press "ctrl + Shift + /" to generate the comment style**
 
 
 
