@@ -29,7 +29,8 @@ This is a No.1 Android Based Note from HITSZ.
 
 	> **Note: In Android Studio, press "ctrl + Shift + /" to generate the comment style**
 
-
+# ProjectRecord
+> Check [ProjectRecord.md](https://github.com/Hoit-23o2/HoitNote/blob/master/ProjectRecord.md)
 
 
 

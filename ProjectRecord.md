@@ -3,6 +3,7 @@
 
 ---
 > Next Time: **2020-09-21**
+
 > ArrangeMent:
 	
 - Check if everyone In team had known about MVVM, data binding
