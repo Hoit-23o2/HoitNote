@@ -28,15 +28,16 @@ import com.example.hoitnote.utils.helpers.BlueToothHelper;
 import com.example.hoitnote.utils.helpers.DataBaseHelper;
 import com.example.hoitnote.utils.helpers.FileHelper;
 import com.example.hoitnote.utils.helpers.ThemeHelper;
+import com.example.hoitnote.viewmodels.BaseViewModel;
 
 public class BaseActivity extends AppCompatActivity {
 
-    DataBaseHelper dataBaseHelper = new DataBaseHelper();
+    BaseViewModel baseViewModel = new BaseViewModel();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Config config = dataBaseHelper.getConfig();
+        Config config = baseViewModel.dataBaseHelper.getConfig();
         /*
         * 初始化相关配置
         * */

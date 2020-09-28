@@ -1,5 +1,22 @@
 # HoitNote
 This is a No.1 Android Based Note from HITSZ.
+# Update 2020-09-28
+1. Architecture
+2. Notice:
+	
+	```java
+	/*将下面代码中的SampleActivity改为MainActivity即可到MainActivity*/
+	new Handler().postDelayed(new Runnable(){
+            @Override
+            public void run() {
+                Intent mainIntent = new Intent(SplashActivity.this, SampleActivity.class);
+                SplashActivity.this.startActivity(mainIntent);
+                SplashActivity.this.finish();
+            }
+        }, Constants.delayDuration);
+
+	```
+
 
 # Specification
 1. **variable** name: start with lower case, the Camel Style

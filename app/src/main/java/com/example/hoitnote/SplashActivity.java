@@ -15,6 +15,7 @@ import android.view.WindowManager;
 
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.helpers.ThemeHelper;
+import com.example.hoitnote.views.SampleActivity;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -29,12 +30,10 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run() {
-                Intent mainIntent = new Intent(SplashActivity.this,MainActivity.class);
+                Intent mainIntent = new Intent(SplashActivity.this, SampleActivity.class);
                 SplashActivity.this.startActivity(mainIntent);
                 SplashActivity.this.finish();
             }
         }, Constants.delayDuration);
     }
-
-
 }
