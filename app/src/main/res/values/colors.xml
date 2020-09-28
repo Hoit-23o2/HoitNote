@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Default Color Combination-->
+    <color name="colorDefaultPrimary">#FFFFFF</color>
+    <color name="colorDefaultPrimaryLight">#FFFFFF</color>
+    <color name="colorDefaultPrimaryDark">#B2B2B2</color>
+    <color name="colorDefaultSecondary">#FFEB3B</color>
+    <color name="colorDefaultSecondaryLight">#FBF94E</color>
+    <color name="colorDefaultSecondaryDark">#FF9800</color>
+
+    <color name="colorDefaultTextAndIcons">#212121</color>
+    <color name="colorDefaultTextPrimary">#212121</color>
+    <color name="colorDefaultTextSecondary">#757575</color>
+    <color name="colorDefaultDivider">#BDBDBD</color>
+
+    <!--Sweet Color Combination-->
+    <color name="colorSweetPrimary">#FFEB3B</color>
+    <color name="colorSweetPrimaryLight">#FBF94E</color>
+    <color name="colorSweetPrimaryDark">#FF9800</color>
+    <color name="colorSweetSecondary">#FFEB3B</color>
+    <color name="colorSweetSecondaryLight">#FBF94E</color>
+    <color name="colorSweetSecondaryDark">#FF9800</color>
+
+    <color name="colorSweetTextAndIcons">#212121</color>
+    <color name="colorSweetTextPrimary">#212121</color>
+    <color name="colorSweetTextSecondary">#757575</color>
+    <color name="colorSweetDivider">#BDBDBD</color>
+</resources>
