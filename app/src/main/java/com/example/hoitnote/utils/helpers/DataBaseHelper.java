@@ -8,6 +8,7 @@ import com.example.hoitnote.utils.Interfaces.IDataBase;
 import com.example.hoitnote.utils.commuications.Config;
 import com.example.hoitnote.utils.commuications.DataBaseFilter;
 import com.example.hoitnote.utils.enums.FilterType;
+import com.example.hoitnote.utils.enums.ThirdPartyType;
 
 import java.util.ArrayList;
 /*
@@ -51,6 +52,51 @@ public class DataBaseHelper implements IDataBase {
     @Override
     public Config getConfig() {
         return null;
+    }
+
+    @Override
+    public ArrayList<String> getAllClassification1() {
+        return null;
+    }
+
+    @Override
+    public ArrayList<String> getClassification2(String classification1) {
+        return null;
+    }
+
+    @Override
+    public boolean delClassification1(String classification1) {
+        return false;
+    }
+
+    @Override
+    public boolean delClassification2(String classification1, String classification2) {
+        return false;
+    }
+
+    @Override
+    public boolean addClassification1(String classification1) {
+        return false;
+    }
+
+    @Override
+    public boolean addClassification2(String classification1, String classification2) {
+        return false;
+    }
+
+    @Override
+    public ArrayList<String> getThirdParties(ThirdPartyType thirdPartyType) {
+        return null;
+    }
+
+    @Override
+    public boolean delThirdParty(ThirdPartyType thirdPartyType, String field) {
+        return false;
+    }
+
+    @Override
+    public boolean addThirdParty(ThirdPartyType thirdPartyType, String field) {
+        return false;
     }
 
 }

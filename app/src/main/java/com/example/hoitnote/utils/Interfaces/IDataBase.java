@@ -3,7 +3,9 @@ package com.example.hoitnote.utils.Interfaces;
 import com.example.hoitnote.models.Tally;
 import com.example.hoitnote.utils.commuications.Config;
 import com.example.hoitnote.utils.commuications.DataBaseFilter;
+import com.example.hoitnote.utils.enums.ThirdPartyType;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public interface IDataBase {
@@ -36,4 +38,22 @@ public interface IDataBase {
     * 获取设置
     * */
     Config getConfig();
+
+
+    /*
+     * 获取分类的增删查
+     * */
+    ArrayList<String> getAllClassification1();
+    ArrayList<String> getClassification2(String classification1);
+    boolean delClassification1(String classification1);
+    boolean delClassification2(String classification1, String classification2);
+    boolean addClassification1(String classification1);
+    boolean addClassification2(String classification1, String classification2);
+
+    /*
+    * Vendor Project Member 选项的增删查
+    * */
+    ArrayList<String> getThirdParties(ThirdPartyType thirdPartyType);
+    boolean delThirdParty(ThirdPartyType thirdPartyType, String field);
+    boolean addThirdParty(ThirdPartyType thirdPartyType, String field);
 }

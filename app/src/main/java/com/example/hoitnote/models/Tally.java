@@ -8,11 +8,12 @@ public class Tally {
     private int id;
     private Double money;
     private Time date;
-    private String classification1;
-    private String classification2;
     private String remark;
     private String account;
     private ActionType actionType;
+
+    private String classification1;
+    private String classification2;
     private String member;
     private String project;
     private String vendor;

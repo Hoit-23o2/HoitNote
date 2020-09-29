@@ -34,11 +34,7 @@ public class ScreenSnapHelper {
 
         OutputStream out = null;
         File imageFile = new File(path);
-        try {
-            imageFile.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
         try {
             out = new FileOutputStream(imageFile);
             // choose JPEG format

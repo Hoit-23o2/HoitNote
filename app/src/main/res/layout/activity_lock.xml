@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="lockViewModel"
+            type="com.example.hoitnote.viewmodels.LockViewModel" />
+    </data>
+
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".views.LockActivity">
+        <EditText
+            android:text="@={lockViewModel.password}"
+            android:id="@+id/realCodeInput"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            android:cursorVisible="false"
+            android:textSize="0sp"
+            android:background="@null"
+            tools:ignore="Autofill,LabelFor,TextFields" />
+
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!--<androidx.cardview.widget.CardView
+                android:layout_width="50dp"
+                android:layout_margin="20dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="?attr/colorPrimary"
+                android:elevation="20dp"
+                tools:targetApi="lollipop">
+
+                <TextView
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="*" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="50dp"
+                android:layout_margin="20dp"
+                android:background="?attr/colorPrimary"
+                android:elevation="20dp"
+                android:layout_weight="1"
+                android:layout_height="50dp"
+                tools:targetApi="lollipop">
+                <TextView
+                    android:text="*"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="50dp"
+                android:layout_margin="20dp"
+                android:background="?attr/colorPrimary"
+                android:elevation="20dp"
+                android:layout_weight="1"
+                android:layout_height="50dp"
+                tools:targetApi="lollipop">
+                <TextView
+                    android:text="*"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="50dp"
+                android:layout_margin="20dp"
+                android:background="?attr/colorPrimary"
+                android:elevation="20dp"
+                android:layout_weight="1"
+                android:layout_height="50dp"
+                tools:targetApi="lollipop">
+                <TextView
+                    android:text="*"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </androidx.cardview.widget.CardView>-->
+
+        </LinearLayout>
+    </LinearLayout>
+</layout>

@@ -49,21 +49,16 @@ public class BaseActivity extends AppCompatActivity {
             currentTheme = config.getCurrentTheme();
         }
         switch (currentTheme){
-            case Default:
+            case DEFAULT:
                 setTheme(R.style.HoitNote_DefaultTheme);
                 break;
-            case Sweet:
+            case SWEET:
                 setTheme(R.style.HoitNote_SweetTheme);
-                break;
-            case Dark:
-                ThemeHelper.setCurrentTheme(this, Theme.Dark);
                 break;
         }
         ThemeHelper.initUI(this);
         requestPermission(this, BaseActivity.this);
         super.onCreate(savedInstanceState);
-
-
     }
 
     private boolean checkPermission(Context context){
