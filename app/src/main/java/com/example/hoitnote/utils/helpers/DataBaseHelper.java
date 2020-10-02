@@ -16,6 +16,11 @@ import java.util.ArrayList;
 * */
 public class DataBaseHelper implements IDataBase {
 
+
+    public DataBaseHelper(){
+
+    }
+
     @Override
     public ArrayList<Tally> getTallies(DataBaseFilter filter) {
         //FilterType filterType = filter.predictFilterType();

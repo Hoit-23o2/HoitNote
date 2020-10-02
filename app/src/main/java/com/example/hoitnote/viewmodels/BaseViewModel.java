@@ -11,9 +11,7 @@ import com.example.hoitnote.utils.helpers.FileHelper;
 * */
 public class BaseViewModel extends BaseObservable {
 
-    public DataBaseHelper dataBaseHelper = new DataBaseHelper();
-    public BlueToothHelper blueToothHelper = new BlueToothHelper();
-    public FileHelper fileHelper = new FileHelper();
+
 
     public BaseViewModel(){
 

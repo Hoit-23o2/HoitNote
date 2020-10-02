@@ -3,19 +3,19 @@ package com.example.hoitnote;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
+import com.example.hoitnote.utils.commuications.Config;
 import com.example.hoitnote.utils.constants.Constants;
+import com.example.hoitnote.utils.App;
+import com.example.hoitnote.utils.helpers.BlueToothHelper;
+import com.example.hoitnote.utils.helpers.DataBaseHelper;
+import com.example.hoitnote.utils.helpers.FileHelper;
+import com.example.hoitnote.utils.helpers.PasswordStatueHelper;
 import com.example.hoitnote.utils.helpers.ThemeHelper;
-import com.example.hoitnote.views.SampleActivity;
+import com.example.hoitnote.views.locks.LockActivity;
+import com.example.hoitnote.views.locks.LockCountDownActivity;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -23,6 +23,11 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.SplashTheme);
         super.onCreate(savedInstanceState);
+
+        App.dataBaseHelper = new DataBaseHelper();
+        App.blueToothHelper = new BlueToothHelper();
+        App.fileHelper = new FileHelper();
+
         ThemeHelper.initUI(this);
 
         /* New Handler to start the Menu-Activity
@@ -30,9 +35,32 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run() {
-                Intent mainIntent = new Intent(SplashActivity.this, MainActivity.class);
-                SplashActivity.this.startActivity(mainIntent);
-                SplashActivity.this.finish();
+                Config config = App.dataBaseHelper.getConfig();
+                /*MockConfig, delete later*/
+                if(config == null){
+                    config = new Config();
+                }
+                /*外层判断是否已经注册*/
+                if(config == null){
+
+                }
+                else {
+                    int time = PasswordStatueHelper.getPasswordStatueTime(SplashActivity.this);
+                    /*进入输入密码页面*/
+                    if(time == 0){
+                        Intent mainIntent = new Intent(SplashActivity.this, LockActivity.class);
+                        SplashActivity.this.startActivity(mainIntent);
+                        SplashActivity.this.finish();
+                    }
+                    /*进入倒计时页面*/
+                    else{
+                        Intent intent = new Intent(SplashActivity.this, LockCountDownActivity.class);
+                        intent.putExtra(Constants.currentPasswordStatue, time);
+                        SplashActivity.this.startActivity(intent);
+                        SplashActivity.this.finish();
+                    }
+                }
+
             }
         }, Constants.delayDuration);
     }

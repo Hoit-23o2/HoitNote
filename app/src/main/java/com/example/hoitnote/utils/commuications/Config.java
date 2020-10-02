@@ -44,4 +44,8 @@ public class Config {
         this.password = password;
         this.passwordStyle = passwordStyle;
     }
+
+    public Config(){
+
+    }
 }

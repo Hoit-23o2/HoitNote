@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">HoitNote</string>
+    <string name="login_btn_hint">登录</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="pattern_lock">手势解锁</string>
+    <string name="traditional_lock">密码解锁</string>
 </resources>

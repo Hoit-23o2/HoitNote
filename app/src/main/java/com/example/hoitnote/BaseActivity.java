@@ -57,7 +57,9 @@ public class BaseActivity extends AppCompatActivity {
                 break;
         }
         ThemeHelper.initUI(this);
-        requestPermission(this, BaseActivity.this);
+        if(!checkPermission(this)){
+            requestPermission(this, BaseActivity.this);
+        }
         super.onCreate(savedInstanceState);
     }
 
@@ -84,7 +86,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == Constants.PERMISSION_REQUEST_CODE) {
-            Toast.makeText(this,"Successful",Toast.LENGTH_LONG).show();
+            //Toast.makeText(this,"Successful",Toast.LENGTH_LONG).show();
         }
     }
 

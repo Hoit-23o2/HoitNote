@@ -9,10 +9,6 @@ import com.example.hoitnote.models.Sample;
 
 public class SampleViewModel extends BaseViewModel {
 
-
-
-
-
     public SampleViewModel(){
 
     }
