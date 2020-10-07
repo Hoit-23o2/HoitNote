@@ -4,6 +4,8 @@ import com.example.hoitnote.utils.Interfaces.IBlueTooth;
 import com.example.hoitnote.utils.commuications.DataPackage;
 
 public class BlueToothHelper implements IBlueTooth {
+
+
     @Override
     public boolean match() {
         return false;

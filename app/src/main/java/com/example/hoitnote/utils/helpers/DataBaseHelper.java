@@ -3,6 +3,7 @@ package com.example.hoitnote.utils.helpers;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.hoitnote.models.Account;
 import com.example.hoitnote.models.Tally;
 import com.example.hoitnote.utils.Interfaces.IDataBase;
 import com.example.hoitnote.utils.commuications.Config;
@@ -55,7 +56,7 @@ public class DataBaseHelper implements IDataBase {
     }
 
     @Override
-    public Config getConfig() {
+    public ArrayList<Config> getConfigs() {
         return null;
     }
 
@@ -101,6 +102,21 @@ public class DataBaseHelper implements IDataBase {
 
     @Override
     public boolean addThirdParty(ThirdPartyType thirdPartyType, String field) {
+        return false;
+    }
+
+    @Override
+    public ArrayList<Account> getAccounts() {
+        return null;
+    }
+
+    @Override
+    public boolean delAccount(Account account) {
+        return false;
+    }
+
+    @Override
+    public boolean addAccount(Account account) {
         return false;
     }
 

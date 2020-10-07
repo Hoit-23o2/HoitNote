@@ -1,7 +1,6 @@
-package com.example.hoitnote.views.locks;
+package com.example.hoitnote.views.passwordfragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,17 +12,20 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 
 import com.example.hoitnote.MainActivity;
 import com.example.hoitnote.R;
 import com.example.hoitnote.databinding.FragmentTraditionalPasswordBinding;
+import com.example.hoitnote.utils.App;
 import com.example.hoitnote.utils.commuications.Config;
 import com.example.hoitnote.utils.constants.Constants;
+import com.example.hoitnote.utils.enums.LockViewType;
+import com.example.hoitnote.utils.enums.PasswordStyle;
 import com.example.hoitnote.utils.helpers.KeyboardHelper;
-import com.example.hoitnote.utils.helpers.PasswordStatueHelper;
+import com.example.hoitnote.utils.helpers.NavigationHelper;
+import com.example.hoitnote.utils.helpers.ThemeHelper;
 import com.example.hoitnote.utils.helpers.ToastHelper;
-import com.example.hoitnote.viewmodels.LockViewModel;
+import com.example.hoitnote.viewmodels.BaseLockViewModel;
 
 public class TraditionalPasswordFragment extends BasePasswordFragment {
 
@@ -34,8 +36,8 @@ public class TraditionalPasswordFragment extends BasePasswordFragment {
         super();
     }
 
-    public TraditionalPasswordFragment(LockViewModel lockViewModel, Context context, Config config){
-        super(lockViewModel, context, config);
+    public TraditionalPasswordFragment(BaseLockViewModel baseLockViewModel, Context context, Config config){
+        super(baseLockViewModel, context, config);
     }
 
     @Nullable
@@ -47,8 +49,15 @@ public class TraditionalPasswordFragment extends BasePasswordFragment {
                 container,
                 false
         );
-        binding.setLockViewModel(lockViewModel);
+        initFrame();
+        return binding.getRoot();
+    }
+
+    @Override
+    public void initFrame() {
+        binding.setTraditionalPasswordFragmentViewModel(baseLockViewModel);
         binding.setTraditionalPasswordFragment(this);
+
         binding.realCodeInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -57,7 +66,7 @@ public class TraditionalPasswordFragment extends BasePasswordFragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int beforeLength, int currentLength) {
-                switch (currentLength){
+                switch (charSequence.toString().length()){
                     case 0:
                         binding.hoitPasswordFrame1.hidePassword();
                         binding.hoitPasswordFrame2.hidePassword();
@@ -65,31 +74,33 @@ public class TraditionalPasswordFragment extends BasePasswordFragment {
                         binding.hoitPasswordFrame4.hidePassword();
                         break;
                     case 1:
-                        binding.hoitPasswordFrame1.showPassword();
+                        binding.hoitPasswordFrame1.showPassword(charSequence.charAt(0));
                         binding.hoitPasswordFrame2.hidePassword();
                         binding.hoitPasswordFrame3.hidePassword();
                         binding.hoitPasswordFrame4.hidePassword();
                         break;
                     case 2:
-                        binding.hoitPasswordFrame1.showPassword();
-                        binding.hoitPasswordFrame2.showPassword();
+                        binding.hoitPasswordFrame1.showPassword(charSequence.charAt(0));
+                        binding.hoitPasswordFrame2.showPassword(charSequence.charAt(1));
                         binding.hoitPasswordFrame3.hidePassword();
                         binding.hoitPasswordFrame4.hidePassword();
                         break;
                     case 3:
-                        binding.hoitPasswordFrame1.showPassword();
-                        binding.hoitPasswordFrame2.showPassword();
-                        binding.hoitPasswordFrame3.showPassword();
+                        binding.hoitPasswordFrame1.showPassword(charSequence.charAt(0));
+                        binding.hoitPasswordFrame2.showPassword(charSequence.charAt(1));
+                        binding.hoitPasswordFrame3.showPassword(charSequence.charAt(2));
                         binding.hoitPasswordFrame4.hidePassword();
                         break;
                     case 4:
-                        binding.hoitPasswordFrame1.showPassword();
-                        binding.hoitPasswordFrame2.showPassword();
-                        binding.hoitPasswordFrame3.showPassword();
-                        binding.hoitPasswordFrame4.showPassword();
+                        binding.hoitPasswordFrame1.showPassword(charSequence.charAt(0));
+                        binding.hoitPasswordFrame2.showPassword(charSequence.charAt(1));
+                        binding.hoitPasswordFrame3.showPassword(charSequence.charAt(2));
+                        binding.hoitPasswordFrame4.showPassword(charSequence.charAt(3));
                         break;
                     default:
-                        KeyboardHelper.closeKeyboard(context);
+                        if(getActivity() != null){
+                            KeyboardHelper.closeKeyboard(context, getActivity());
+                        }
                         break;
                 }
 
@@ -100,7 +111,6 @@ public class TraditionalPasswordFragment extends BasePasswordFragment {
 
             }
         });
-        return binding.getRoot();
     }
 
     public void getFocus(View view) {
@@ -108,44 +118,42 @@ public class TraditionalPasswordFragment extends BasePasswordFragment {
         KeyboardHelper.showKeyboard(context);
     }
 
-    public void login(View view) {
-        wrongCount++;
-        String password = lockViewModel.getPassword();
+    public void btnClick(View view) {
+
+        String password = baseLockViewModel.getPassword();
         //ToastHelper.showToast(context,password,Toast.LENGTH_LONG);
         if(password.length() < 4){
             ToastHelper.showToast(context, Constants.passwordNotEnough, Toast.LENGTH_SHORT);
         }
         else {
             password = password.substring(0,4);
-            if(!password.equals(config.getPassword())){
-                int remainWrongTimes = Constants.totalWrongCount - wrongCount;
-                if(remainWrongTimes < 0){
-                    wrongCount = 0;
-                    PasswordStatueHelper.setPasswordSatueTime(context, Constants.notPassTime);
-                    Intent intent = new Intent(getActivity(), LockCountDownActivity.class);
-                    intent.putExtra(Constants.currentPasswordStatue, Constants.notPassTime);
-                    startActivity(intent);
-                    if(getActivity() != null){
-                        getActivity().finish();
-                    }
+            /*登录*/
+            if(baseLockViewModel.getLockViewType() == LockViewType.LOGIN){
+                if(!password.equals(config.getPassword())){
+                    wrongCount++;
+                    int remainWrongTimes = Constants.totalWrongCount - wrongCount;
+                    triggerWrongTips(remainWrongTimes);
                 }
                 else{
-                    ToastHelper.showToast(context,Constants.passwordWrong, Toast.LENGTH_SHORT);
-                    ToastHelper.showToast(context,Constants.passwordWrongTips+
-                                    remainWrongTimes,
-                            Toast.LENGTH_SHORT);
+                    NavigationHelper.navigationClosedCurrentActivity(getActivity(),
+                            MainActivity.class);
                 }
             }
-            else{
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                startActivity(intent);
-                if(getActivity() != null){
-                    getActivity().finish();
+            /*注册*/
+            else if(baseLockViewModel.getLockViewType() == LockViewType.REGISTRATION){
+                Config newConfig = new Config(ThemeHelper.getCurrentTheme(context),
+                        password, PasswordStyle.TRADITIONAL);
+                boolean isSaved = App.dataBaseHelper.saveConfig(newConfig);
+                if(isSaved){
+                    ToastHelper.showToast(context,Constants.registrationSuccess,Toast.LENGTH_SHORT);
+                    NavigationHelper.navigationClosedCurrentActivity(context, MainActivity.class);
                 }
-
+                else{
+                    ToastHelper.showToast(context,Constants.registrationFalse,Toast.LENGTH_LONG);
+                }
             }
-
         }
+
     }
 
 }

@@ -1,8 +1,9 @@
 package com.example.hoitnote.utils.commuications;
 
+import com.example.hoitnote.models.Account;
 import com.example.hoitnote.utils.enums.FilterType;
 
-import java.sql.Time;
+import java.sql.Date;
 import java.util.ArrayList;
 
 /*
@@ -10,15 +11,23 @@ import java.util.ArrayList;
 * 过滤器模型
 * */
 public class DataBaseFilter {
+
+
+
     /*
     * 如果不想使用ID查找，传入IDInvalid
     * */
     public static final int IDInvalid = -1;
     /*
+     * 根据账户查询
+     * */
+    private Account account;
+
+    /*
     * 依据时间段查找
     * */
-    private Time startTime;
-    private Time endTime;
+    private Date startDate;
+    private Date endDate;
 
     /*
     * 依据ID查找
@@ -41,22 +50,27 @@ public class DataBaseFilter {
         return id;
     }
 
-    public Time getStartTime() {
-        return startTime;
+    public Date getStartDate() {
+        return startDate;
     }
 
-    public Time getEndTime() {
-        return endTime;
+    public Date getEndDate() {
+        return endDate;
     }
 
+    public Account getAccount() {
+        return account;
+    }
     /*
     * 构造函数
     * */
-    public DataBaseFilter(Time startTime, Time endTime, int id, ArrayList<String> classifications) {
-        this.startTime = startTime;
-        this.endTime = endTime;
+    public DataBaseFilter(Date startDate, Date endDate,
+                          int id, ArrayList<String> classifications, Account account) {
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.id = id;
         this.classifications = classifications;
+        this.account = account;
     }
 
     /*
@@ -65,15 +79,18 @@ public class DataBaseFilter {
     public FilterType predictFilterType(){
         if(getId() != IDInvalid)
             return FilterType.ID;
-        if(getClassifications() != null && getStartTime() == null
-        && getEndTime() == null)
+        if(getClassifications() != null && getStartDate() == null
+        && getEndDate() == null)
             return FilterType.ClassificationOnly;
-        if(getClassifications() != null && (getStartTime() != null
-                || getEndTime() != null))
+        if(getClassifications() != null && (getStartDate() != null
+                || getEndDate() != null))
             return FilterType.DurationAndClassification;
-        if(getClassifications() == null && (getStartTime() != null
-                || getEndTime() != null))
+        if(getClassifications() == null && (getStartDate() != null
+                || getEndDate() != null))
             return FilterType.DurationOnly;
         return FilterType.All;
     }
+
+
+
 }

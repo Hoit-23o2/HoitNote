@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.databinding.Bindable;
 import androidx.databinding.DataBindingUtil;
 
 import com.example.hoitnote.R;
@@ -17,11 +18,20 @@ import com.example.hoitnote.databinding.CustomviewHoitPasswordFrameBinding;
 public class HoitPasswordFrame extends CardView {
     private int frameColor;
     private String passwordDisplayStyle;
+    private boolean isMask;
     private CustomviewHoitPasswordFrameBinding binding;
     public HoitPasswordFrame(@NonNull Context context) {
         super(context);
     }
 
+
+    public boolean getIsMask(){
+        return this.isMask;
+    }
+
+    public void setIsMask(boolean isMask){
+        this.isMask = isMask;
+    }
     public HoitPasswordFrame(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         //从xml的属性中获取到字体颜色与string
@@ -30,6 +40,7 @@ public class HoitPasswordFrame extends CardView {
                 Color.WHITE);
         passwordDisplayStyle = typedArray.getString(R.styleable
                 .HoitPasswordFrame_passwordDisplayStyle);
+        isMask = typedArray.getBoolean(R.styleable.HoitPasswordFrame_isMask, true);
         typedArray.recycle();
 
         //获取到控件
@@ -46,8 +57,14 @@ public class HoitPasswordFrame extends CardView {
         super(context, attrs, defStyleAttr);
     }
 
-    public void showPassword() {
-        binding.passwordDisplay.setText(this.passwordDisplayStyle);
+    public void showPassword(char text) {
+        if(isMask){
+            binding.passwordDisplay.setText(this.passwordDisplayStyle);
+        }
+        else {
+            binding.passwordDisplay.setText(String.valueOf(text));
+        }
+
     }
 
     public void hidePassword(){

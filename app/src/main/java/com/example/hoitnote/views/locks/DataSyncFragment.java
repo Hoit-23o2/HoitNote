@@ -12,32 +12,26 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.example.hoitnote.R;
-import com.example.hoitnote.databinding.FragmentFingerprintPasswordBinding;
-import com.example.hoitnote.utils.commuications.Config;
-import com.example.hoitnote.viewmodels.LockViewModel;
+import com.example.hoitnote.databinding.FragmentDatasyncBinding;
 
-public class FingerprintPasswordFragment extends BasePasswordFragment {
-    FragmentFingerprintPasswordBinding binding;
+public class DataSyncFragment extends Fragment {
+    FragmentDatasyncBinding binding;
 
-    public FingerprintPasswordFragment(){
-        super();
+    public DataSyncFragment(){
+
     }
 
-    public FingerprintPasswordFragment(LockViewModel lockViewModel,Context context, Config config){
-        super(lockViewModel, context, config);
-    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(
                 inflater,
-                R.layout.fragment_fingerprint_password,
+                R.layout.fragment_datasync,
                 container,
                 false
         ) ;
-        binding.setLockViewModel(lockViewModel);
-        binding.setFingerprintPasswordFragment(this);
+
         return  binding.getRoot();
     }
 }

@@ -1,5 +1,6 @@
 package com.example.hoitnote.utils.Interfaces;
 
+import com.example.hoitnote.models.Account;
 import com.example.hoitnote.models.Tally;
 import com.example.hoitnote.utils.commuications.Config;
 import com.example.hoitnote.utils.commuications.DataBaseFilter;
@@ -37,7 +38,7 @@ public interface IDataBase {
     /*
     * 获取设置
     * */
-    Config getConfig();
+    ArrayList<Config> getConfigs();
 
 
     /*
@@ -56,4 +57,13 @@ public interface IDataBase {
     ArrayList<String> getThirdParties(ThirdPartyType thirdPartyType);
     boolean delThirdParty(ThirdPartyType thirdPartyType, String field);
     boolean addThirdParty(ThirdPartyType thirdPartyType, String field);
+
+
+
+    /*
+    * 账户account的增删查
+    * */
+    ArrayList<Account> getAccounts();
+    boolean delAccount(Account account);
+    boolean addAccount(Account account);
 }

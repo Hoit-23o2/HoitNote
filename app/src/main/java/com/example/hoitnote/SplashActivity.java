@@ -6,12 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.example.hoitnote.utils.commuications.Config;
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.App;
 import com.example.hoitnote.utils.helpers.BlueToothHelper;
 import com.example.hoitnote.utils.helpers.DataBaseHelper;
 import com.example.hoitnote.utils.helpers.FileHelper;
+import com.example.hoitnote.utils.helpers.NavigationHelper;
 import com.example.hoitnote.utils.helpers.PasswordStatueHelper;
 import com.example.hoitnote.utils.helpers.ThemeHelper;
 import com.example.hoitnote.views.locks.LockActivity;
@@ -35,30 +35,19 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run() {
-                Config config = App.dataBaseHelper.getConfig();
-                /*MockConfig, delete later*/
-                if(config == null){
-                    config = new Config();
-                }
-                /*外层判断是否已经注册*/
-                if(config == null){
 
+                int time = PasswordStatueHelper.getPasswordStatueTime(SplashActivity.this);
+                /*进入输入密码页面*/
+                if(time == 0){
+                    NavigationHelper.navigationClosedCurrentActivity(SplashActivity.this,
+                            LockActivity.class);
                 }
-                else {
-                    int time = PasswordStatueHelper.getPasswordStatueTime(SplashActivity.this);
-                    /*进入输入密码页面*/
-                    if(time == 0){
-                        Intent mainIntent = new Intent(SplashActivity.this, LockActivity.class);
-                        SplashActivity.this.startActivity(mainIntent);
-                        SplashActivity.this.finish();
-                    }
-                    /*进入倒计时页面*/
-                    else{
-                        Intent intent = new Intent(SplashActivity.this, LockCountDownActivity.class);
-                        intent.putExtra(Constants.currentPasswordStatue, time);
-                        SplashActivity.this.startActivity(intent);
-                        SplashActivity.this.finish();
-                    }
+                /*进入倒计时页面*/
+                else{
+                    Intent intent = new Intent(SplashActivity.this, LockCountDownActivity.class);
+                    intent.putExtra(Constants.currentPasswordStatue, time);
+                    SplashActivity.this.startActivity(intent);
+                    SplashActivity.this.finish();
                 }
 
             }

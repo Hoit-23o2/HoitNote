@@ -2,14 +2,15 @@ package com.example.hoitnote.models;
 
 import com.example.hoitnote.utils.enums.ActionType;
 
+import java.sql.Date;
 import java.sql.Time;
 
 public class Tally {
     private int id;
     private Double money;
-    private Time date;
+    private Date date;
     private String remark;
-    private String account;
+    private Account account;
     private ActionType actionType;
 
     private String classification1;
@@ -18,7 +19,7 @@ public class Tally {
     private String project;
     private String vendor;
 
-    public Tally(Time date, Double money, String classification1, String classification2, String remark, String account, ActionType actionType, String member, String project, String vendor) {
+    public Tally(Date date, Double money, String classification1, String classification2, String remark, Account account, ActionType actionType, String member, String project, String vendor) {
         this.date = date;
         this.money = money;
         this.classification1 = classification1;
@@ -35,11 +36,11 @@ public class Tally {
 
     }
 
-    public Time getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(Time date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
@@ -75,11 +76,11 @@ public class Tally {
         this.remark = remark;
     }
 
-    public String getAccount() {
+    public Account getAccount() {
         return account;
     }
 
-    public void setAccount(String account) {
+    public void setAccount(Account account) {
         this.account = account;
     }
 

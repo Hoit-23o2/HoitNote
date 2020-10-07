@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="lockFragment"
+            type="com.example.hoitnote.views.locks.LockFragment" />
+    </data>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="horizontal" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/fingerprintLock"
+                android:onClick="@{(v)->lockFragment.switchTheme(v)}"
+                android:layout_margin="20dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/icons8_fingerprint_64"/>
+
+            <ImageView
+                android:id="@+id/patternLock"
+                android:onClick="@{(v)->lockFragment.switchTheme(v)}"
+                android:layout_margin="20dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/icons8_pattern_lock_64"/>
+
+            <ImageView
+                android:id="@+id/traditionalLock"
+                android:onClick="@{(v)->lockFragment.switchTheme(v)}"
+                android:layout_margin="20dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/icons8_bunch_of_keys_64"/>
+
+            <ImageView
+                android:id="@+id/syncSettings"
+                android:onClick="@{(v)->lockFragment.switchTheme(v)}"
+                android:layout_margin="20dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/icons8_sync_settings_64" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+</layout>

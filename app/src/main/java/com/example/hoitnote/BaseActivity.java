@@ -21,8 +21,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.example.hoitnote.utils.App;
 import com.example.hoitnote.utils.commuications.Config;
 import com.example.hoitnote.utils.constants.Constants;
+import com.example.hoitnote.utils.enums.PasswordStyle;
 import com.example.hoitnote.utils.enums.Theme;
 import com.example.hoitnote.utils.helpers.BlueToothHelper;
 import com.example.hoitnote.utils.helpers.DataBaseHelper;
@@ -30,23 +32,27 @@ import com.example.hoitnote.utils.helpers.FileHelper;
 import com.example.hoitnote.utils.helpers.ThemeHelper;
 import com.example.hoitnote.viewmodels.BaseViewModel;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class BaseActivity extends AppCompatActivity {
-
-    BaseViewModel baseViewModel = new BaseViewModel();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Config config = baseViewModel.dataBaseHelper.getConfig();
+        App.configs = App.dataBaseHelper.getConfigs();
+        App.configs = new ArrayList<>(Arrays.asList(
+                new Config(Theme.DEFAULT, "1234",PasswordStyle.TRADITIONAL)/*,
+                new Config(Theme.DEFAULT, "01234",PasswordStyle.PIN)*/
+        ));
         /*
         * 初始化相关配置
         * */
         Theme currentTheme;
-        if(config == null){
+        if(App.configs == null){
             currentTheme = ThemeHelper.getCurrentTheme(this);
         }
         else{
-            currentTheme = config.getCurrentTheme();
+            currentTheme = App.configs.get(0).getCurrentTheme();
         }
         switch (currentTheme){
             case DEFAULT:
@@ -60,9 +66,17 @@ public class BaseActivity extends AppCompatActivity {
         if(!checkPermission(this)){
             requestPermission(this, BaseActivity.this);
         }
+
+
         super.onCreate(savedInstanceState);
     }
 
+
+
+
+    /*
+    * 工具方法
+    * */
     private boolean checkPermission(Context context){
 
         return ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -88,6 +102,17 @@ public class BaseActivity extends AppCompatActivity {
         if (requestCode == Constants.PERMISSION_REQUEST_CODE) {
             //Toast.makeText(this,"Successful",Toast.LENGTH_LONG).show();
         }
+    }
+
+    public int checkPasswordtyleInConfigs(ArrayList<Config> configs, PasswordStyle passwordStyle){
+        int index = -1;
+        for (Config config:
+             configs) {
+            if(config.getPasswordStyle() == passwordStyle){
+                return configs.indexOf(config);
+            }
+        }
+        return index;
     }
 
 

@@ -9,6 +9,7 @@ public interface IBlueTooth {
     boolean match();
 
 
+
     boolean sendAllData(DataPackage dataPackage);
 
     DataPackage receiveAllData();
