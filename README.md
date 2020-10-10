@@ -1,5 +1,9 @@
 # HoitNote
 This is a No.1 Android Based Note from HITSZ.
+# Update at 2020-10-10
+
+> Check [Protype Here](https://modao.cc/app/6586f50c7704b77aec1c8f04667addcf1b4e3f81/embed/v2)
+
 # Update 2020-09-28
 1. Architecture
 2. Notice:
