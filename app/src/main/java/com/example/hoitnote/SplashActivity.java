@@ -16,6 +16,7 @@ import com.example.hoitnote.utils.helpers.PasswordStatueHelper;
 import com.example.hoitnote.utils.helpers.ThemeHelper;
 import com.example.hoitnote.views.locks.LockActivity;
 import com.example.hoitnote.views.locks.LockCountDownActivity;
+import com.example.hoitnote.views.settings.SettingsActivity;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -40,7 +41,7 @@ public class SplashActivity extends AppCompatActivity {
                 /*进入输入密码页面*/
                 if(time == 0){
                     NavigationHelper.navigationClosedCurrentActivity(SplashActivity.this,
-                            LockActivity.class);
+                            LockActivity.class/*SettingsActivity.class*/);
                 }
                 /*进入倒计时页面*/
                 else{

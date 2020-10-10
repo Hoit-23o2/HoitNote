@@ -4,6 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+
+import androidx.core.app.ActivityOptionsCompat;
+
+import com.example.hoitnote.views.settings.ThemeSettingActivity;
 
 public class NavigationHelper {
     /*
@@ -30,5 +35,15 @@ public class NavigationHelper {
     * */
     public static void navigationWithParameters(Bundle bundle, Activity fromActivity, Class<?> toClass){
 
+    }
+
+    /*
+    * 过渡元素导航
+    * */
+    public static void navigationWithTransitionAnim(Context context, View sharedElement, String sharedElementName,Class<?> toClass){
+        Intent intent = new Intent(context, toClass);
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation((Activity) context, sharedElement, sharedElementName);
+        context.startActivity(intent, options.toBundle());
     }
 }

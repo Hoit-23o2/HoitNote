@@ -28,6 +28,7 @@ import com.example.hoitnote.utils.helpers.NavigationHelper;
 import com.example.hoitnote.utils.helpers.ThemeHelper;
 import com.example.hoitnote.utils.helpers.ToastHelper;
 import com.example.hoitnote.viewmodels.BaseLockViewModel;
+import com.example.hoitnote.views.settings.PasswordSettingActivity;
 
 import java.util.List;
 
@@ -55,6 +56,7 @@ public class PINPasswordFragment extends BasePasswordFragment {
         return  binding.getRoot();
     }
 
+    private boolean isComeFromSetting = false;
     @Override
     public void initFrame(){
         binding.setPinPasswordFragmentViewModel(baseLockViewModel);
@@ -83,7 +85,6 @@ public class PINPasswordFragment extends BasePasswordFragment {
                     if(baseLockViewModel.getLockViewType() == LockViewType.LOGIN){
                         if(!password.equals(config.getPassword())){
                             wrongCount++;
-
                             binding.patternLockView.setViewMode(PatternLockView.PatternViewMode.WRONG);
                             clearPattern();
                             int remainWrongTimes = Constants.totalWrongCount - wrongCount;
@@ -100,13 +101,45 @@ public class PINPasswordFragment extends BasePasswordFragment {
                         Config newConfig = new Config(ThemeHelper.getCurrentTheme(context),
                                 password, PasswordStyle.TRADITIONAL);
                         boolean isSaved = App.dataBaseHelper.saveConfig(newConfig);
-                        if(isSaved){
-                            ToastHelper.showToast(context,Constants.registrationSuccess,Toast.LENGTH_SHORT);
-                            NavigationHelper.navigationClosedCurrentActivity(context, MainActivity.class);
+                        /*不是来自Setting的注册*/
+                        if(!isComeFromSetting){
+                            if(isSaved){
+                                ToastHelper.showToast(context,Constants.registrationSuccess,Toast.LENGTH_SHORT);
+                                NavigationHelper.navigationClosedCurrentActivity(context, MainActivity.class);
+                            }
+                            else{
+                                ToastHelper.showToast(context,Constants.registrationFalse,Toast.LENGTH_LONG);
+                                clearPattern();
+                            }
                         }
+                        /*是来自Setting的注册*/
                         else{
-                            ToastHelper.showToast(context,Constants.registrationFalse,Toast.LENGTH_LONG);
+                            if(isSaved){
+                                ToastHelper.showToast(context,Constants.settingSuccess,Toast.LENGTH_SHORT);
+                                NavigationHelper.navigationClosedCurrentActivity(context, PasswordSettingActivity.class);
+                            }
+                            else{
+                                ToastHelper.showToast(context,Constants.settingFalse,Toast.LENGTH_SHORT);
+                                clearPattern();
+                            }
+                        }
+                    }
+
+                    /*设置-重设*/
+                    else if(baseLockViewModel.getLockViewType() == LockViewType.SETTING){
+                        /*第一次输入密码错误*/
+                        if(!password.equals(config.getPassword())){
+                            ToastHelper.showToast(context, Constants.passwordWrong, Toast.LENGTH_SHORT);
+                        }
+                        /*输入密码正确*/
+                        else{
+                            baseLockViewModel.setTitle(Constants.patternSettingTip2);
+                            baseLockViewModel.setBtnText(Constants.settingBtnText);
+                            baseLockViewModel.setPassword("");
+                            baseLockViewModel.setLockViewType(LockViewType.REGISTRATION);
+                            binding.setPinPasswordFragmentViewModel(baseLockViewModel);
                             clearPattern();
+                            isComeFromSetting = true;
                         }
                     }
                 }
@@ -128,6 +161,6 @@ public class PINPasswordFragment extends BasePasswordFragment {
             public void run() {
                 binding.patternLockView.clearPattern();
             }
-        }, Constants.delayDuration);
+        }, Constants.delayDuration / 2);
     }
 }

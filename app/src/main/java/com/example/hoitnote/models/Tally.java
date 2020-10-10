@@ -2,13 +2,15 @@ package com.example.hoitnote.models;
 
 import com.example.hoitnote.utils.enums.ActionType;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Time;
 
-public class Tally {
-    private int id;
+public class Tally implements Serializable {
+    private long id;
     private Double money;
     private Date date;
+    private Time time;
     private String remark;
     private Account account;
     private ActionType actionType;
@@ -19,14 +21,15 @@ public class Tally {
     private String project;
     private String vendor;
 
-    public Tally(Date date, Double money, String classification1, String classification2, String remark, Account account, ActionType actionType, String member, String project, String vendor) {
-        this.date = date;
+    public Tally(Double money, Date date, Time time, String remark, Account account, ActionType actionType, String classification1, String classification2, String member, String project, String vendor) {
         this.money = money;
-        this.classification1 = classification1;
-        this.classification2 = classification2;
+        this.date = date;
+        this.time = time;
         this.remark = remark;
         this.account = account;
         this.actionType = actionType;
+        this.classification1 = classification1;
+        this.classification2 = classification2;
         this.member = member;
         this.project = project;
         this.vendor = vendor;
@@ -116,11 +119,19 @@ public class Tally {
         this.vendor = vendor;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
+    }
+
+    public Time getTime() {
+        return time;
+    }
+
+    public void setTime(Time time) {
+        this.time = time;
     }
 }

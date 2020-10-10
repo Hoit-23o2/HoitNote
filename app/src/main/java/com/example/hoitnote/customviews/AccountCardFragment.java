@@ -13,15 +13,18 @@ import androidx.fragment.app.Fragment;
 import com.example.hoitnote.R;
 import com.example.hoitnote.databinding.FragmentAccountcardBinding;
 import com.example.hoitnote.models.Account;
+import com.example.hoitnote.viewmodels.AccountCardViewModel;
 
 public class AccountCardFragment extends Fragment {
 
     FragmentAccountcardBinding binding;
-    Account account;
+    AccountCardViewModel accountViewModel;
 
-    public AccountCardFragment(Account account){
-        account = account;
+    public AccountCardFragment(AccountCardViewModel accountViewModel){
+        this.accountViewModel = accountViewModel;
     }
+
+
 
     @Nullable
     @Override
@@ -32,8 +35,14 @@ public class AccountCardFragment extends Fragment {
                 container,
                 false
         );
-        binding.setAccount(account);
+        binding.setAccountCardViewModel(accountViewModel);
 
         return binding.getRoot();
     }
+
+    public FragmentAccountcardBinding getBinding(){
+        return this.binding;
+    }
+
+
 }

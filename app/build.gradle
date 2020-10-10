@@ -42,5 +42,4 @@ dependencies {
     implementation 'androidx.biometric:biometric:1.0.1'//指纹相关
     implementation 'com.airbnb.android:lottie:3.4.3'//Lottie Animation
     implementation 'androidx.preference:preference:1.1.1'
-
 }

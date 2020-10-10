@@ -16,6 +16,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -29,31 +30,37 @@ import com.example.hoitnote.utils.enums.Theme;
 import com.example.hoitnote.utils.helpers.BlueToothHelper;
 import com.example.hoitnote.utils.helpers.DataBaseHelper;
 import com.example.hoitnote.utils.helpers.FileHelper;
+import com.example.hoitnote.utils.helpers.NavigationHelper;
 import com.example.hoitnote.utils.helpers.ThemeHelper;
 import com.example.hoitnote.viewmodels.BaseViewModel;
+import com.example.hoitnote.views.settings.SettingsActivity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class BaseActivity extends AppCompatActivity {
+    public Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        context = this;
         App.configs = App.dataBaseHelper.getConfigs();
         App.configs = new ArrayList<>(Arrays.asList(
-                new Config(Theme.DEFAULT, "1234",PasswordStyle.TRADITIONAL)/*,
-                new Config(Theme.DEFAULT, "01234",PasswordStyle.PIN)*/
+                new Config(Theme.DEFAULT, "1234",PasswordStyle.TRADITIONAL),
+                new Config(Theme.DEFAULT, "01234",PasswordStyle.PIN)
         ));
         /*
         * 初始化相关配置
         * */
         Theme currentTheme;
-        if(App.configs == null){
+        /*if(App.configs == null){
             currentTheme = ThemeHelper.getCurrentTheme(this);
         }
         else{
             currentTheme = App.configs.get(0).getCurrentTheme();
-        }
+        }*/
+        currentTheme = ThemeHelper.getCurrentTheme(context);
+
         switch (currentTheme){
             case DEFAULT:
                 setTheme(R.style.HoitNote_DefaultTheme);
@@ -63,6 +70,7 @@ public class BaseActivity extends AppCompatActivity {
                 break;
         }
         ThemeHelper.initUI(this);
+
         if(!checkPermission(this)){
             requestPermission(this, BaseActivity.this);
         }
@@ -115,5 +123,28 @@ public class BaseActivity extends AppCompatActivity {
         return index;
     }
 
+    /*
+    * 显示后退按钮
+    * */
+    public void showBackButton(){
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
 
+    // handle button activities
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.action_settings:
+                NavigationHelper.navigationNormally(context, SettingsActivity.class);
+                break;
+            case android.R.id.home:
+                supportFinishAfterTransition();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

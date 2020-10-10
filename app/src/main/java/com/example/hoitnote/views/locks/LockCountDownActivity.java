@@ -24,7 +24,6 @@ import com.example.hoitnote.viewmodels.LockCountDownViewModel;
 public class LockCountDownActivity extends BaseActivity {
     ActivityLockCountDownBinding binding;
     LockCountDownViewModel lockCountDownViewModel;
-    Context context;
     CountDownTimer countDownTimer;
 
     @Override

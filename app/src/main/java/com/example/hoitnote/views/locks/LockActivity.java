@@ -24,7 +24,6 @@ import java.util.ArrayList;
 
 public class LockActivity extends BaseActivity {
     ActivityLockBinding binding;
-    Context context;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
 

@@ -14,11 +14,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/HoitNote.DefaultTheme">
-        <activity android:name=".views.locks.LockCountDownActivity" />
         <activity
-            android:windowSoftInputMode="adjustPan"
-            android:name=".views.locks.LockActivity" />
+            android:name=".views.settings.PasswordSettingDetailActivity"
+            android:parentActivityName=".views.settings.PasswordSettingActivity" />
+
+        <activity android:name=".views.settings.SyncSettingActivity" />
+
+        <activity
+            android:name=".views.settings.PasswordSettingActivity"
+            android:parentActivityName=".views.settings.SettingsActivity" />
+        <activity
+            android:name=".views.settings.ThemeSettingActivity"
+            android:parentActivityName=".views.settings.SettingsActivity" />
+        <activity android:name=".views.locks.LockCountDownActivity" />
+
+        <activity
+            android:name=".views.locks.LockActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".views.SampleActivity" />
+
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,8 +40,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BaseActivity" />
+
         <activity android:name=".MainActivity" />
+
+        <activity
+            android:name=".views.settings.SettingsActivity"
+            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>

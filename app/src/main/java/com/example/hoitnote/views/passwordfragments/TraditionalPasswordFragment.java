@@ -26,6 +26,7 @@ import com.example.hoitnote.utils.helpers.NavigationHelper;
 import com.example.hoitnote.utils.helpers.ThemeHelper;
 import com.example.hoitnote.utils.helpers.ToastHelper;
 import com.example.hoitnote.viewmodels.BaseLockViewModel;
+import com.example.hoitnote.views.settings.PasswordSettingActivity;
 
 public class TraditionalPasswordFragment extends BasePasswordFragment {
 
@@ -118,6 +119,7 @@ public class TraditionalPasswordFragment extends BasePasswordFragment {
         KeyboardHelper.showKeyboard(context);
     }
 
+    private boolean isComeFromSetting = false;
     public void btnClick(View view) {
 
         String password = baseLockViewModel.getPassword();
@@ -144,12 +146,42 @@ public class TraditionalPasswordFragment extends BasePasswordFragment {
                 Config newConfig = new Config(ThemeHelper.getCurrentTheme(context),
                         password, PasswordStyle.TRADITIONAL);
                 boolean isSaved = App.dataBaseHelper.saveConfig(newConfig);
-                if(isSaved){
-                    ToastHelper.showToast(context,Constants.registrationSuccess,Toast.LENGTH_SHORT);
-                    NavigationHelper.navigationClosedCurrentActivity(context, MainActivity.class);
+                /*不是来自Setting的注册*/
+                if(!isComeFromSetting){
+                    if(isSaved){
+                        ToastHelper.showToast(context,Constants.registrationSuccess,Toast.LENGTH_SHORT);
+                        NavigationHelper.navigationClosedCurrentActivity(context, MainActivity.class);
+                    }
+                    else{
+                        ToastHelper.showToast(context,Constants.registrationFalse,Toast.LENGTH_LONG);
+                    }
                 }
+                /*是来自Setting的注册*/
                 else{
-                    ToastHelper.showToast(context,Constants.registrationFalse,Toast.LENGTH_LONG);
+                    if(isSaved){
+                        ToastHelper.showToast(context,Constants.settingSuccess,Toast.LENGTH_SHORT);
+                        NavigationHelper.navigationClosedCurrentActivity(context, PasswordSettingActivity.class);
+                    }
+                    else{
+                        ToastHelper.showToast(context,Constants.settingFalse,Toast.LENGTH_SHORT);
+                    }
+                }
+
+            }
+            /*设置-重设*/
+            else if(baseLockViewModel.getLockViewType() == LockViewType.SETTING){
+                /*第一次输入密码错误*/
+                if(!password.equals(config.getPassword())){
+                    ToastHelper.showToast(context, Constants.passwordWrong, Toast.LENGTH_SHORT);
+                }
+                /*输入密码正确*/
+                else{
+                    baseLockViewModel.setTitle(Constants.traditionalSettingTip2);
+                    baseLockViewModel.setBtnText(Constants.settingBtnText);
+                    baseLockViewModel.setPassword("");
+                    baseLockViewModel.setLockViewType(LockViewType.REGISTRATION);
+                    binding.setTraditionalPasswordFragmentViewModel(baseLockViewModel);
+                    isComeFromSetting = true;
                 }
             }
         }

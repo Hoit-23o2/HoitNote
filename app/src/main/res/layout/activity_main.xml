@@ -16,6 +16,10 @@
         android:orientation="vertical"
         android:background="?attr/colorPrimary">
 
+        <androidx.viewpager2.widget.ViewPager2
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:id="@+id/accountCardBanner"/>
 
     </LinearLayout>
 </layout>

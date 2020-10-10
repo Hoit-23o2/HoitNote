@@ -7,6 +7,12 @@ public class Constants {
     public static String currentTheme = "current_theme";
     public static String theme = "theme";
 
+    public static String defaultColorPrimary = "#FFFFFF";
+    public static String defaultColorAccent = "#FFD100";
+
+    public static String sweetColorPrimary = "#FFFFFF";
+    public static String sweetColorAccent = "#EFC7C2";
+
     /*
     * Splash Related:
     * */
@@ -35,18 +41,32 @@ public class Constants {
     public static String patternLock = "手势解锁";
     public static String traditionalLock = "密码解锁";
     public static String fingerprintLock = "指纹解锁";
-    public static String patternRegistration = "绘制手势";
+    public static String patternRegistration = "注册手势";
     public static String traditionalRegistration = "密码注册";
     public static String fingerprintRegistration = "指纹功能无法开启";
+    public static String patternSettingTip1 = "请绘制上一次的手势";
+    public static String patternSettingTip2 = "设置新的手势";
+    public static String traditionalSettingTip1 = "请输入上一次的密码";
+    public static String traditionalSettingTip2 = "设置新的密码";
+    public static String fingerprintSetting = "请在安卓系统级别修改指纹";
 
     public static String registrationSuccess = "注册成功";
     public static String loginSuccess = "解锁成功";
     public static String registrationFalse = "注册失败，密码重复";
+    public static String loginFalse = "解锁失败";
+    public static String settingSuccess = "设置成功";
+    public static String settingFalse = "设置失败，密码重复";
 
-    public static String registrationBtnText = "注册";
-    public static String loginBtnText = "登录";
+    public static String registrationBtnText = "注  册";
+    public static String settingBtnText = "修  改";
+    public static String confirmBtnText = "确  定";
+    public static String loginBtnText = "登  录";
 
 
+    /*
+    * Setting Activity Related
+    * */
+    public static int animDelayDuration = 200;
 
     /*
     * Data base related

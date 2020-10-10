@@ -1,6 +1,7 @@
 package com.example.hoitnote.utils.commuications;
 
 import com.example.hoitnote.models.Account;
+import com.example.hoitnote.utils.enums.ActionType;
 import com.example.hoitnote.utils.enums.FilterType;
 
 import java.sql.Date;
@@ -12,8 +13,10 @@ import java.util.ArrayList;
 * */
 public class DataBaseFilter {
 
-
-
+    /*
+    * ActionType
+    * */
+    private ActionType actionType;
     /*
     * 如果不想使用ID查找，传入IDInvalid
     * */
@@ -65,12 +68,14 @@ public class DataBaseFilter {
     * 构造函数
     * */
     public DataBaseFilter(Date startDate, Date endDate,
-                          int id, ArrayList<String> classifications, Account account) {
+                          int id, ArrayList<String> classifications, Account account,
+                          ActionType actionType) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.id = id;
         this.classifications = classifications;
         this.account = account;
+        this.actionType = actionType;
     }
 
     /*
@@ -92,5 +97,11 @@ public class DataBaseFilter {
     }
 
 
+    public ActionType getActionType() {
+        return actionType;
+    }
 
+    public void setActionType(ActionType actionType) {
+        this.actionType = actionType;
+    }
 }

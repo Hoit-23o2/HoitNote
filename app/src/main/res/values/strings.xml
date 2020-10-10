@@ -9,4 +9,14 @@
     <string name="pattern_registration">绘制手势</string>
     <string name="traditional_registration">密码注册</string>
     <string name="fingerprint_registration">指纹功能无法开启</string>
+    <string name="settings">设置</string>
+    <string name="settings_title">设  置</string>
+    <string name="settings_theme">主  题</string>
+    <string name="settings_security">安  全</string>
+    <string name="setting_traditional">设置密码</string>
+    <string name="setting_pattern">设置手势</string>
+    <string name="setting_fingerprint">设置指纹</string>
+    <string name="sweet_theme">甜蜜</string>
+    <string name="default_theme">默认</string>
+    <string name="setting_sync">同  步</string>
 </resources>

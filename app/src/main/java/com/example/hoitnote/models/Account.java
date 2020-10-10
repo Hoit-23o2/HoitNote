@@ -1,6 +1,8 @@
 package com.example.hoitnote.models;
 
-public class Account {
+import java.io.Serializable;
+
+public class Account implements Serializable {
     private String accountName;
     private String accountCode;
 
