@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -41,25 +42,46 @@ import java.util.Arrays;
 public class BaseActivity extends AppCompatActivity {
     public Context context;
 
+    private boolean themeChangeFlag = false;
+
+    public boolean isThemeChangeFlag() {
+        return themeChangeFlag;
+    }
+
+    public void clearThemeChangedFlag() {
+        themeChangeFlag = false;
+    }
+    public void addThemeChangedFlag(){
+        themeChangeFlag = true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        NavigationHelper.popActivity(this);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        NavigationHelper.pushActivity(this);
+
         context = this;
         App.configs = App.dataBaseHelper.getConfigs();
-        App.configs = new ArrayList<>(Arrays.asList(
+        /*App.configs = new ArrayList<>(Arrays.asList(
                 new Config(Theme.DEFAULT, "1234",PasswordStyle.TRADITIONAL),
                 new Config(Theme.DEFAULT, "01234",PasswordStyle.PIN)
-        ));
+        ));*/
         /*
         * 初始化相关配置
         * */
         Theme currentTheme;
-        /*if(App.configs == null){
+        if(App.configs == null){
             currentTheme = ThemeHelper.getCurrentTheme(this);
         }
         else{
             currentTheme = App.configs.get(0).getCurrentTheme();
-        }*/
-        currentTheme = ThemeHelper.getCurrentTheme(context);
+        }
+        //currentTheme = ThemeHelper.getCurrentTheme(context);
 
         switch (currentTheme){
             case DEFAULT:
@@ -69,15 +91,17 @@ public class BaseActivity extends AppCompatActivity {
                 setTheme(R.style.HoitNote_SweetTheme);
                 break;
         }
-        ThemeHelper.initUI(this);
+        ThemeHelper.initUI(this, currentTheme);
 
         if(!checkPermission(this)){
             requestPermission(this, BaseActivity.this);
         }
 
-
         super.onCreate(savedInstanceState);
+
     }
+
+
 
 
 
@@ -147,4 +171,17 @@ public class BaseActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public void restartActivity() {
+        this.finish();
+        this.startActivity(new Intent(this, this.getClass()));
+        overridePendingTransition(0,0);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ThemeHelper.notifyThemeChanged(this);
+    }
+
 }

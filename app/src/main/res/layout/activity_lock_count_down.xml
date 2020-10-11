@@ -11,11 +11,12 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:background="?attr/colorPrimary"
         android:layout_height="match_parent"
         tools:context=".views.locks.LockCountDownActivity">
 
         <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/fingerprintAnim"
+            android:id="@+id/countDownProgress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -25,7 +26,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:lottie_autoPlay="true"
-            app:lottie_loop="true"
-            app:lottie_rawRes="@raw/progress_loader"></com.airbnb.lottie.LottieAnimationView>
+            app:lottie_loop="false"
+            app:lottie_rawRes="@raw/progress_loader" />
+
+        <TextView
+            android:textColor="?attr/textColorPrimary"
+            android:id="@+id/timeDisplay"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

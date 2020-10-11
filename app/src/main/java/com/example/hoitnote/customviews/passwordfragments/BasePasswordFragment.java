@@ -1,4 +1,4 @@
-package com.example.hoitnote.views.passwordfragments;
+package com.example.hoitnote.customviews.passwordfragments;
 
 import android.content.Context;
 import android.content.Intent;

@@ -9,10 +9,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.example.hoitnote.utils.commuications.Config;
 import com.example.hoitnote.viewmodels.BaseLockViewModel;
 import com.example.hoitnote.views.locks.DataSyncFragment;
-import com.example.hoitnote.views.passwordfragments.FingerprintPasswordFragment;
+import com.example.hoitnote.customviews.passwordfragments.FingerprintPasswordFragment;
 import com.example.hoitnote.views.locks.LockFragment;
-import com.example.hoitnote.views.passwordfragments.PINPasswordFragment;
-import com.example.hoitnote.views.passwordfragments.TraditionalPasswordFragment;
+import com.example.hoitnote.customviews.passwordfragments.PINPasswordFragment;
+import com.example.hoitnote.customviews.passwordfragments.TraditionalPasswordFragment;
 
 import java.util.ArrayList;
 

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.hoitnote.BaseActivity;
 import com.example.hoitnote.R;
@@ -15,6 +16,7 @@ import com.example.hoitnote.SplashActivity;
 import com.example.hoitnote.databinding.ActivityPasswordSettingBinding;
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.PasswordStyle;
+import com.example.hoitnote.utils.helpers.ToastHelper;
 import com.example.hoitnote.views.locks.LockCountDownActivity;
 
 public class PasswordSettingActivity extends BaseActivity {
@@ -40,7 +42,7 @@ public class PasswordSettingActivity extends BaseActivity {
     }
 
     public void setFingerPrint(View view) {
-
+        ToastHelper.showToast(context, Constants.fingerprintSetting, Toast.LENGTH_SHORT);
     }
 
     public void setPattern(View view) {

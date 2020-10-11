@@ -19,7 +19,7 @@
             app:cardElevation="10dp"
             android:layout_margin="20dp"
             android:layout_width="match_parent"
-            android:layout_height="200dp">
+            android:layout_height="match_parent">
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -37,6 +37,7 @@
                     android:text="@{accountCardViewModel.account.accountName, default=中国平安银行}"
                     android:textColor="?attr/textColorPrimary"
                     android:textSize="28sp"
+                    android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 

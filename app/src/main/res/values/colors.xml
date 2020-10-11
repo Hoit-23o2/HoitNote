@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Default Color Combination-->
-    <color name="colorDefaultPrimary">#FFFFFF</color>
+    <color name="colorDefaultPrimary">#F6F6F6</color>
     <color name="colorDefaultPrimaryLight">#FFFFFF</color>
     <color name="colorDefaultPrimaryDark">#B2B2B2</color>
     <color name="colorDefaultSecondary">#FFD100</color>
@@ -14,7 +14,7 @@
     <color name="colorDefaultDivider">#BDBDBD</color>
 
     <!--Sweet Color Combination-->
-    <color name="colorSweetPrimary">#FFFFFF</color>
+    <color name="colorSweetPrimary">#F6F6F6</color>
     <color name="colorSweetPrimaryLight">#FFFFFF</color>
     <color name="colorSweetPrimaryDark">#B2B2B2</color>
     <color name="colorSweetSecondary">#EFC7C2</color>

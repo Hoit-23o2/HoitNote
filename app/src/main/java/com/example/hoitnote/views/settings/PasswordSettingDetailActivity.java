@@ -1,26 +1,22 @@
 package com.example.hoitnote.views.settings;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.example.hoitnote.BaseActivity;
 import com.example.hoitnote.R;
-import com.example.hoitnote.databinding.ActivityPasswordSettingBinding;
 import com.example.hoitnote.databinding.ActivityPasswordSettingDetailBinding;
 import com.example.hoitnote.utils.App;
 import com.example.hoitnote.utils.commuications.Config;
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.LockViewType;
 import com.example.hoitnote.utils.enums.PasswordStyle;
-import com.example.hoitnote.utils.helpers.ToastHelper;
 import com.example.hoitnote.viewmodels.BaseLockViewModel;
-import com.example.hoitnote.views.passwordfragments.PINPasswordFragment;
-import com.example.hoitnote.views.passwordfragments.TraditionalPasswordFragment;
+import com.example.hoitnote.customviews.passwordfragments.PINPasswordFragment;
+import com.example.hoitnote.customviews.passwordfragments.TraditionalPasswordFragment;
 
 public class PasswordSettingDetailActivity extends BaseActivity {
     ActivityPasswordSettingDetailBinding binding;

@@ -6,10 +6,12 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
@@ -26,6 +28,7 @@ import static android.content.Context.MODE_PRIVATE;
 * */
 public class ThemeHelper {
 
+
     public static Theme getCurrentTheme(Context context){
         SharedPreferences preferences = context.getSharedPreferences(Constants.theme, MODE_PRIVATE);
         int current_theme = preferences.getInt(Constants.currentTheme, 0);
@@ -38,14 +41,28 @@ public class ThemeHelper {
         editor.apply();
     }
 
-    public static void initUI(BaseActivity activity){
+    public static void notifyThemeChanged(BaseActivity activity){
+        /*Log.d(activity.getClass().toString(), "Flag:"+ activity.isThemeChangeFlag());
+        ToastHelper.showToast(activity, "Flag:"+ activity.isThemeChangeFlag(), Toast.LENGTH_SHORT);*/
+        if(activity.isThemeChangeFlag()){
+            activity.restartActivity();
+            activity.clearThemeChangedFlag();
+        }
+    }
+    /*请使用Contants中的Color*/
+    public static void changeColorOfNavigationBar(Activity activity, String color){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            activity.getWindow().setNavigationBarColor(Color.parseColor(color));
+        }
+    }
+    public static void initUI(BaseActivity activity, Theme theme){
         View decorView = activity.getWindow().getDecorView();
+
         int layoutFlag = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            activity.getWindow().setNavigationBarColor(Color.TRANSPARENT);
             activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -55,6 +72,7 @@ public class ThemeHelper {
             layoutFlag |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
         }
         decorView.setSystemUiVisibility(layoutFlag);
+
         Toolbar actionBarToolbar = activity.findViewById(R.id.action_bar);
         if (actionBarToolbar != null){
             actionBarToolbar.setTitleTextColor(Color.BLACK);
@@ -64,6 +82,13 @@ public class ThemeHelper {
         if(actionBar != null){
             actionBar.show();
             actionBar.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+
+        if(theme == Theme.SWEET){
+            changeColorOfNavigationBar(activity, Constants.sweetColorPrimary);
+        }
+        else if(theme == Theme.DEFAULT){
+            changeColorOfNavigationBar(activity, Constants.defaultColorPrimary);
         }
 
     }

@@ -20,6 +20,10 @@ public class AccountCardFragment extends Fragment {
     FragmentAccountcardBinding binding;
     AccountCardViewModel accountViewModel;
 
+    public AccountCardFragment(){
+
+    }
+
     public AccountCardFragment(AccountCardViewModel accountViewModel){
         this.accountViewModel = accountViewModel;
     }

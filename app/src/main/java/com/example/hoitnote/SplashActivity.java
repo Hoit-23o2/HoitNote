@@ -25,7 +25,10 @@ public class SplashActivity extends AppCompatActivity {
         setTheme(R.style.SplashTheme);
         super.onCreate(savedInstanceState);
 
-        App.dataBaseHelper = new DataBaseHelper();
+        /*初始化数据库*/
+        App.dataBaseHelper = new DataBaseHelper(this,Constants.databaseFileName,null,Constants.databaseVersion);
+        App.sqLiteDatabase = App.dataBaseHelper.getWritableDatabase();
+        /*初始化蓝牙*/
         App.blueToothHelper = new BlueToothHelper();
         App.fileHelper = new FileHelper();
 

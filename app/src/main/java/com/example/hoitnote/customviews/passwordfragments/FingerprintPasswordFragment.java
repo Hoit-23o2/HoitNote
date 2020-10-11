@@ -1,4 +1,4 @@
-package com.example.hoitnote.views.passwordfragments;
+package com.example.hoitnote.customviews.passwordfragments;
 
 import android.animation.Animator;
 import android.content.Context;
@@ -27,7 +27,6 @@ import com.example.hoitnote.utils.enums.LockViewType;
 import com.example.hoitnote.utils.helpers.NavigationHelper;
 import com.example.hoitnote.utils.helpers.ToastHelper;
 import com.example.hoitnote.viewmodels.BaseLockViewModel;
-import com.example.hoitnote.views.passwordfragments.BasePasswordFragment;
 
 import java.util.concurrent.Executor;
 

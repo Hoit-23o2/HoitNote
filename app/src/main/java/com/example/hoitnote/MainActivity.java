@@ -1,26 +1,34 @@
 package com.example.hoitnote;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 import android.view.Menu;
 import android.view.MenuItem;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.hoitnote.adapters.main.AccountCardAdapter;
+import com.example.hoitnote.adapters.main.TallyRecentAdapter;
 import com.example.hoitnote.customviews.AccountCardFragment;
 import com.example.hoitnote.databinding.ActivityMainBinding;
 import com.example.hoitnote.models.Account;
 import com.example.hoitnote.models.Tally;
 import com.example.hoitnote.utils.App;
+import com.example.hoitnote.utils.commuications.DataBaseFilter;
+import com.example.hoitnote.utils.enums.ActionType;
 import com.example.hoitnote.utils.helpers.NavigationHelper;
 import com.example.hoitnote.utils.helpers.ToastHelper;
 import com.example.hoitnote.viewmodels.AccountCardViewModel;
 import com.example.hoitnote.viewmodels.MainViewModel;
+import com.example.hoitnote.viewmodels.TallyViewModel;
 import com.example.hoitnote.views.settings.SettingsActivity;
 
+import java.sql.Date;
+import java.sql.Time;
 import java.util.ArrayList;
 
 public class MainActivity extends BaseActivity {
@@ -28,18 +36,18 @@ public class MainActivity extends BaseActivity {
     ActivityMainBinding binding;
     AccountCardAdapter accountCardAdapter;
     ArrayList<AccountCardFragment> accountCardFragments = new ArrayList<>();
-    AccountCardFragment currentAccountCard;
+    AccountCardFragment currentAccountCardFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this,R.layout.activity_main);
         mainViewModel = new MainViewModel();
-
-        //App.dataBaseHelper.getAccounts();
-        accountCardAdapter = new AccountCardAdapter(getSupportFragmentManager(),getLifecycle(), accountCardFragments);
+        accountCardFragments = mainViewModel.getAccountCardFragments();
+        Lifecycle lifecycle = getLifecycle();
+        accountCardAdapter = new AccountCardAdapter(getSupportFragmentManager(),lifecycle,
+                accountCardFragments);
         initActivity();
-        this.context = MainActivity.this;
     }
 
     private void initActivity() {
@@ -49,10 +57,16 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                currentAccountCard = accountCardAdapter.getFragment(position);
-                AccountCardViewModel currentAccountCardViewModel = currentAccountCard.getBinding().getAccountCardViewModel();
-                if(currentAccountCardViewModel.getAccount()!=null){
-                    ToastHelper.showToast(context,"现在是:"+position+","+currentAccountCardViewModel.getAccount().getAccountName(), Toast.LENGTH_SHORT);
+                currentAccountCardFragment = accountCardAdapter.getFragment(position);
+                if(currentAccountCardFragment.getBinding() != null){
+                    AccountCardViewModel currentAccountCardViewModel = currentAccountCardFragment.getBinding().getAccountCardViewModel();
+                    ArrayList<TallyViewModel> tallyViewModels = mainViewModel.getRecentTallyViewModels(currentAccountCardFragment);
+                    TallyRecentAdapter adapter = new TallyRecentAdapter(context, tallyViewModels);
+                    binding.recentTalliesContainer.setAdapter(adapter);
+                    if(currentAccountCardViewModel.getAccount()!=null){
+                        ToastHelper.showToast(context,"现在是:"+position+","+currentAccountCardViewModel.getAccount().getAccountName(), Toast.LENGTH_SHORT);
+
+                    }
                 }
             }
         });
@@ -60,18 +74,9 @@ public class MainActivity extends BaseActivity {
 
     public void addAccount(View view) {
         /*Fake card*/
-        AccountCardViewModel accountCardViewModel = new AccountCardViewModel(
-                new Account("中国电信","111"),
-                "",
-                "",
-                "",
-                "",
-                true
-        );
-        AccountCardFragment accountCardFragment = new AccountCardFragment(accountCardViewModel);
-        accountCardAdapter.addAccountCard(binding.accountCardBanner, accountCardFragment);
 
-        App.dataBaseHelper.addAccount(new Account());
+        App.dataBaseHelper.addAccount(new Account("中国中央银行卡","1000000000100000111"));
+        //accountCardAdapter.addAccountCard(binding.accountCardBanner, accountCardFragment);
     }
 
     // create an action bar button
@@ -80,6 +85,7 @@ public class MainActivity extends BaseActivity {
         getMenuInflater().inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
 
 
 }

@@ -57,20 +57,20 @@ public class LockActivity extends BaseActivity {
         * pos:2 trditional
         * */
         ArrayList<BaseLockViewModel> baseLockViewModels = new ArrayList<>();
-
-        for (Config config :
-                App.configs) {
-            if(config.getPasswordStyle() == PasswordStyle.FINGERPRINT){
-                this.fingerprintConfig = config;
-            }
-            else if(config.getPasswordStyle() == PasswordStyle.PIN){
-                this.pinConfig = config;
-            }
-            else {
-                this.traditionalConfig = config;
+        if(App.configs != null){
+            for (Config config :
+                    App.configs) {
+                if(config.getPasswordStyle() == PasswordStyle.FINGERPRINT){
+                    this.fingerprintConfig = config;
+                }
+                else if(config.getPasswordStyle() == PasswordStyle.PIN){
+                    this.pinConfig = config;
+                }
+                else {
+                    this.traditionalConfig = config;
+                }
             }
         }
-
         //初始化3个页面的ViewModel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if(FingerPrintHelper.isSupportFingerPrint(context)){

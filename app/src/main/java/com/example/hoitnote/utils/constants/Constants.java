@@ -7,10 +7,10 @@ public class Constants {
     public static String currentTheme = "current_theme";
     public static String theme = "theme";
 
-    public static String defaultColorPrimary = "#FFFFFF";
+    public static String defaultColorPrimary = "#F6F6F6";
     public static String defaultColorAccent = "#FFD100";
 
-    public static String sweetColorPrimary = "#FFFFFF";
+    public static String sweetColorPrimary = "#F6F6F6";
     public static String sweetColorAccent = "#EFC7C2";
 
     /*
@@ -31,8 +31,9 @@ public class Constants {
 
     public static String passwordStatue = "password_statue";
     public static String currentPasswordStatue = "current_password_statue";
-    public static int notPassTime = 10; //十分钟
-    public static int passTime = 0;     //0分钟
+    public static int notPassTime = 10; //10s
+    public static float notPassTimeFraction = 0.0001f; //10s
+    public static int passTime = 0;     //0s
 
     public static String fingerPrintNotSupportHardWare = "您的系统版本过低，不支持指纹功能";
     public static String fingerPrintNotEnrolled = "至少录入一个指纹";
@@ -88,6 +89,7 @@ public class Constants {
      * */
     public static String tallyTableName = "TallyTable";
     public static String createTallyTable = "CREATE TABLE IF NOT EXISTS "+ tallyTableName + " (id integer primary key autoincrement, money double, mTime time, mDate date, remark text, account text, actionType integer, classification1 text, classification2 text, member text, project text, vendor text)";
+    public static String tallyTableColumn_id = "id";
     public static String tallyTableColumn_money = "money";
     public static String tallyTableColumn_date = "mDate";
     public static String tallyTableColumn_remark = "remark";
@@ -104,9 +106,10 @@ public class Constants {
      * classification table related
      * */
     public static String classificationTableName = "ClassificationTable";
-    public static String createClassificationTable = "CREATE TABLE IF NOT EXISTS " + classificationTableName + " (id integer primary key autoincrement, classification1 text, classification2 text)";
+    public static String createClassificationTable = "CREATE TABLE IF NOT EXISTS " + classificationTableName + " (id integer primary key autoincrement, classification1 text, classification2 text, actionType integer)";
     public static String classificationColumn_c1 = "classification1";
     public static String classificationColumn_c2 = "classification2";
+    public static String classificationColumn_actionType = "actionType";
 
     /*
      * ThirdParty table related

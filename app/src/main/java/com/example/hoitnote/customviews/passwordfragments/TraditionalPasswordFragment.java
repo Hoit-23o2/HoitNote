@@ -1,4 +1,4 @@
-package com.example.hoitnote.views.passwordfragments;
+package com.example.hoitnote.customviews.passwordfragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -145,7 +145,7 @@ public class TraditionalPasswordFragment extends BasePasswordFragment {
             else if(baseLockViewModel.getLockViewType() == LockViewType.REGISTRATION){
                 Config newConfig = new Config(ThemeHelper.getCurrentTheme(context),
                         password, PasswordStyle.TRADITIONAL);
-                boolean isSaved = App.dataBaseHelper.saveConfig(newConfig);
+                boolean isSaved = App.dataBaseHelper.saveConfig(newConfig, null);
                 /*不是来自Setting的注册*/
                 if(!isComeFromSetting){
                     if(isSaved){
@@ -160,7 +160,7 @@ public class TraditionalPasswordFragment extends BasePasswordFragment {
                 else{
                     if(isSaved){
                         ToastHelper.showToast(context,Constants.settingSuccess,Toast.LENGTH_SHORT);
-                        NavigationHelper.navigationClosedCurrentActivity(context, PasswordSettingActivity.class);
+                        NavigationHelper.closeCurrentActivity(context);
                     }
                     else{
                         ToastHelper.showToast(context,Constants.settingFalse,Toast.LENGTH_SHORT);

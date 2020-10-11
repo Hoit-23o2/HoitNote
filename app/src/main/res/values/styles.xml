@@ -4,27 +4,53 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorDefaultPrimary</item>
         <item name="colorPrimaryDark">@color/colorDefaultPrimaryDark</item>
+        <item name="colorPrimaryLight">@color/colorDefaultPrimaryLight</item>
         <item name="colorAccent">@color/colorDefaultSecondary</item>
         <item name="textColorPrimary">@color/colorDefaultTextPrimary</item>
+        <item name="textColorSecondary">@color/colorDefaultTextSecondary</item>
 
         <!--My custom theme-->
         <item name="android:fitsSystemWindows">true</item>
         <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds" tools:targetApi="lollipop">true</item>
     </style>
 
     <style name="HoitNote.SweetTheme" parent="Theme.AppCompat.DayNight">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorSweetPrimary</item>
+        <item name="colorPrimaryLight">@color/colorSweetPrimaryLight</item>
         <item name="colorPrimaryDark">@color/colorSweetPrimaryDark</item>
         <item name="colorAccent">@color/colorSweetSecondary</item>
         <item name="textColorPrimary">@color/colorSweetTextPrimary</item>
+        <item name="textColorSecondary">@color/colorSweetTextSecondary</item>
 
         <item name="android:fitsSystemWindows">true</item>
         <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds" tools:targetApi="lollipop">true</item>
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/splash</item>
+    </style>
+
+    <!--组件样式-->
+    <!--标题字体-->
+    <style name="TallyTitleText">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/textColorPrimary</item>
+    </style>
+
+    <style name="TallyMoneyText">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/textColorPrimary</item>
+    </style>
+
+    <style name="TallySubTitleText">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">?attr/textColorSecondary</item>
     </style>
 
 </resources>

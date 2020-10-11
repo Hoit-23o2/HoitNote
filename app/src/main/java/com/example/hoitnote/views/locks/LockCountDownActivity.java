@@ -21,6 +21,8 @@ import com.example.hoitnote.utils.helpers.PasswordStatueHelper;
 import com.example.hoitnote.utils.helpers.ToastHelper;
 import com.example.hoitnote.viewmodels.LockCountDownViewModel;
 
+import java.sql.Time;
+
 public class LockCountDownActivity extends BaseActivity {
     ActivityLockCountDownBinding binding;
     LockCountDownViewModel lockCountDownViewModel;
@@ -37,6 +39,7 @@ public class LockCountDownActivity extends BaseActivity {
         if(bundle != null){
             int time = bundle.getInt(Constants.currentPasswordStatue);
             ToastHelper.showToast(context,String.valueOf(time), Toast.LENGTH_SHORT);
+            binding.countDownProgress.setProgress(0);
             startCountDown(time);
         }
 
@@ -46,11 +49,17 @@ public class LockCountDownActivity extends BaseActivity {
     * 开始计时
     * */
     private void startCountDown(int startTime){
-        countDownTimer = new CountDownTimer(startTime * 1000, 1000) {
+        countDownTimer = new CountDownTimer(startTime * 1000, 1) {
 
             public void onTick(long millisUntilFinished) {
                 PasswordStatueHelper.setPasswordSatueTime(context, (int) millisUntilFinished / 1000);
-                ToastHelper.showToast(context,millisUntilFinished+"left",Toast.LENGTH_SHORT);
+                /*ToastHelper.showToast(context,millisUntilFinished+"left",Toast.LENGTH_SHORT);*/
+                float percentage = (Constants.notPassTime * 1000 - millisUntilFinished) * Constants.notPassTimeFraction;
+                binding.countDownProgress.setProgress(percentage);
+                Time time = new Time(millisUntilFinished);
+                time.setTime(millisUntilFinished);
+                /*00:00:00*/
+                binding.timeDisplay.setText(time.toString().substring(3));
             }
 
             public void onFinish() {

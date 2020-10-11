@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class AccountCardAdapter extends FragmentStateAdapter {
     ArrayList<AccountCardFragment> AccountCardFragments;
 
+
     public AccountCardAdapter(@NonNull FragmentManager fragmentManager,
                               @NonNull Lifecycle lifecycle,
                               ArrayList<AccountCardFragment> AccountCardFragments) {

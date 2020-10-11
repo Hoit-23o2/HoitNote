@@ -8,7 +8,7 @@ import java.sql.Time;
 
 public class Tally implements Serializable {
     private long id;
-    private Double money;
+    private double money;
     private Date date;
     private Time time;
     private String remark;
@@ -21,7 +21,7 @@ public class Tally implements Serializable {
     private String project;
     private String vendor;
 
-    public Tally(Double money, Date date, Time time, String remark, Account account, ActionType actionType, String classification1, String classification2, String member, String project, String vendor) {
+    public Tally(double money, Date date, Time time, String remark, Account account, ActionType actionType, String classification1, String classification2, String member, String project, String vendor) {
         this.money = money;
         this.date = date;
         this.time = time;
@@ -47,11 +47,11 @@ public class Tally implements Serializable {
         this.date = date;
     }
 
-    public Double getMoney() {
+    public double getMoney() {
         return money;
     }
 
-    public void setMoney(Double money) {
+    public void setMoney(double money) {
         this.money = money;
     }
 

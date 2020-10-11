@@ -12,13 +12,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.hoitnote.BaseActivity;
 import com.example.hoitnote.R;
 import com.example.hoitnote.databinding.ActivityThemeSettingBinding;
+import com.example.hoitnote.utils.App;
+import com.example.hoitnote.utils.commuications.Config;
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.Theme;
+import com.example.hoitnote.utils.helpers.NavigationHelper;
 import com.example.hoitnote.utils.helpers.ThemeHelper;
+import com.example.hoitnote.utils.helpers.ToastHelper;
 import com.wuyr.rippleanimation.RippleAnimation;
 
 public class ThemeSettingActivity extends BaseActivity {
@@ -47,11 +52,13 @@ public class ThemeSettingActivity extends BaseActivity {
                 // Parse MyCustomStyle, using Context.obtainStyledAttributes()
                 colorPrimary = Color.parseColor(Constants.defaultColorPrimary);
                 colorAccent = Color.parseColor(Constants.defaultColorAccent);
+                ThemeHelper.changeColorOfNavigationBar(this, Constants.defaultColorPrimary);
                 ThemeHelper.setCurrentTheme(context, Theme.DEFAULT);
                 break;
             case R.id.sweetThemeBtn:
                 colorPrimary = Color.parseColor(Constants.sweetColorPrimary);
                 colorAccent = Color.parseColor(Constants.sweetColorAccent);
+                ThemeHelper.changeColorOfNavigationBar(this, Constants.sweetColorPrimary);
                 ThemeHelper.setCurrentTheme(context, Theme.SWEET);
                 break;
             default:
@@ -60,6 +67,13 @@ public class ThemeSettingActivity extends BaseActivity {
 
         binding.upperContainer.setBackgroundColor(colorAccent);
         binding.displayContainer.setBackgroundColor(colorPrimary);
+        boolean isSaved =  App.dataBaseHelper.saveConfig(null,
+                ThemeHelper.getCurrentTheme(context));
+        ToastHelper.showToast(context,String.valueOf(isSaved), Toast.LENGTH_SHORT);
+        /*除本页外全部添加Flag*/
+        for(int i = 0; i < NavigationHelper.navigationStack.size() - 1; i++){
+            NavigationHelper.navigationStack.get(i).addThemeChangedFlag();
+        }
 
     }
 /*

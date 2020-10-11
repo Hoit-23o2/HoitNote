@@ -8,9 +8,23 @@ import android.view.View;
 
 import androidx.core.app.ActivityOptionsCompat;
 
+import com.example.hoitnote.BaseActivity;
 import com.example.hoitnote.views.settings.ThemeSettingActivity;
 
+import java.util.ArrayList;
+
 public class NavigationHelper {
+
+    public static ArrayList<BaseActivity> navigationStack = new ArrayList<>();
+    public static int pushActivity(BaseActivity activity){
+        navigationStack.add(activity);
+        return navigationStack.size();
+    }
+    public static int popActivity(BaseActivity activity){
+        int originpos = navigationStack.indexOf(activity);
+        navigationStack.remove(activity);
+        return originpos;
+    }
     /*
     * 正常导航
     * */
@@ -35,6 +49,12 @@ public class NavigationHelper {
     * */
     public static void navigationWithParameters(Bundle bundle, Activity fromActivity, Class<?> toClass){
 
+    }
+    /*
+    * 关闭当前Activity
+    * */
+    public static void closeCurrentActivity(Context packageContext){
+        ((Activity)packageContext).finish();
     }
 
     /*
