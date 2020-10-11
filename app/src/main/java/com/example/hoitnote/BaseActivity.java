@@ -21,6 +21,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.example.hoitnote.utils.App;
 import com.example.hoitnote.utils.commuications.Config;
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.Theme;
@@ -37,7 +38,7 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Config config = baseViewModel.dataBaseHelper.getConfig();
+        Config config = App.dataBaseHelper.getConfig();
         /*
         * 初始化相关配置
         * */

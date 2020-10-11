@@ -1,5 +1,7 @@
 package com.example.hoitnote.utils;
 
+import android.database.sqlite.SQLiteDatabase;
+
 import com.example.hoitnote.utils.helpers.BlueToothHelper;
 import com.example.hoitnote.utils.helpers.DataBaseHelper;
 import com.example.hoitnote.utils.helpers.FileHelper;
@@ -11,4 +13,5 @@ public class App {
     public static DataBaseHelper dataBaseHelper;
     public static BlueToothHelper blueToothHelper;
     public static FileHelper fileHelper;
+    public static SQLiteDatabase hoitDataBase;
 }
