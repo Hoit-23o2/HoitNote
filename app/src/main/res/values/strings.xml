@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">BlueTeethTest</string>
+    <string name="paired_device">已匹配设备</string>
+    <string name="found_device">发现的设备</string>
+</resources>
