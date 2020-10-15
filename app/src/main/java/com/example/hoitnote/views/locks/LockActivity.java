@@ -17,6 +17,7 @@ import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.LockViewType;
 import com.example.hoitnote.utils.enums.PasswordStyle;
 import com.example.hoitnote.utils.App;
+import com.example.hoitnote.utils.helpers.BlueToothHelper;
 import com.example.hoitnote.utils.helpers.FingerPrintHelper;
 import com.example.hoitnote.viewmodels.BaseLockViewModel;
 
@@ -40,6 +41,9 @@ public class LockActivity extends BaseActivity {
         /*数据绑定固定写法*/
         binding = DataBindingUtil.setContentView(this,R.layout.activity_lock);
         context = LockActivity.this;
+
+        /*初始化蓝牙*/
+        App.blueToothHelper = new BlueToothHelper(this);
 
         initUI();
 
@@ -112,17 +116,4 @@ public class LockActivity extends BaseActivity {
         );
         fragmentTransaction.add(binding.mainContainer.getId(), lockFragment).commit();
     }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
-            actionBar.show();
-        }
-    }
-
-
-
 }

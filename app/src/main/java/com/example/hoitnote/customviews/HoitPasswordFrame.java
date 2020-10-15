@@ -32,6 +32,7 @@ public class HoitPasswordFrame extends CardView {
     public void setIsMask(boolean isMask){
         this.isMask = isMask;
     }
+
     public HoitPasswordFrame(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         //从xml的属性中获取到字体颜色与string

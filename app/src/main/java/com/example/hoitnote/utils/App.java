@@ -17,6 +17,7 @@ public class App {
     public static SQLiteDatabase sqLiteDatabase;
     @SuppressLint("StaticFieldLeak")
     public static DataBaseHelper dataBaseHelper;
+    @SuppressLint("StaticFieldLeak")
     public static BlueToothHelper blueToothHelper;
     public static FileHelper fileHelper;
     public static ArrayList<Config> configs;    //保存了除了指纹外的所有密码

@@ -42,7 +42,7 @@ public class LockFragmentAdapter extends FragmentStateAdapter {
         this.fingerprintPasswordFragment = new FingerprintPasswordFragment(baseLockViewModels.get(0),context,fingerprintConfig);
         this.pinPasswordFragment = new PINPasswordFragment(baseLockViewModels.get(1),context,pinConfig);
         this.traditionalPasswordFragment = new TraditionalPasswordFragment(baseLockViewModels.get(2),context,traditionalConfig);
-        this.dataSyncFragment = new DataSyncFragment();
+        this.dataSyncFragment = new DataSyncFragment(context);
 
         fragments.add(fingerprintPasswordFragment);
         fragments.add(pinPasswordFragment);

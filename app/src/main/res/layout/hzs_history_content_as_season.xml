@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3">
+            <Button
+                android:id="@+id/hzs_history_content_as_season_year"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="2020年"
+                android:textSize="24dp"
+                android:background="@android:color/transparent"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3">
+            <Button
+                android:id="@+id/hzs_history_content_as_season_season"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="春"
+                android:textSize="24dp"
+                android:background="@android:color/transparent"/>
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/hzs_down"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/hzs_history_content_as_season_season_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/hzs_flower"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.12"
+                app:layout_constraintStart_toStartOf="@+id/hzs_history_content_as_season_season"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@android:color/holo_red_light" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/hzs_history_content_as_season_jieyu"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:text="结余"
+            android:textSize="20dp"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:text="1000.0"
+            android:textColor="@android:color/black"
+            android:textSize="20dp"/>
+
+
+    </LinearLayout>
+    <ExpandableListView
+        android:orientation="vertical"
+        android:id="@+id/hzs_history_content_as_season_expandable_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></ExpandableListView>
+
+</LinearLayout>

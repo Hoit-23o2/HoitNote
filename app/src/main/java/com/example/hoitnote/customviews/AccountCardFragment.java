@@ -28,8 +28,6 @@ public class AccountCardFragment extends Fragment {
         this.accountViewModel = accountViewModel;
     }
 
-
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

@@ -1,16 +1,34 @@
 package com.example.hoitnote.utils.Interfaces;
 
+import android.bluetooth.BluetoothDevice;
+import android.content.Context;
+
 import com.example.hoitnote.utils.commuications.DataPackage;
 
+import java.util.ArrayList;
+
 public interface IBlueTooth {
+
     /*
-    * 蓝牙配对
+    *
     * */
-    boolean match();
+    void checkBluetoothSupport(Context context);
 
+    void scanDevice(Context context);
 
+    void openBluetooth(Context context);
 
-    boolean sendAllData(DataPackage dataPackage);
+    void startServer(Context context);
 
-    DataPackage receiveAllData();
+    ArrayList<BluetoothDevice> getPairedDeviceList();
+
+    void closeBluetooth();
+
+    void exposeDevice();
+
+    void connectDevice(BluetoothDevice device);
+
+    void applyPermission();
+
+    void sendDataPackage(final DataPackage dataPackage);
 }

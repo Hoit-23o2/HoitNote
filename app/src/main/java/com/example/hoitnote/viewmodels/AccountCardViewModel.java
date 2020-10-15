@@ -1,5 +1,6 @@
 package com.example.hoitnote.viewmodels;
 
+import android.view.View;
 import android.widget.ImageView;
 
 import androidx.databinding.Bindable;
@@ -94,5 +95,9 @@ public class AccountCardViewModel extends BaseViewModel {
     public void setCard(boolean card) {
         isCard = card;
         notifyPropertyChanged(BR.card);
+    }
+
+    public void goAnalyseAccount(View v){
+        
     }
 }

@@ -34,7 +34,7 @@ public class LockFragment extends Fragment {
 
     FragmentLockBinding binding;
 
-    ArrayList<ImageView> icons = new ArrayList<>();
+    ArrayList<View> icons = new ArrayList<>();
 
     public LockFragment(){
 
@@ -101,8 +101,8 @@ public class LockFragment extends Fragment {
         }
     }
 
-    private void renderIcons(ImageView targetIcon){
-        for (ImageView icon:
+    private void renderIcons(View targetIcon){
+        for (View icon:
              icons) {
             if(icon == targetIcon){
                 icon.animate().scaleX(1.3f).scaleY(1.3f).start();

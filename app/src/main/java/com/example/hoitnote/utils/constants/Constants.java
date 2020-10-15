@@ -63,6 +63,13 @@ public class Constants {
     public static String confirmBtnText = "确  定";
     public static String loginBtnText = "登  录";
 
+    /*
+    * Main Activity Related
+    * */
+    public static String noneAccountCode = "xxxxxxxx";
+    public static String noneAccountName = "Unkonw";
+
+    public static String recentDayStr = "最近";
 
     /*
     * Setting Activity Related
@@ -126,4 +133,20 @@ public class Constants {
     public static String createAccountTable = "CREATE TABLE IF NOT EXISTS " + AccountTableName + " (id integer primary key autoincrement, accountName text, accountCode text)";
     public static String AccountColumn_an = "accountName";
     public static String AccountColumn_ac = "accountCode";
+
+
+    /*
+    * BlueTooth Related
+    * */
+
+    public static final int MSG_SEND_SUCCESS = 0;
+    public static final int MSG_SEND_FAILURE = 1;
+    public static final int MSG_RECEIVE_SUCCESS = 2;
+    public static final int MSG_RECEIVE_FAILURE = 3;
+    public static final int MSG_CONNECT_SUCCESS = 4;
+    public static final int MSG_CONNECT_FAILURE = 5;
+    public static final int MSG_LISTEN_FAILURE = 6;
+    public static final int MSG_Is_Connected = 7;
+
+    public static String deviceNotSupport = "设备不支持蓝牙";
 }

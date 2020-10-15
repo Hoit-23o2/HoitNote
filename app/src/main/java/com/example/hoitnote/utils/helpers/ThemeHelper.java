@@ -64,6 +64,12 @@ public class ThemeHelper {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
+            /*if(theme == Theme.DEFAULT){
+                activity.getWindow().setStatusBarColor(Color.parseColor(Constants.defaultColorPrimary));
+            }
+            else {
+                activity.getWindow().setStatusBarColor(Color.parseColor(Constants.sweetColorPrimary));
+            }*/
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             layoutFlag |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
@@ -82,6 +88,14 @@ public class ThemeHelper {
         if(actionBar != null){
             actionBar.show();
             actionBar.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            /*if(theme == Theme.DEFAULT){
+                actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Constants.defaultColorPrimary)));
+
+            }
+            else {
+                actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor(Constants.sweetColorPrimary)));
+            }
+            actionBar.setElevation(0);*/
         }
 
         if(theme == Theme.SWEET){
