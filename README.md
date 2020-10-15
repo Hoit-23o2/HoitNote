@@ -1,6 +1,6 @@
 # HoitNote
 This is a No.1 Android Based Note from HITSZ.
-# Update at 2020-10-15
+# Update at 2020-10-15: <font color="red">MillStone</font>
 ## Have Done!!!
 1. Change A lot of UI
 2. Add Bluetooth part
