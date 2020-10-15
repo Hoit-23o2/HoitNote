@@ -15,8 +15,10 @@
         android:layout_height="match_parent"
         android:gravity="center">
         <androidx.cardview.widget.CardView
+            android:foreground="?attr/selectableItemBackground"
+            android:onClick="@{(v)->accountCardViewModel.goAnalyseAccount(v)}"
             app:cardCornerRadius="20dp"
-            app:cardElevation="10dp"
+            app:cardElevation="5dp"
             android:layout_margin="20dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">

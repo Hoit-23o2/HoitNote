@@ -19,4 +19,14 @@
     <string name="sweet_theme">甜蜜</string>
     <string name="default_theme">默认</string>
     <string name="setting_sync">同  步</string>
+    <string name="right_arrow"></string>
+    <string name="check_more">查看更多</string>
+    <string name="account_name_hint">账户名</string>
+    <string name="account_code_hint">账号</string>
+    <string name="finger_print_icon"></string>
+    <string name="sync_icon"></string>
+    <string name="traditional_password_icon"></string>
+    <string name="pattern_lock_icon"></string>
+    <string name="theme_icon"></string>
+    <string name="security_icon"></string>
 </resources>

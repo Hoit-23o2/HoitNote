@@ -27,12 +27,13 @@
             android:orientation="vertical"
             tools:targetApi="lollipop">
 
-            <ImageView
+            <com.example.hoitnote.customviews.FontAwesome
                 android:id="@+id/imageView"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_gravity="center"
-                android:src="@drawable/icons8_t_shirt_64"
+                android:text="@string/theme_icon"
+                style="@style/HoitIcon"
+                android:textSize="40sp"
                 android:transitionName="themeIcon"
                 tools:targetApi="lollipop" />
 
@@ -42,8 +43,7 @@
                 android:layout_gravity="center"
                 android:text="@string/settings_theme"
                 android:textAlignment="center"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                style="@style/HoitTitleText"/>
         </LinearLayout>
 
         <LinearLayout

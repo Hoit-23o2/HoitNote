@@ -51,7 +51,7 @@
 
                     <TextView
                         android:id="@+id/title"
-                        style="@style/TallyTitleText"
+                        style="@style/HoitTitleText"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
@@ -106,7 +106,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        style="@style/TallySubTitleText"
+                        style="@style/HoitSubTitleText"
                         android:text='@{tally.tally.classification1, default="餐 饮"}'/>
 
                     <TextView
@@ -114,7 +114,7 @@
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:textAlignment="viewEnd"
-                        style="@style/TallySubTitleText"
+                        style="@style/HoitSubTitleText"
                         android:text='@{String.valueOf(tally.tally.time), default="11:32"}'
                         android:layout_height="wrap_content"
                         android:gravity="end" />

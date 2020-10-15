@@ -1,5 +1,16 @@
 # HoitNote
 This is a No.1 Android Based Note from HITSZ.
+# Update at 2020-10-15
+## Have Done!!!
+1. Change A lot of UI
+2. Add Bluetooth part
+3. Add Tally part
+## To Do
+1. Change UI
+2. Implement **ActivityAnalysis**
+3. Add Chart & CI
+4. Accomplish **FragmentSync**
+
 # Update at 2020-10-10
 
 > Check [Protype Here](https://modao.cc/app/6586f50c7704b77aec1c8f04667addcf1b4e3f81/embed/v2)

@@ -42,4 +42,7 @@ dependencies {
     implementation 'androidx.biometric:biometric:1.0.1'//指纹相关
     implementation 'com.airbnb.android:lottie:3.4.3'//Lottie Animation
     implementation 'androidx.preference:preference:1.1.1'
+    implementation 'com.contrarywind:Android-PickerView:4.1.9' //PickerView
+    implementation 'com.android.support:support-v4:20.+'
+    implementation "com.daimajia.swipelayout:library:1.2.0@aar" //滑动删除控件
 }

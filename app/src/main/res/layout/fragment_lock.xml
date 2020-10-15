@@ -28,41 +28,38 @@
             android:orientation="horizontal"
             android:gravity="center">
 
-            <ImageView
-                android:foreground="?actionBarItemBackground"
+            <com.example.hoitnote.customviews.FontAwesome
                 android:id="@+id/fingerprintLock"
                 android:onClick="@{(v)->lockFragment.switchTheme(v)}"
-                android:layout_margin="20dp"
+                style="@style/HoitIcon"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/icons8_fingerprint_64"/>
+                android:text="@string/finger_print_icon" />
 
-            <ImageView
-                android:foreground="?actionBarItemBackground"
+            <com.example.hoitnote.customviews.FontAwesome
                 android:id="@+id/patternLock"
                 android:onClick="@{(v)->lockFragment.switchTheme(v)}"
-                android:layout_margin="20dp"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/icons8_pattern_lock_64"/>
+                style="@style/HoitIcon"
+                android:text="@string/pattern_lock_icon"/>
 
-            <ImageView
-                android:foreground="?actionBarItemBackground"
+            <com.example.hoitnote.customviews.FontAwesome
                 android:id="@+id/traditionalLock"
                 android:onClick="@{(v)->lockFragment.switchTheme(v)}"
-                android:layout_margin="20dp"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/icons8_bunch_of_keys_64"/>
+                android:text="@string/traditional_password_icon"
+                style="@style/HoitIcon"/>
 
-            <ImageView
+            <com.example.hoitnote.customviews.FontAwesome
                 android:foreground="?actionBarItemBackground"
                 android:id="@+id/syncSettings"
                 android:onClick="@{(v)->lockFragment.switchTheme(v)}"
-                android:layout_margin="20dp"
+                style="@style/HoitIcon"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/icons8_sync_settings_64" />
+                android:text="@string/sync_icon"/>
         </LinearLayout>
 
     </LinearLayout>
