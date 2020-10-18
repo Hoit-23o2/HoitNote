@@ -78,28 +78,28 @@ public class LockActivity extends BaseActivity {
         //初始化3个页面的ViewModel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if(FingerPrintHelper.isSupportFingerPrint(context)){
-                baseLockViewModels.add(new BaseLockViewModel(
+                baseLockViewModels.add(new BaseLockViewModel(context,
                         LockViewType.LOGIN, Constants.fingerprintLock
                         ,Constants.loginBtnText));
             }
             else{
                 //无指纹通知
                 baseLockViewModels.add(
-                        new BaseLockViewModel(
+                        new BaseLockViewModel(context,
                                 LockViewType.REGISTRATION,
                                 Constants.fingerprintRegistration,Constants.registrationBtnText));
             }
         }
 
         baseLockViewModels.add(this.pinConfig != null ?
-                new BaseLockViewModel(LockViewType.LOGIN,Constants.patternLock
+                new BaseLockViewModel(context,LockViewType.LOGIN,Constants.patternLock
                         ,Constants.loginBtnText)
-                : new BaseLockViewModel(LockViewType.REGISTRATION,Constants.patternRegistration,
+                : new BaseLockViewModel(context,LockViewType.REGISTRATION,Constants.patternRegistration,
                 Constants.registrationBtnText));
         baseLockViewModels.add(this.traditionalConfig != null ?
-                new BaseLockViewModel(LockViewType.LOGIN,Constants.traditionalLock
+                new BaseLockViewModel(context,LockViewType.LOGIN,Constants.traditionalLock
                         ,Constants.loginBtnText)
-                : new BaseLockViewModel(LockViewType.REGISTRATION,Constants.traditionalRegistration,
+                : new BaseLockViewModel(context,LockViewType.REGISTRATION,Constants.traditionalRegistration,
                 Constants.registrationBtnText));
 
         fragmentManager = getSupportFragmentManager();

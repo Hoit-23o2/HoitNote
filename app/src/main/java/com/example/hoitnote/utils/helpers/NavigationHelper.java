@@ -9,22 +9,22 @@ import android.view.View;
 import androidx.core.app.ActivityOptionsCompat;
 
 import com.example.hoitnote.BaseActivity;
-import com.example.hoitnote.views.settings.ThemeSettingActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class NavigationHelper {
 
     public static ArrayList<BaseActivity> navigationStack = new ArrayList<>();
-    public static int pushActivity(BaseActivity activity){
+
+    public static void pushActivity(BaseActivity activity){
         navigationStack.add(activity);
-        return navigationStack.size();
     }
-    public static int popActivity(BaseActivity activity){
-        int originpos = navigationStack.indexOf(activity);
+
+    public static void popActivity(BaseActivity activity){
         navigationStack.remove(activity);
-        return originpos;
     }
+
     /*
     * 正常导航
     * */
@@ -45,11 +45,32 @@ public class NavigationHelper {
         }
     }
     /*
-    * 待实现
+    * 带参数导航
+    * @param
+    * tag:标识符
+    * serializableObject:参数
     * */
-    public static void navigationWithParameters(Bundle bundle, Activity fromActivity, Class<?> toClass){
-
+    public static void navigationWithParameter(String tag, Serializable serializableObject,
+                                                Context packageContext, Class<?> toClass, boolean isClosedCurrentActivity){
+        Intent intent = new Intent(packageContext, toClass);
+        intent.putExtra(tag, serializableObject); //where user is an instance of User
+        packageContext.startActivity(intent);
+        if(isClosedCurrentActivity)
+            ((Activity)packageContext).finish();
     }
+
+    /*
+    * 封装接受参数方法
+    * @param
+    * tag:标识符
+    * */
+    public static Serializable getNavigationParameter(Activity activity, String tag){
+        if(activity.getIntent().getExtras() != null) {
+            return activity.getIntent().getSerializableExtra(tag);
+        }
+        return null;
+    }
+
     /*
     * 关闭当前Activity
     * */

@@ -29,4 +29,15 @@
     <string name="pattern_lock_icon"></string>
     <string name="theme_icon"></string>
     <string name="security_icon"></string>
+    <string name="accout_information_title">信息</string>
+    <string name="account_remain_money">结余:</string>
+    <string name="account_income">收入:</string>
+    <string name="account_outcome">支出:</string>
+    <string name="account_transfer">转账:</string>
+    <string name="arrow_left"></string>
+    <string name="chart_cl_year">年</string>
+    <string name="chart_cl_month">月</string>
+    <string name="chart_cl_week">周</string>
+    <string name="chart_cl_day">日</string>
+    <string name="chart_cl_filter_hint">—查看方式—</string>
 </resources>

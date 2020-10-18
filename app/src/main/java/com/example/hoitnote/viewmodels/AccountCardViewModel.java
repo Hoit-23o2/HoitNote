@@ -1,5 +1,6 @@
 package com.example.hoitnote.viewmodels;
 
+import android.content.Context;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -10,28 +11,43 @@ import com.bumptech.glide.Glide;
 import com.example.hoitnote.BR;
 import com.example.hoitnote.R;
 import com.example.hoitnote.models.Account;
+import com.example.hoitnote.utils.constants.Constants;
+import com.example.hoitnote.utils.enums.ClickType;
+import com.example.hoitnote.utils.helpers.NavigationHelper;
+import com.example.hoitnote.views.analysis.AnalysisActivity;
 
-public class AccountCardViewModel extends BaseViewModel {
+import java.io.Serializable;
+
+public class AccountCardViewModel extends BaseViewModel{
     private Account account;
     private String backgroundUrl;
     private String incomes;
     private String outcomes;
     private String transfer;
     private boolean isCard;
+    private ClickType clickType;
 
-    public AccountCardViewModel(){
-
+    public AccountCardViewModel(Context context){
+        super(context);
     }
 
+    /*
+    * @params
+    * clickType:该Card是否可点击
+    * isCard:该Card是否为Card，（可能是加号）
+    * */
     public AccountCardViewModel(Account account, String backgroundUrl,
                                 String incomes, String outcomes,
-                                String transfer, boolean isCard) {
+                                String transfer, boolean isCard,
+                                Context context, ClickType clickType) {
+        super(context);
         this.account = account;
         this.backgroundUrl = backgroundUrl;
         this.incomes = incomes;
         this.outcomes = outcomes;
         this.transfer = transfer;
         this.isCard = isCard;
+        this.clickType = clickType;
     }
 
     @Bindable
@@ -97,7 +113,7 @@ public class AccountCardViewModel extends BaseViewModel {
         notifyPropertyChanged(BR.card);
     }
 
-    public void goAnalyseAccount(View v){
-        
+    public ClickType getClickType() {
+        return clickType;
     }
 }

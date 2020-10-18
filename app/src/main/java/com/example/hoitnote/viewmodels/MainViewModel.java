@@ -1,5 +1,6 @@
 package com.example.hoitnote.viewmodels;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.example.hoitnote.customviews.AccountCardFragment;
@@ -9,6 +10,7 @@ import com.example.hoitnote.utils.App;
 import com.example.hoitnote.utils.commuications.DataBaseFilter;
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.ActionType;
+import com.example.hoitnote.utils.enums.ClickType;
 import com.example.hoitnote.utils.enums.GroupType;
 
 import java.sql.Time;
@@ -21,8 +23,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class MainViewModel extends BaseViewModel {
-    public MainViewModel(){
 
+    public MainViewModel(Context context){
+        super(context);
     }
 
     /*
@@ -33,35 +36,9 @@ public class MainViewModel extends BaseViewModel {
         ArrayList<Account> accounts = App.dataBaseHelper.getAccounts();
         for (Account account:
                 accounts) {
-            ArrayList<Tally> tallies = App.dataBaseHelper.getTallies(new DataBaseFilter(
-                    null,
-                    null,
-                    DataBaseFilter.IDInvalid,
-                    null,
-                    account,
-                    null
-            ));
-            int incomes = 0;
-            int outcomes = 0;
-            for (Tally tally:
-                    tallies) {
-                if(tally.getActionType() == ActionType.OUTCOME){
-                    outcomes = outcomes + (int) tally.getMoney();
-                }
-                else if(tally.getActionType() == ActionType.INCOME){
-                    incomes += (int)tally.getMoney();
-                }
-            }
-            AccountCardViewModel accountCardViewModel = new AccountCardViewModel(
-                    account,
-                    "",
-                    String.valueOf(incomes),
-                    String.valueOf(outcomes),
-                    "",
-                    true
-            );
-            AccountCardFragment accountCardFragment = new AccountCardFragment(accountCardViewModel);
-            accountCardFragments.add(accountCardFragment);
+            AccountCardFragment accountCardFragment = account.
+                    parseToAccountCardFragment(context, ClickType.TAP);
+            accountCardFragments.add(0,accountCardFragment);
         }
         return accountCardFragments;
     }
@@ -77,8 +54,6 @@ public class MainViewModel extends BaseViewModel {
             for (TallyViewModel tallyViewModel:
                  tallyViewModels) {
                 String timeStr = tallyViewModel.getTally().getDate().toString();
-                /*if(timeStr.equals(new Date(System.currentTimeMillis()).toString()))
-                    timeStr = Constants.recentDayStr;*/
                 ArrayList<TallyViewModel> tallies = tallyViewModelWithGroups.get(timeStr);
                 if(tallies == null){
                     tallies = new ArrayList<>();
@@ -93,7 +68,7 @@ public class MainViewModel extends BaseViewModel {
     /*
     * 获取最近7天内的TallyViewModel
     * */
-    public ArrayList<TallyViewModel> getRecentTallyViewModels(AccountCardFragment currentAccountCardFragment){
+    public ArrayList<TallyViewModel> getRecentTallyViewModelsByCardFragment(AccountCardFragment currentAccountCardFragment){
         AccountCardViewModel currentAccountCardViewModel = currentAccountCardFragment.getBinding().getAccountCardViewModel();
         Account currentAccount = currentAccountCardViewModel.getAccount();
         ArrayList<TallyViewModel> tallyViewModels = new ArrayList<>();
@@ -118,6 +93,7 @@ public class MainViewModel extends BaseViewModel {
         for (Tally tally:
              tallies) {
             TallyViewModel tallyViewModel = new TallyViewModel(
+                    context,
                     tally,
                     "2222"
             );
@@ -126,7 +102,7 @@ public class MainViewModel extends BaseViewModel {
         /*测试用*/
         if(tallyViewModels.size() == 0){
             tallyViewModels.add(
-                    new TallyViewModel(new Tally(
+                    new TallyViewModel(context, new Tally(
                             20.0,
                             new Date(System.currentTimeMillis()),
                             new Time(10000),
@@ -142,7 +118,7 @@ public class MainViewModel extends BaseViewModel {
                     ), "ss")
             );
             tallyViewModels.add(
-                    new TallyViewModel(new Tally(
+                    new TallyViewModel(context,new Tally(
                             20.0,
                             new Date(System.currentTimeMillis()-1000000000),
                             new Time(10001),

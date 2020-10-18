@@ -34,7 +34,7 @@ public class PasswordSettingDetailActivity extends BaseActivity {
         initActivity();
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
-        BaseLockViewModel baseLockViewModel = new BaseLockViewModel();
+        BaseLockViewModel baseLockViewModel = new BaseLockViewModel(context);
         for (Config config :
                 App.configs) {
             if(config.getPasswordStyle() == PasswordStyle.FINGERPRINT){

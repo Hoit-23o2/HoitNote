@@ -4,7 +4,7 @@
     <!--Default Color Combination-->
     <color name="colorDefaultPrimary">#F6F6F6</color>
     <color name="colorDefaultPrimaryLight">#FFFFFF</color>
-    <color name="colorDefaultPrimaryDark">#B2B2B2</color>
+    <color name="colorDefaultPrimaryDark">#D3D3D3</color>
     <color name="colorDefaultSecondary">#FFD100</color>
     <color name="colorDefaultSecondaryLight">#FBF94E</color>
     <color name="colorDefaultSecondaryDark">#FF9800</color>
@@ -17,7 +17,7 @@
     <!--Sweet Color Combination-->
     <color name="colorSweetPrimary">#F6F6F6</color>
     <color name="colorSweetPrimaryLight">#FFFFFF</color>
-    <color name="colorSweetPrimaryDark">#B2B2B2</color>
+    <color name="colorSweetPrimaryDark">#D3D3D3</color>
     <color name="colorSweetSecondary">#EFC7C2</color>
     <color name="colorSweetSecondaryLight">#FFE8D8</color>
     <color name="colorSweetSecondaryDark">#EDC7CF</color>

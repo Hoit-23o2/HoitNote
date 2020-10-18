@@ -9,9 +9,11 @@ public class Constants {
 
     public static String defaultColorPrimary = "#F6F6F6";
     public static String defaultColorAccent = "#FFD100";
+    public static String defaultColorPrimaryLight = "#FFFFFF";
 
     public static String sweetColorPrimary = "#F6F6F6";
     public static String sweetColorAccent = "#EFC7C2";
+    public static String sweetColorPrimaryLight = "#FFFFFF";
 
     /*
     * Splash Related:
@@ -69,7 +71,15 @@ public class Constants {
     public static String noneAccountCode = "xxxxxxxx";
     public static String noneAccountName = "Unkonw";
 
-    public static String recentDayStr = "最近";
+    public static String accountCodeSameHint = "已有账号";
+    public static String accountCodeNotEnoughHint = "账号位数不足";
+
+    /*
+    * Analysis Activity Related
+    * */
+
+    public static String analysisParamTag = "current_account";
+
 
     /*
     * Setting Activity Related

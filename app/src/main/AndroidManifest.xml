@@ -19,10 +19,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/HoitNote.DefaultTheme">
-        <activity android:name=".views.analysis.AnalysisActivity"></activity>
+        <activity
+            android:name=".views.analysis.AnalysisActivity"
+            android:parentActivityName=".MainActivity" />
+
         <activity
             android:name=".views.settings.PasswordSettingDetailActivity"
             android:parentActivityName=".views.settings.PasswordSettingActivity" />
+
         <activity android:name=".views.settings.SyncSettingActivity" />
         <activity
             android:name=".views.settings.PasswordSettingActivity"

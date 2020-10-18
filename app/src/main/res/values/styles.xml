@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorDefaultSecondary</item>
         <item name="textColorPrimary">@color/colorDefaultTextPrimary</item>
         <item name="textColorSecondary">@color/colorDefaultTextSecondary</item>
+        <item name="colorDivider">@color/colorDefaultDivider</item>
 
         <!--My custom theme-->
         <item name="android:fitsSystemWindows">true</item>
@@ -23,6 +24,7 @@
         <item name="colorAccent">@color/colorSweetSecondary</item>
         <item name="textColorPrimary">@color/colorSweetTextPrimary</item>
         <item name="textColorSecondary">@color/colorSweetTextSecondary</item>
+        <item name="colorDivider">@color/colorSweetDivider</item>
 
         <item name="android:fitsSystemWindows">true</item>
         <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
@@ -49,6 +51,8 @@
     <!--输入栏样式-->
 
     <!--标题字体-->
+
+
     <style name="HoitGroupText">
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
@@ -71,6 +75,12 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">?attr/textColorSecondary</item>
+    </style>
+
+    <style name="HoitDividerText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">?attr/colorDivider</item>
     </style>
 
     <!--动画相关-->

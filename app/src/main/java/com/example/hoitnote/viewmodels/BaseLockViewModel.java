@@ -1,5 +1,7 @@
 package com.example.hoitnote.viewmodels;
 
+import android.content.Context;
+
 import androidx.databinding.Bindable;
 
 import com.example.hoitnote.BR;
@@ -66,11 +68,13 @@ public class BaseLockViewModel extends BaseViewModel {
         notifyPropertyChanged(BR.btnText);
     }
 
-    public BaseLockViewModel(){
-
+    public BaseLockViewModel(Context context){
+        super(context);
     }
 
-    public BaseLockViewModel(LockViewType lockViewType, String title, String btnText) {
+    public BaseLockViewModel(Context context,
+                             LockViewType lockViewType, String title, String btnText) {
+        super(context);
         this.lockViewType = lockViewType;
         this.title = title;
         this.btnText = btnText;

@@ -29,7 +29,9 @@ public class AccountCardAdapter extends FragmentStateAdapter {
                         null,
                         null,
                         null,
-                        false
+                        false,
+                        null,
+                        null
                 )
         );
         this.AccountCardFragments.add(addFragment);

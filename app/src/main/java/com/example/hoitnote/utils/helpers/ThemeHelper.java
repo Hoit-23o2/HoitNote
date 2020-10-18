@@ -3,16 +3,14 @@ package com.example.hoitnote.utils.helpers;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
-import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
@@ -41,6 +39,7 @@ public class ThemeHelper {
         editor.apply();
     }
 
+    /*在每个Activity开头调用*/
     public static void notifyThemeChanged(BaseActivity activity){
         /*Log.d(activity.getClass().toString(), "Flag:"+ activity.isThemeChangeFlag());
         ToastHelper.showToast(activity, "Flag:"+ activity.isThemeChangeFlag(), Toast.LENGTH_SHORT);*/
@@ -49,6 +48,35 @@ public class ThemeHelper {
             activity.clearThemeChangedFlag();
         }
     }
+
+    public static int getPrimaryLightColor(Context context){
+        int colorPrimary;
+        if(getCurrentTheme(context) == Theme.SWEET)
+            colorPrimary = Color.parseColor(Constants.sweetColorPrimaryLight);
+        else
+            colorPrimary = Color.parseColor(Constants.defaultColorPrimaryLight);
+        return colorPrimary;
+    }
+
+    public static int getPrimaryColor(Context context){
+        int colorPrimary;
+        if(getCurrentTheme(context) == Theme.SWEET)
+            colorPrimary = Color.parseColor(Constants.sweetColorPrimary);
+        else
+            colorPrimary = Color.parseColor(Constants.defaultColorPrimary);
+        return colorPrimary;
+    }
+
+
+    public static int getAccentColor(Context context){
+        int colorAccent;
+        if(getCurrentTheme(context) == Theme.SWEET)
+            colorAccent = Color.parseColor(Constants.sweetColorAccent);
+        else
+            colorAccent = Color.parseColor(Constants.defaultColorAccent);
+        return colorAccent;
+    }
+
     /*请使用Contants中的Color*/
     public static void changeColorOfNavigationBar(Activity activity, String color){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

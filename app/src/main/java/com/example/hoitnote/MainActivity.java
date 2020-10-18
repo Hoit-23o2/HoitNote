@@ -22,9 +22,14 @@ import com.example.hoitnote.models.Account;
 import com.example.hoitnote.models.Tally;
 import com.example.hoitnote.utils.App;
 import com.example.hoitnote.utils.commuications.DataBaseFilter;
+import com.example.hoitnote.utils.constants.Constants;
+import com.example.hoitnote.utils.enums.AccountJudgeType;
 import com.example.hoitnote.utils.enums.ActionType;
+import com.example.hoitnote.utils.enums.ClickType;
 import com.example.hoitnote.utils.enums.GroupType;
+import com.example.hoitnote.utils.enums.Theme;
 import com.example.hoitnote.utils.helpers.NavigationHelper;
+import com.example.hoitnote.utils.helpers.ThemeHelper;
 import com.example.hoitnote.utils.helpers.ToastHelper;
 import com.example.hoitnote.viewmodels.AccountCardViewModel;
 import com.example.hoitnote.viewmodels.MainViewModel;
@@ -50,7 +55,8 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this,R.layout.activity_main);
-        mainViewModel = new MainViewModel();
+        mainViewModel = new MainViewModel(context);
+        /*从viewModel处拿取账户数据，并转换为Fragments*/
         accountCardFragments = mainViewModel.getAccountCardFragments();
         Lifecycle lifecycle = getLifecycle();
         accountCardAdapter = new AccountCardAdapter(getSupportFragmentManager(),lifecycle,
@@ -68,7 +74,7 @@ public class MainActivity extends BaseActivity {
                 currentAccountCardFragment = accountCardAdapter.getFragment(position);
                 if(currentAccountCardFragment.getBinding() != null){
                     AccountCardViewModel currentAccountCardViewModel = currentAccountCardFragment.getBinding().getAccountCardViewModel();
-                    ArrayList<TallyViewModel> tallyViewModels = mainViewModel.getRecentTallyViewModels(currentAccountCardFragment);
+                    ArrayList<TallyViewModel> tallyViewModels = mainViewModel.getRecentTallyViewModelsByCardFragment(currentAccountCardFragment);
                     /*分组*/
                     HashMap<String, ArrayList<TallyViewModel>> tallyViewModelWithGroups = mainViewModel.
                             groupTallyViewModel(tallyViewModels, GroupType.DATE);
@@ -82,22 +88,54 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
+        int color = ThemeHelper.getPrimaryLightColor(context);
+        String colorStr = "#" + Integer.toHexString(color).substring(2);
+        ThemeHelper.changeColorOfNavigationBar(this,
+                colorStr);
+
     }
 
+    /*点击添加加号后添加一个账户*/
     public void addAccount(View view) {
-        /*Fake card*/
         final AddAccountPopupView popupView = new AddAccountPopupView(view);
         final PopupWindow popupWindow = popupView.showPopupWindow();
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                PopupwindowAddaccountBinding binding = popupView.getBinding();
-                ToastHelper.showToast(context, binding.accountCodeField.getText().toString(), Toast.LENGTH_SHORT);
-                ToastHelper.showToast(context, binding.accountNameField.getText().toString(), Toast.LENGTH_SHORT);
+                PopupwindowAddaccountBinding popupViewBinding = popupView.getBinding();
+                String accountName = popupViewBinding.accountNameField.getText().toString();
+                String accountCode = popupViewBinding.accountCodeField.getText().toString();
+                ToastHelper.showToast(context, accountName, Toast.LENGTH_SHORT);
+                ToastHelper.showToast(context, accountCode, Toast.LENGTH_SHORT);
+                Account newAccount = new Account(accountName,accountCode);
+                AccountJudgeType accountJudge = newAccount.checkIfAccountValid();
+                if(accountJudge == AccountJudgeType.SUCCESSFUL){
+                    App.dataBaseHelper.addAccount(newAccount);
+                    AccountCardFragment newCardFragment = new AccountCardFragment(
+                            new AccountCardViewModel(
+                                    newAccount,
+                                    "",
+                                    "0",
+                                    "0",
+                                    "0",
+                                    true,
+                                    context,
+                                    ClickType.TAP
+                            )
+                    );
+                    accountCardAdapter.addAccountCard(binding.accountCardBanner, newCardFragment);
+                }
+                else if(accountJudge == AccountJudgeType.CODE_SAME){
+                    ToastHelper.showToast(context, Constants.accountCodeSameHint
+                            , Toast.LENGTH_SHORT);
+                }
+                else if(accountJudge == AccountJudgeType.CODE_NOT_ENOUGH){
+                    ToastHelper.showToast(context, Constants.accountCodeNotEnoughHint
+                            , Toast.LENGTH_SHORT);
+                }
+
             }
         });
-        //App.dataBaseHelper.addAccount(new Account("中国中央银行卡","1000000000100000111"));
-        //accountCardAdapter.addAccountCard(binding.accountCardBanner, accountCardFragment);
     }
 
     // create an action bar button

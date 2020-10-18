@@ -32,9 +32,9 @@ public class LockCountDownActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this,R.layout.activity_lock_count_down);
-        lockCountDownViewModel = new LockCountDownViewModel();
-        binding.setLockCountDownViewModel(lockCountDownViewModel);
         context = LockCountDownActivity.this;
+        lockCountDownViewModel = new LockCountDownViewModel(context);
+        binding.setLockCountDownViewModel(lockCountDownViewModel);
         Bundle bundle = getIntent().getExtras();
         if(bundle != null){
             int time = bundle.getInt(Constants.currentPasswordStatue);

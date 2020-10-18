@@ -1,6 +1,17 @@
 package com.example.hoitnote.models;
 
+import android.content.Context;
+
+import com.example.hoitnote.customviews.AccountCardFragment;
+import com.example.hoitnote.utils.App;
+import com.example.hoitnote.utils.commuications.DataBaseFilter;
+import com.example.hoitnote.utils.enums.AccountJudgeType;
+import com.example.hoitnote.utils.enums.ActionType;
+import com.example.hoitnote.utils.enums.ClickType;
+import com.example.hoitnote.viewmodels.AccountCardViewModel;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Account implements Serializable {
     private String accountName;
@@ -30,4 +41,55 @@ public class Account implements Serializable {
         this.accountName = accountName;
         this.accountCode = accountCode;
     }
+
+    public AccountJudgeType checkIfAccountValid(){
+        ArrayList<Account> existAccounts = App.dataBaseHelper.getAccounts();
+
+        for (Account existAccount:
+             existAccounts) {
+            if(existAccount.accountCode.equals(this.accountCode)){
+                return AccountJudgeType.CODE_SAME;
+            }
+        }
+        return AccountJudgeType.SUCCESSFUL;
+    }
+
+    public AccountCardFragment parseToAccountCardFragment(Context context, ClickType clickType){
+        AccountCardViewModel accountCardViewModel = parseToAccountCardViewModel(context, clickType);
+        return new AccountCardFragment(accountCardViewModel);
+    }
+
+    public AccountCardViewModel parseToAccountCardViewModel(Context context, ClickType clickType){
+        ArrayList<Tally> tallies = App.dataBaseHelper.getTallies(new DataBaseFilter(
+                null,
+                null,
+                DataBaseFilter.IDInvalid,
+                null,
+                this,
+                null
+        ));
+        int incomes = 0;
+        int outcomes = 0;
+        for (Tally tally:
+                tallies) {
+            if(tally.getActionType() == ActionType.OUTCOME){
+                outcomes = outcomes + (int) tally.getMoney();
+            }
+            else if(tally.getActionType() == ActionType.INCOME){
+                incomes += (int)tally.getMoney();
+            }
+        }
+        AccountCardViewModel accountCardViewModel = new AccountCardViewModel(
+                this,
+                "",
+                String.valueOf(incomes),
+                String.valueOf(outcomes),
+                "",
+                true,
+                context,
+                clickType
+        );
+        return accountCardViewModel;
+    }
+
 }

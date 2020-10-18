@@ -1,5 +1,6 @@
 package com.example.hoitnote.viewmodels;
 
+import android.content.Context;
 import android.widget.ImageView;
 
 import androidx.databinding.Bindable;
@@ -37,11 +38,12 @@ public class TallyViewModel extends BaseViewModel {
         Glide.with(imageView.getContext()).load(iconUrl).error(R.drawable.ic_launcher_foreground).into(imageView);
     }
 
-    public TallyViewModel(){
-
+    public TallyViewModel(Context context){
+        super(context);
     }
 
-    public TallyViewModel(Tally tally, String iconUrl) {
+    public TallyViewModel(Context context, Tally tally, String iconUrl) {
+        super(context);
         this.tally = tally;
         this.iconUrl = iconUrl;
     }

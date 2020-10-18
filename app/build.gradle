@@ -45,4 +45,5 @@ dependencies {
     implementation 'com.contrarywind:Android-PickerView:4.1.9' //PickerView
     implementation 'com.android.support:support-v4:20.+'
     implementation "com.daimajia.swipelayout:library:1.2.0@aar" //滑动删除控件
+    implementation 'com.caverock:androidsvg-aar:1.4' //SVG
 }

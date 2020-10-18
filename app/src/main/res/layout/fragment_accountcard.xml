@@ -7,6 +7,9 @@
 
         <import type="android.view.View" />
         <variable
+            name="accountCardFragment"
+            type="com.example.hoitnote.customviews.AccountCardFragment" />
+        <variable
             name="accountCardViewModel"
             type="com.example.hoitnote.viewmodels.AccountCardViewModel" />
     </data>
@@ -16,7 +19,7 @@
         android:gravity="center">
         <androidx.cardview.widget.CardView
             android:foreground="?attr/selectableItemBackground"
-            android:onClick="@{(v)->accountCardViewModel.goAnalyseAccount(v)}"
+            android:onClick="@{(v)->accountCardFragment.actionWhenCardClicked(v)}"
             app:cardCornerRadius="20dp"
             app:cardElevation="5dp"
             android:layout_margin="20dp"

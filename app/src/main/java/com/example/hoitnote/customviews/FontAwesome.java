@@ -1,6 +1,9 @@
 package com.example.hoitnote.customviews;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
@@ -28,10 +31,7 @@ public class FontAwesome extends androidx.appcompat.widget.AppCompatTextView {
     }
 
     private void init(Context context) {
-
-        //Font name should not contain "/".
         Typeface tf = ResourcesCompat.getFont(context, R.font.fontawesome5solid);
         setTypeface(tf);
     }
-
 }
