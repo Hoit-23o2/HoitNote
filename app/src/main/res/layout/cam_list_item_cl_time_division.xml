@@ -1,9 +1,6 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-        <variable
-            name="tally"
-            type="com.example.myproject02.model.Tally" />
     </data>
 
     <LinearLayout

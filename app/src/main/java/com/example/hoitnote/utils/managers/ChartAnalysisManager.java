@@ -1,31 +1,49 @@
 package com.example.hoitnote.utils.managers;
 
+import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Color;
 import android.icu.util.Calendar;
 import android.os.Build;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.hoitnote.customviews.CAMListAdapterPc;
-import com.example.hoitnote.customviews.CAMListAdapterSgCl;
-import com.example.hoitnote.customviews.CAMListAdapterTdCl;
-import com.example.hoitnote.customviews.HoitNoteImageViewCl;
-import com.example.hoitnote.customviews.HoitNoteImageViewPc;
-
+import com.example.hoitnote.R;
+import com.example.hoitnote.adapters.analysis.charts.CAMFirstScreenListAdapter;
+import com.example.hoitnote.adapters.analysis.charts.CAMPCListAdapter;
+import com.example.hoitnote.adapters.analysis.charts.CAMPCRVAdapter;
+import com.example.hoitnote.adapters.analysis.charts.CAMTdClListAdapter;
+import com.example.hoitnote.adapters.analysis.charts.CAMSgClListAdapter;
+import com.example.hoitnote.customviews.charts.HoitNoteClView;
+import com.example.hoitnote.customviews.charts.HoitNotePCView;
 import com.example.hoitnote.models.Account;
 import com.example.hoitnote.models.Tally;
-import com.example.hoitnote.models.TallyAnalysisCl;
-import com.example.hoitnote.models.TallyAnalysisClTimeDivision;
-import com.example.hoitnote.models.TallyAnalysisPc;
+import com.example.hoitnote.models.charts.ChooseScreenListNode;
+import com.example.hoitnote.models.charts.TallyAnalysisCl;
+import com.example.hoitnote.models.charts.TallyAnalysisClTimeDivision;
+import com.example.hoitnote.models.charts.TallyAnalysisPC;
+import com.example.hoitnote.utils.App;
+import com.example.hoitnote.utils.commuications.DataBaseFilter;
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.ActionType;
+import com.example.hoitnote.utils.enums.ThirdPartyType;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
@@ -35,229 +53,542 @@ public class ChartAnalysisManager {
     private Context context;
 
     //扇形统计图相关
-    private HoitNoteImageViewPc hoitNoteImageViewPc;
-    private CAMListAdapterPc CAMListAdapterPc;
-
+    private HoitNotePCView hoitNotePCView;
+    private CAMPCListAdapter CAMPCListAdapter;
     private ListView myListViewPc;
-    private TextView myTextViewPc;
-    private ContentValues showNameContentValues;
+    private RecyclerView recyclerViewShowScreen;
+    private CAMPCRVAdapter campcrvAdapter;
+    private ContentValues screenContentValues;
 
     //折线统计图相关
     static Calendar calendar = Calendar.getInstance();
     static Calendar calendar2 = Calendar.getInstance();
-
-    private HoitNoteImageViewCl hoitNoteImageViewCl;
-    private CAMListAdapterTdCl CAMListAdapterTdCl;
-    private CAMListAdapterSgCl CAMListAdapterSgCl;
+    private HoitNoteClView hoitNoteCLView;
+    private CAMTdClListAdapter CAMTdClListAdapter;
+    private CAMSgClListAdapter CAMSgClListAdapter;
     private ListView myListViewClTimeDivision;
     private ListView myListViewClSignName;
     private ArrayList<String> timeDivisionList;
 
+    //对话框相关
+    private boolean ifAnalysing = false;
+    private Button btnActDialog;
+    private AlertDialog dialog;
+    private ArrayList<ChooseScreenListNode> chooseScreenListNodeArrayList;      //包括一级，二级的ScreenList
+    private boolean[] firstLevelCheckedList;            //一级checkedList
+    private ArrayList<boolean[]> checkedList;           //二级checkedList
+    private ArrayList<String> chooseScreenList;         //初始化于initialDialog中,其中包含了已选中的一级Screen，而且是按选中的先后顺序排列
+    private TextView mTvStartTime,mTvEndTime;           //对话框中选择时间
+    ArrayList<Tally> correspondingTallies;              //初始化于getCorrespondingTallies
+
+
+
 
     public ChartAnalysisManager(Context context) {
         //初始化Pc
-        hoitNoteImageViewPc = null;
+        hoitNotePCView = null;
         myListViewPc = null;
         this.context = context;
+        this.screenContentValues = new ContentValues();
+        this.screenContentValues.put(Constants.tallyTableColumn_c1,"一级分类");
+        this.screenContentValues.put(Constants.tallyTableColumn_c2,"二级分类");
+        this.screenContentValues.put(Constants.tallyTableColumn_project,"项目");
+        this.screenContentValues.put(Constants.tallyTableColumn_member,"成员");
+        this.screenContentValues.put(Constants.tallyTableColumn_account,"账户");
+        this.screenContentValues.put(Constants.tallyTableColumn_vendor,"商家");
+
         //初始化Cl
-        hoitNoteImageViewCl = null;
+        hoitNoteCLView = null;
         timeDivisionList = new ArrayList<>();
         timeDivisionList.add("年");
         timeDivisionList.add("月");
         timeDivisionList.add("周");
         timeDivisionList.add("日");
+
+        //初始化对话框
+        initializeDialog();
+        ifAnalysing = false;
     }
 
     //扇形统计图相关
-    public void setHoitNoteImageViewPc(HoitNoteImageViewPc hoitNoteImageViewPc) {
-        this.hoitNoteImageViewPc = hoitNoteImageViewPc;
-        this.hoitNoteImageViewPc.setManager(this);
+    public void setHoitNotePCView(HoitNotePCView hoitNotePCView) {
+        this.hoitNotePCView = hoitNotePCView;
+        this.hoitNotePCView.setManager(this);
     }
 
-    public void setListViewPc(ListView myListView) {
+    public void setListViewPC(ListView myListView) {
         this.myListViewPc = myListView;
-        this.CAMListAdapterPc = new CAMListAdapterPc(context);
-        this.myListViewPc.setAdapter(this.CAMListAdapterPc);
-        this.CAMListAdapterPc.setManager(this);
+        this.CAMPCListAdapter = new CAMPCListAdapter(context);
+        this.myListViewPc.setAdapter(this.CAMPCListAdapter);
+        this.CAMPCListAdapter.setManager(this);
     }
 
-    public void setTextViewPc(TextView textView){
-        this.myTextViewPc = textView;
-        this.showNameContentValues = new ContentValues();
-        showNameContentValues.put(Constants.tallyTableColumn_c1,"一级分类");
-        showNameContentValues.put(Constants.tallyTableColumn_c2,"二级分类");
-        showNameContentValues.put(Constants.tallyTableColumn_account,"账户");
-        showNameContentValues.put(Constants.tallyTableColumn_member,"成员");
-        showNameContentValues.put(Constants.tallyTableColumn_project,"项目");
-        showNameContentValues.put(Constants.tallyTableColumn_vendor,"商家");
-        showNameContentValues.put("总计","总计");
+    public void setRecyclerViewShowScreen(RecyclerView recyclerViewShowScreen){
+        this.recyclerViewShowScreen = recyclerViewShowScreen;
+        this.campcrvAdapter = new CAMPCRVAdapter(context);
+        this.recyclerViewShowScreen.setAdapter(campcrvAdapter);
+        this.campcrvAdapter.setScreenContentValues(screenContentValues);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        this.recyclerViewShowScreen.setLayoutManager(linearLayoutManager);
     }
 
-    public void setTallyAnalysisPcListPc(ArrayList<TallyAnalysisPc> tallyAnalysisPcArrayList){
+    public void setTallyAnalysisPCListPC(ArrayList<TallyAnalysisPC> tallyAnalysisPCArrayList,ArrayList<String> screenMarkList){
         //设置要绘制的数据array
         //设置扇形统计图数据array逻辑
-        if(hoitNoteImageViewPc != null){
-            hoitNoteImageViewPc.endAnimation();
-            hoitNoteImageViewPc.setTallyAnalysisPcArrayList(tallyAnalysisPcArrayList);
+        if(hoitNotePCView != null){
+            hoitNotePCView.endAnimation();
+            hoitNotePCView.setTallyAnalysisPCArrayList(tallyAnalysisPCArrayList);
         }
         if(myListViewPc != null){
-            CAMListAdapterPc.setList(tallyAnalysisPcArrayList);
+            CAMPCListAdapter.setList(tallyAnalysisPCArrayList);
         }
-        if(myTextViewPc != null){
-            myTextViewPc.setText(showNameContentValues.getAsString("总计"));
+        if(campcrvAdapter != null){
+            campcrvAdapter.setScreenMarkList(screenMarkList);
         }
     }
 
-    public void notifyEnterTallyAnalysisPc(TallyAnalysisPc tallyAnalysisPc, String key){
+    public void notifyEnterTallyAnalysisPC(TallyAnalysisPC tallyAnalysisPC){
         //通知要深入
         //扇形统计图深入Screen逻辑
-        if(hoitNoteImageViewPc != null){
-            if(!hoitNoteImageViewPc.ifAnimation){
-                hoitNoteImageViewPc.enterTallyAnalysisPc(tallyAnalysisPc);
+        if(hoitNotePCView != null){
+            if(!hoitNotePCView.ifAnimation){
+                hoitNotePCView.enterTallyAnalysisPC(tallyAnalysisPC);
                 if(myListViewPc != null) {
-                    CAMListAdapterPc.enterTallyAnalysisPc(tallyAnalysisPc);
+                    CAMPCListAdapter.enterTallyAnalysisPC(tallyAnalysisPC);
                 }
-                if(myTextViewPc != null){
-                    myTextViewPc.setText(showNameContentValues.getAsString(key));
+                if(campcrvAdapter != null){
+                    campcrvAdapter.enterOnce();
                 }
             }
         }else {
             if(myListViewPc != null){
-                CAMListAdapterPc.enterTallyAnalysisPc(tallyAnalysisPc);
+                CAMPCListAdapter.enterTallyAnalysisPC(tallyAnalysisPC);
             }
-            if(myTextViewPc != null){
-                myTextViewPc.setText(showNameContentValues.getAsString(key));
+            if(campcrvAdapter != null){
+                campcrvAdapter.enterOnce();
             }
         }
     }
 
-    public void notifyGoBackPc(String key){
+    public void notifyGoBackPc(){
         //通知要回退
         //扇形统计图深入Screen逻辑
-        if(hoitNoteImageViewPc != null){
-            if(!hoitNoteImageViewPc.ifAnimation){
-                hoitNoteImageViewPc.goBack();
+        if(hoitNotePCView != null){
+            if(!hoitNotePCView.ifAnimation){
+                hoitNotePCView.goBack();
                 if(myListViewPc != null) {
-                    CAMListAdapterPc.goBack();
+                    CAMPCListAdapter.goBack();
                 }
-                if(myTextViewPc != null){
-                    myTextViewPc.setText(showNameContentValues.getAsString(key));
+                if(campcrvAdapter != null){
+                    campcrvAdapter.goBack();
                 }
             }
         }else {
             if(myListViewPc != null){
-                CAMListAdapterPc.goBack();
+                CAMPCListAdapter.goBack();
             }
-            if(myTextViewPc != null){
-                myTextViewPc.setText(showNameContentValues.getAsString(key));
+            if(campcrvAdapter != null){
+                campcrvAdapter.goBack();
             }
         }
     }
 
     public void setBackgroundColorPc(int color){
-        if(hoitNoteImageViewPc != null){
-            hoitNoteImageViewPc.setSelfBackgroundColor(color);
+        if(hoitNotePCView != null){
+            hoitNotePCView.setSelfBackgroundColor(color);
         }
     }
 
     public void setCuttingLineColorPc(int color){
-        if(hoitNoteImageViewPc != null){
-            hoitNoteImageViewPc.setSelfCuttingLineColor(color);
+        if(hoitNotePCView != null){
+            hoitNotePCView.setSelfCuttingLineColor(color);
         }
     }
 
-    public void actImageViewPc(){
-        if(hoitNoteImageViewPc != null){
-            hoitNoteImageViewPc.actSelf();
+    public void actImageViewPC(){
+        if(hoitNotePCView != null){
+            hoitNotePCView.actSelf();
         }
     }
 
     //折线统计图相关
-    public void setHoitNoteImageViewCl(HoitNoteImageViewCl hoitNoteImageViewCl){
-        this.hoitNoteImageViewCl = hoitNoteImageViewCl;
-        this.hoitNoteImageViewCl.setManager(this);
+    public void setHoitNoteCLView(HoitNoteClView hoitNoteCLView){
+        this.hoitNoteCLView = hoitNoteCLView;
+        this.hoitNoteCLView.setManager(this);
     }
 
     public void setListViewCl(ListView listViewTD, ListView listViewSN){
         this.myListViewClTimeDivision= listViewTD;
         if(listViewTD != null){
-            this.CAMListAdapterTdCl = new CAMListAdapterTdCl(context);
-            this.myListViewClTimeDivision.setAdapter(this.CAMListAdapterTdCl);
-            this.CAMListAdapterTdCl.setManager(this);
+            this.CAMTdClListAdapter = new CAMTdClListAdapter(context);
+            this.myListViewClTimeDivision.setAdapter(this.CAMTdClListAdapter);
+            this.CAMTdClListAdapter.setManager(this);
         }
         this.myListViewClSignName = listViewSN;
         if(listViewSN != null){
-            this.CAMListAdapterSgCl = new CAMListAdapterSgCl(context);
-            this.myListViewClSignName.setAdapter(this.CAMListAdapterSgCl);
-            this.CAMListAdapterSgCl.setManager(this);
+            this.CAMSgClListAdapter = new CAMSgClListAdapter(context);
+            this.myListViewClSignName.setAdapter(this.CAMSgClListAdapter);
+            this.CAMSgClListAdapter.setManager(this);
         }
     }
 
     public void setTallyAnalysisClListCl(ArrayList<TallyAnalysisCl> tallyAnalysisClListCl){
-        if(hoitNoteImageViewCl != null){
-            hoitNoteImageViewCl.endAnimation();
-            hoitNoteImageViewCl.setTallyAnalysisClArrayList(tallyAnalysisClListCl);
+        if(hoitNoteCLView != null){
+            hoitNoteCLView.endAnimation();
+            hoitNoteCLView.setTallyAnalysisClArrayList(tallyAnalysisClListCl);
         }
         if(myListViewClTimeDivision != null){
-            CAMListAdapterTdCl.setList(timeDivisionList);
+            CAMTdClListAdapter.setList(timeDivisionList);
         }
         if(myListViewClSignName != null){
-            CAMListAdapterSgCl.setList(tallyAnalysisClListCl);
+            CAMSgClListAdapter.setList(tallyAnalysisClListCl);
         }
     }
 
     public void notifyTimeDivision(String newTimeDivision){
-        if(hoitNoteImageViewCl != null){
-            if(!hoitNoteImageViewCl.ifAnimation){
-                hoitNoteImageViewCl.changeTimeDivision(newTimeDivision);
+        if(hoitNoteCLView != null){
+            if(!hoitNoteCLView.ifAnimation){
+                hoitNoteCLView.changeTimeDivision(newTimeDivision);
                 if(myListViewClTimeDivision != null){
-                    CAMListAdapterTdCl.changeTimeDivision(newTimeDivision);
+                    CAMTdClListAdapter.changeTimeDivision(newTimeDivision);
                 }
             }
         }else{
             if(myListViewClTimeDivision != null){
-                CAMListAdapterTdCl.changeTimeDivision(newTimeDivision);
+                CAMTdClListAdapter.changeTimeDivision(newTimeDivision);
             }
         }
     }
 
     public void notifyMainSignChange(TallyAnalysisCl tallyAnalysisCl){
-        if(hoitNoteImageViewCl != null){
-            if(!hoitNoteImageViewCl.ifAnimation){
-                hoitNoteImageViewCl.changeMainSign(tallyAnalysisCl);
-                CAMListAdapterSgCl.notifyDataSetChanged();
+        if(hoitNoteCLView != null){
+            if(!hoitNoteCLView.ifAnimation){
+                hoitNoteCLView.changeMainSign(tallyAnalysisCl);
+                CAMSgClListAdapter.notifyDataSetChanged();
             }
         }
     }
 
     public void setBackgroundColorCl(int color){
-        if(hoitNoteImageViewCl != null){
-            hoitNoteImageViewCl.setSelfBackgroundColor(color);
+        if(hoitNoteCLView != null){
+            hoitNoteCLView.setSelfBackgroundColor(color);
         }
     }
 
     public void setInsideBackgroundColorCl(int color){
-        if(hoitNoteImageViewCl != null){
-            hoitNoteImageViewCl.setSelfInsideBackgroundColor(color);
+        if(hoitNoteCLView != null){
+            hoitNoteCLView.setSelfInsideBackgroundColor(color);
         }
     }
 
     public void setLineColorCl(int color){
-        if(hoitNoteImageViewCl != null){
-            hoitNoteImageViewCl.setSelfLineColor(color);
+        if(hoitNoteCLView != null){
+            hoitNoteCLView.setSelfLineColor(color);
         }
     }
 
     public void setTextColorCl(int color){
-        if(hoitNoteImageViewCl != null){
-            hoitNoteImageViewCl.setSelfTextColor(color);
+        if(hoitNoteCLView != null){
+            hoitNoteCLView.setSelfTextColor(color);
         }
     }
 
     public void actImageViewCl(){
-        if(hoitNoteImageViewCl != null){
-            hoitNoteImageViewCl.actSelf();
+        if(hoitNoteCLView != null){
+            hoitNoteCLView.actSelf();
         }
+    }
+
+    //对话框相关
+    public void showDialog(){
+        //重置时间选择
+        mTvStartTime.setText("");
+        mTvEndTime.setText("");
+        dialog.show();
+        //设置对话框大小
+        Window window = dialog.getWindow();
+        WindowManager.LayoutParams lp = Objects.requireNonNull(window).getAttributes();
+        lp.gravity = Gravity.BOTTOM ;
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(lp);
+        window.setGravity(Gravity.BOTTOM);
+        //window.getDecorView().setPadding( 0 , 0 , 0 , 0 );
+    }
+
+    public void setBtnActDialog(Button btnActDialog){
+        this.btnActDialog = btnActDialog;
+        btnActDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!ifAnalysing){
+                    showDialog();
+                }
+            }
+        });
+    }
+
+    public void initializeChooseScreenListNodeArrayList(){
+        int i,j,len,len2;
+        ArrayList<String> stringArrayList;
+        chooseScreenListNodeArrayList = new ArrayList<>();
+        chooseScreenListNodeArrayList.add(new ChooseScreenListNode("一级分类",Constants.tallyTableColumn_c1));
+        chooseScreenListNodeArrayList.add(new ChooseScreenListNode("二级分类",Constants.tallyTableColumn_c2));
+        chooseScreenListNodeArrayList.add(new ChooseScreenListNode("账户",Constants.tallyTableColumn_account));
+        chooseScreenListNodeArrayList.add(new ChooseScreenListNode("成员",Constants.tallyTableColumn_member));
+        chooseScreenListNodeArrayList.add(new ChooseScreenListNode("项目",Constants.tallyTableColumn_project));
+        chooseScreenListNodeArrayList.add(new ChooseScreenListNode("商家",Constants.tallyTableColumn_vendor));
+
+        //获取一级分类
+        chooseScreenListNodeArrayList.get(0).content = App.dataBaseHelper.getAllClassification1(false,ActionType.INCOME);
+
+        //获取二级分类
+        stringArrayList = new ArrayList<>();
+        len = chooseScreenListNodeArrayList.get(0).content.size();
+        for(i = 0; i < len;i++){
+            ArrayList<String> classification2List = App.dataBaseHelper.getClassification2(chooseScreenListNodeArrayList.get(0).content.get(i),true,ActionType.INCOME);
+            len2 = classification2List.size();
+            for(j = 0; j < len2; j++){
+                stringArrayList.add(chooseScreenListNodeArrayList.get(0).content.get(i)+"-"+classification2List.get(j));
+            }
+        }
+        chooseScreenListNodeArrayList.get(1).content = stringArrayList;
+
+        //获取账户
+        ArrayList<Account> accountArrayList = App.dataBaseHelper.getAccounts();
+        len = accountArrayList.size();
+        stringArrayList = new ArrayList<>();
+        for(i = 0; i < len;i++){
+            stringArrayList.add(accountArrayList.get(i).getAccountName()+"\n"+accountArrayList.get(i).getAccountCode());
+        }
+        chooseScreenListNodeArrayList.get(2).content = stringArrayList;
+
+        //获取成员
+        chooseScreenListNodeArrayList.get(3).content = App.dataBaseHelper.getThirdParties(ThirdPartyType.MEMBER);
+
+        //获取项目
+        chooseScreenListNodeArrayList.get(4).content = App.dataBaseHelper.getThirdParties(ThirdPartyType.PROJECT);
+
+        //获取商家
+        chooseScreenListNodeArrayList.get(5).content = App.dataBaseHelper.getThirdParties(ThirdPartyType.VENDOR);
+    }
+
+    public void initializeCheckedList(){
+        checkedList = new ArrayList<>();
+        int i,len = chooseScreenListNodeArrayList.size();
+        for(i = 0; i < len;i++){
+            boolean[] booleans = new boolean[chooseScreenListNodeArrayList.get(i).content.size()];
+            checkedList.add(booleans);
+        }
+        firstLevelCheckedList = new boolean [chooseScreenListNodeArrayList.size()];
+    }
+
+    public void getCorrespondingTallies(){
+        int i,j,lenTallies,lenSecondScreen;
+        boolean [] checkedArray;
+        ArrayList<String> content;
+        ArrayList<Tally> removeTallyArrayList =  new ArrayList<>();
+
+        //筛选时间
+        Date startDate = null,endDate = null;
+        String startDateStr,endDateStr;
+        startDateStr = mTvStartTime.getText().toString();
+        if(startDateStr.length() != 0){
+            startDate = Date.valueOf(startDateStr);
+        }
+        endDateStr = mTvEndTime.getText().toString();
+        if(endDateStr.length() != 0){
+            endDate = Date.valueOf(endDateStr);
+        }
+        DataBaseFilter filter = new DataBaseFilter(startDate,endDate,DataBaseFilter.IDInvalid,null,null,null);
+        correspondingTallies = App.dataBaseHelper.getTallies(filter);
+        //筛选其他Screen
+        lenTallies = correspondingTallies.size();
+        for(i = 0; i < lenTallies; i++){
+            Tally tally = correspondingTallies.get(i);
+            //筛选一级分类
+            if(firstLevelCheckedList[0]){
+                checkedArray = checkedList.get(0);
+                lenSecondScreen = checkedArray.length;
+                content = chooseScreenListNodeArrayList.get(0).content;
+                for(j = 0; j < lenSecondScreen ; j++){
+                    if(!checkedArray[j] && tally.getClassification1().equals(content.get(j))){
+                        removeTallyArrayList.add(tally);
+                        break;
+                    }
+                }
+                if(j != lenSecondScreen){
+                    continue;
+                }
+            }
+            //筛选二级分类  "c1-c2"
+            if(firstLevelCheckedList[1]){
+                checkedArray = checkedList.get(1);
+                lenSecondScreen = checkedArray.length;
+                content = chooseScreenListNodeArrayList.get(1).content;
+                String tallyClassification = tally.getClassification1() + "-" + tally.getClassification2();
+                for(j = 0; j < lenSecondScreen ; j++){
+                    if(!checkedArray[j] && tallyClassification.equals(content.get(j))){
+                        removeTallyArrayList.add(tally);
+                        break;
+                    }
+                }
+                if(j != lenSecondScreen){
+                    continue;
+                }
+            }
+            //筛选"账户"  "ACN\nACC"
+            if(firstLevelCheckedList[2]){
+                checkedArray = checkedList.get(2);
+                lenSecondScreen = checkedArray.length;
+                content = chooseScreenListNodeArrayList.get(2).content;
+                Account account = tally.getAccount();
+                String tallyAccount = account.getAccountName() + "\n" + account.getAccountCode();
+                for(j = 0; j < lenSecondScreen ; j++){
+                    if(!checkedArray[j] && tallyAccount.equals(content.get(j))){
+                        removeTallyArrayList.add(tally);
+                        break;
+                    }
+                }
+                if(j != lenSecondScreen){
+                    continue;
+                }
+            }
+            //筛选"成员"
+            if(firstLevelCheckedList[3]){
+                checkedArray = checkedList.get(3);
+                lenSecondScreen = checkedArray.length;
+                content = chooseScreenListNodeArrayList.get(3).content;
+                for(j = 0; j < lenSecondScreen ; j++){
+                    if(!checkedArray[j] && tally.getMember().equals(content.get(j))){
+                        removeTallyArrayList.add(tally);
+                        break;
+                    }
+                }
+                if(j != lenSecondScreen){
+                    continue;
+                }
+            }
+            //筛选"项目"
+            if(firstLevelCheckedList[4]){
+                checkedArray = checkedList.get(4);
+                lenSecondScreen = checkedArray.length;
+                content = chooseScreenListNodeArrayList.get(4).content;
+                for(j = 0; j < lenSecondScreen ; j++){
+                    if(!checkedArray[j] && tally.getProject().equals(content.get(j))){
+                        removeTallyArrayList.add(tally);
+                        break;
+                    }
+                }
+                if(j != lenSecondScreen){
+                    continue;
+                }
+            }
+            //筛选"商家"
+            if(firstLevelCheckedList[5]){
+                checkedArray = checkedList.get(5);
+                lenSecondScreen = checkedArray.length;
+                content = chooseScreenListNodeArrayList.get(5).content;
+                for(j = 0; j < lenSecondScreen ; j++){
+                    if(!checkedArray[j] && tally.getVendor().equals(content.get(j))){
+                        removeTallyArrayList.add(tally);
+                        break;
+                    }
+                }
+            }
+        }
+        //从correspondingTallies中移除不满足的Tally
+        int lenRemove = removeTallyArrayList.size();
+        for(i = 0;i<lenRemove;i++){
+            correspondingTallies.remove(removeTallyArrayList.get(i));
+        }
+    }
+
+    public void initializeDialog(){
+        //选择分析内容对话框相关=============================================================
+        //初始化Screen列表
+        initializeChooseScreenListNodeArrayList();
+        //初始化checked列表
+        initializeCheckedList();
+        chooseScreenList = new ArrayList<>();
+        //建立对话框
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        View view = LayoutInflater.from(context).inflate(R.layout.cam_dialog_choose_screen,null);
+        dialog = builder.setTitle("选择要分析的内容").setView(view).create();
+        //获取，设置Screen-ListView
+        ListView mLvDialogScreen;                   //一级Screen的ListView
+        CAMFirstScreenListAdapter CAMFirstScreenListAdapter;    //一级Screen的ListView的适配器
+        mLvDialogScreen = view.findViewById(R.id.lv_screen);
+        CAMFirstScreenListAdapter = new CAMFirstScreenListAdapter(context);
+        CAMFirstScreenListAdapter.setList(chooseScreenListNodeArrayList);
+        CAMFirstScreenListAdapter.setCheckedList(firstLevelCheckedList,checkedList);
+        CAMFirstScreenListAdapter.setChooseScreenList(chooseScreenList);
+        mLvDialogScreen.setAdapter(CAMFirstScreenListAdapter);
+        //设置开始时间相关
+        mTvStartTime = view.findViewById(R.id.tv_startDate);
+        mTvStartTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //生成一个DatePickerDialog对象，并显示。显示的DatePickerDialog控件可以选择年月日，并设置
+                DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        //修改日历控件的年，月，日
+                        //这里的year,monthOfYear,dayOfMonth的值与DatePickerDialog控件设置的最新值一致
+                        calendar.set(Calendar.YEAR,year);
+                        calendar.set(Calendar.MONTH,month);
+                        calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+                        String string = year + "-" + (month+1) + "-" + dayOfMonth;
+                        mTvStartTime.setText(string);
+                    }
+                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+                datePickerDialog.show();
+            }
+        });
+        //设置结束时间相关
+        mTvEndTime = (TextView) view.findViewById(R.id.tv_endDate);
+        mTvEndTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //生成一个DatePickerDialog对象，并显示。显示的DatePickerDialog控件可以选择年月日，并设置
+                DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        //修改日历控件的年，月，日
+                        //这里的year,monthOfYear,dayOfMonth的值与DatePickerDialog控件设置的最新值一致
+                        calendar.set(Calendar.YEAR,year);
+                        calendar.set(Calendar.MONTH,month);
+                        calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+                        String string = year + "-" + (month+1) + "-" + dayOfMonth;
+                        mTvEndTime.setText(string);
+                    }
+                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+                datePickerDialog.show();
+            }
+        });
+        //确认选择好了需要分析的内容
+        Button mBtnConfirmChooseScreen;             //终止对话框并返回
+        mBtnConfirmChooseScreen = (Button)view.findViewById(R.id.bt_confirmChooseScreen);
+        mBtnConfirmChooseScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.hide();
+                //此处展示出正在分析对话框
+                ifAnalysing = true;
+                getCorrespondingTallies();
+                ArrayList<ContentValues> contentValuesArrayList = ChartAnalysisManager.getContentValuesTallies(correspondingTallies);
+                //设置扇形统计图
+                ArrayList<TallyAnalysisPC> tallyAnalysisPcArrayList = ChartAnalysisManager.analyseTalliesPC(contentValuesArrayList,chooseScreenList);
+                setTallyAnalysisPCListPC(tallyAnalysisPcArrayList,chooseScreenList);
+                //设置折线统计图
+                ArrayList<TallyAnalysisCl> tallyAnalysisClArrayList = ChartAnalysisManager.analyseTalliesCl(contentValuesArrayList);
+                setTallyAnalysisClListCl(tallyAnalysisClArrayList);
+                //Toast.makeText(context,"完成分析",Toast.LENGTH_SHORT).show();
+                ifAnalysing = false;
+            }
+        });
     }
 
 
@@ -372,29 +703,29 @@ public class ChartAnalysisManager {
         return colorList;
     }
     //Pc处理
-    public static ArrayList<TallyAnalysisPc> analyseTalliesPc(ArrayList<ContentValues> contentValuesTallies, ArrayList<String> screenList) {
+    public static ArrayList<TallyAnalysisPC> analyseTalliesPC(ArrayList<ContentValues> contentValuesTallies, ArrayList<String> screenList) {
         if (contentValuesTallies == null || contentValuesTallies.size() == 0) {
             return null;
         } else {
             //基础插入
-            ArrayList<TallyAnalysisPc> tallyAnalysisPcArrayList = new ArrayList<>();
-            TallyAnalysisPc tallyAnalysisPcIncome = new TallyAnalysisPc();
-            tallyAnalysisPcIncome.signName = "收入";
-            tallyAnalysisPcIncome.screen = "总计";
-            tallyAnalysisPcIncome.allMoney = 0;
-            tallyAnalysisPcArrayList.add(tallyAnalysisPcIncome);
+            ArrayList<TallyAnalysisPC> tallyAnalysisPCArrayList = new ArrayList<>();
+            TallyAnalysisPC tallyAnalysisPCIncome = new TallyAnalysisPC();
+            tallyAnalysisPCIncome.signName = "收入";
+            tallyAnalysisPCIncome.screen = "总计";
+            tallyAnalysisPCIncome.allMoney = 0;
+            tallyAnalysisPCArrayList.add(tallyAnalysisPCIncome);
 
-            TallyAnalysisPc tallyAnalysisPcOutcome = new TallyAnalysisPc();
-            tallyAnalysisPcOutcome.signName = "支出";
-            tallyAnalysisPcOutcome.screen = "总计";
-            tallyAnalysisPcOutcome.allMoney = 0;
-            tallyAnalysisPcArrayList.add(tallyAnalysisPcOutcome);
+            TallyAnalysisPC tallyAnalysisPCOutcome = new TallyAnalysisPC();
+            tallyAnalysisPCOutcome.signName = "支出";
+            tallyAnalysisPCOutcome.screen = "总计";
+            tallyAnalysisPCOutcome.allMoney = 0;
+            tallyAnalysisPCArrayList.add(tallyAnalysisPCOutcome);
 
-            TallyAnalysisPc tallyAnalysisPcTransfer = new TallyAnalysisPc();
-            tallyAnalysisPcTransfer.signName = "转账";
-            tallyAnalysisPcTransfer.screen = "总计";
-            tallyAnalysisPcTransfer.allMoney = 0;
-            tallyAnalysisPcArrayList.add(tallyAnalysisPcTransfer);
+            TallyAnalysisPC tallyAnalysisPCTransfer = new TallyAnalysisPC();
+            tallyAnalysisPCTransfer.signName = "转账";
+            tallyAnalysisPCTransfer.screen = "总计";
+            tallyAnalysisPCTransfer.allMoney = 0;
+            tallyAnalysisPCArrayList.add(tallyAnalysisPCTransfer);
 
             int len = contentValuesTallies.size();
             int i;
@@ -402,81 +733,81 @@ public class ChartAnalysisManager {
                 ContentValues contentValuesTally = contentValuesTallies.get(i);
                 String actionType = contentValuesTally.getAsString(Constants.tallyTableColumn_actionType);
                 if(actionType.equals(ActionType.INCOME.toString())){
-                    addTallyIntoNode(contentValuesTally,tallyAnalysisPcIncome,screenList);
+                    addTallyIntoNode(contentValuesTally,tallyAnalysisPCIncome,screenList);
                     if(contentValuesTally.getAsString(Constants.tallyTableColumn_c1).equals("转账收入")){
-                        addTallyIntoNode(contentValuesTally,tallyAnalysisPcTransfer,screenList);
+                        addTallyIntoNode(contentValuesTally,tallyAnalysisPCTransfer,screenList);
                     }
                 }else{
-                    addTallyIntoNode(contentValuesTally,tallyAnalysisPcOutcome,screenList);
+                    addTallyIntoNode(contentValuesTally,tallyAnalysisPCOutcome,screenList);
                     if(contentValuesTally.getAsString(Constants.tallyTableColumn_c1).equals("转账支出")){
-                        addTallyIntoNode(contentValuesTally,tallyAnalysisPcTransfer,screenList);
+                        addTallyIntoNode(contentValuesTally,tallyAnalysisPCTransfer,screenList);
                     }
                 }
             }
             //详细信息统计
-            getDetailedInformation(tallyAnalysisPcArrayList);
-            return tallyAnalysisPcArrayList;
+            getDetailedInformation(tallyAnalysisPCArrayList);
+            return tallyAnalysisPCArrayList;
         }
     }
 
-    private static void addTallyIntoNode(ContentValues contentValuesTally, TallyAnalysisPc tallyAnalysisPc, ArrayList<String> screenList){;
-        TallyAnalysisPc tallyAnalysisPcTmp;
-        tallyAnalysisPc.allMoney += contentValuesTally.getAsDouble(Constants.tallyTableColumn_money);
-        tallyAnalysisPcTmp = tallyAnalysisPc;
-        ArrayList<TallyAnalysisPc> nowTallyAnalysisPcArrayList;
-        nowTallyAnalysisPcArrayList = tallyAnalysisPcTmp.nextScreen;
+    private static void addTallyIntoNode(ContentValues contentValuesTally, TallyAnalysisPC tallyAnalysisPC, ArrayList<String> screenList){;
+        TallyAnalysisPC tallyAnalysisPCTmp;
+        tallyAnalysisPC.allMoney += contentValuesTally.getAsDouble(Constants.tallyTableColumn_money);
+        tallyAnalysisPCTmp = tallyAnalysisPC;
+        ArrayList<TallyAnalysisPC> nowTallyAnalysisPCArrayList;
+        nowTallyAnalysisPCArrayList = tallyAnalysisPCTmp.nextScreen;
         int allLevel = screenList.size();
         int nowLevel = 0;
-        //仅使用tallyAnalysisPcTmp，nowTallyAnalysisPcArrayList
+        //仅使用tallyAnalysisPCTmp，nowTallyAnalysisPCArrayList
         while(nowLevel < allLevel){
-            if(nowTallyAnalysisPcArrayList == null){
-                tallyAnalysisPcTmp.nextScreen = new ArrayList<>();
-                nowTallyAnalysisPcArrayList = tallyAnalysisPcTmp.nextScreen;
+            if(nowTallyAnalysisPCArrayList == null){
+                tallyAnalysisPCTmp.nextScreen = new ArrayList<>();
+                nowTallyAnalysisPCArrayList = tallyAnalysisPCTmp.nextScreen;
             }
             //获取当前正在统计的Screen
             String nowScreen = screenList.get(nowLevel);
             String nowTallySignName = contentValuesTally.getAsString(nowScreen);
             int i,len;
-            len = nowTallyAnalysisPcArrayList.size();
+            len = nowTallyAnalysisPCArrayList.size();
             for(i = 0; i < len;i++){
-                if(nowTallyAnalysisPcArrayList.get(i).signName.equals(nowTallySignName)){
-                    nowTallyAnalysisPcArrayList.get(i).allMoney += contentValuesTally.getAsDouble(Constants.tallyTableColumn_money);
-                    tallyAnalysisPcTmp = nowTallyAnalysisPcArrayList.get(i);
-                    nowTallyAnalysisPcArrayList = tallyAnalysisPcTmp.nextScreen;
+                if(nowTallyAnalysisPCArrayList.get(i).signName.equals(nowTallySignName)){
+                    nowTallyAnalysisPCArrayList.get(i).allMoney += contentValuesTally.getAsDouble(Constants.tallyTableColumn_money);
+                    tallyAnalysisPCTmp = nowTallyAnalysisPCArrayList.get(i);
+                    nowTallyAnalysisPCArrayList = tallyAnalysisPCTmp.nextScreen;
                     break;
                 }
             }
             if(i == len){
-                TallyAnalysisPc newTallyAnalysisPc = new TallyAnalysisPc();
-                newTallyAnalysisPc.screen = nowScreen;
-                newTallyAnalysisPc.allMoney = contentValuesTally.getAsDouble(Constants.tallyTableColumn_money);
-                newTallyAnalysisPc.signName = nowTallySignName;
-                nowTallyAnalysisPcArrayList.add(newTallyAnalysisPc);
-                tallyAnalysisPcTmp = newTallyAnalysisPc;
-                nowTallyAnalysisPcArrayList = tallyAnalysisPcTmp.nextScreen;
+                TallyAnalysisPC newTallyAnalysisPC = new TallyAnalysisPC();
+                newTallyAnalysisPC.screen = nowScreen;
+                newTallyAnalysisPC.allMoney = contentValuesTally.getAsDouble(Constants.tallyTableColumn_money);
+                newTallyAnalysisPC.signName = nowTallySignName;
+                nowTallyAnalysisPCArrayList.add(newTallyAnalysisPC);
+                tallyAnalysisPCTmp = newTallyAnalysisPC;
+                nowTallyAnalysisPCArrayList = tallyAnalysisPCTmp.nextScreen;
             }
             nowLevel += 1;
         }
     }
 
-    private static void getDetailedInformation(ArrayList<TallyAnalysisPc> tallyAnalysisPcArrayList){
+    private static void getDetailedInformation(ArrayList<TallyAnalysisPC> tallyAnalysisPCArrayList){
         double allMoney = 0;
-        int len = tallyAnalysisPcArrayList.size();
+        int len = tallyAnalysisPCArrayList.size();
         int i;
         for(i = 0; i < len; i++){
-            allMoney += tallyAnalysisPcArrayList.get(i).allMoney;
+            allMoney += tallyAnalysisPCArrayList.get(i).allMoney;
         }
         float fanStart = 0.0f;
         ArrayList<Integer> colorList = createColor(len,50);
         for(i = 0; i < len; i++){
-            TallyAnalysisPc nowTallyAnalysisPc = tallyAnalysisPcArrayList.get(i);
-            nowTallyAnalysisPc.percent = nowTallyAnalysisPc.allMoney / allMoney;
-            nowTallyAnalysisPc.selfColor = colorList.get(i);
-            nowTallyAnalysisPc.fanStart = fanStart;
-            nowTallyAnalysisPc.fanEnd = fanStart + (float)(nowTallyAnalysisPc.percent * 360.0D);
-            fanStart = fanStart + (nowTallyAnalysisPc.fanEnd - nowTallyAnalysisPc.fanStart);
-            if(nowTallyAnalysisPc.nextScreen != null){
-                getDetailedInformation(nowTallyAnalysisPc.nextScreen);
+            TallyAnalysisPC nowTallyAnalysisPC = tallyAnalysisPCArrayList.get(i);
+            nowTallyAnalysisPC.percent = nowTallyAnalysisPC.allMoney / allMoney;
+            nowTallyAnalysisPC.selfColor = colorList.get(i);
+            nowTallyAnalysisPC.fanStart = fanStart;
+            nowTallyAnalysisPC.fanEnd = fanStart + (float)(nowTallyAnalysisPC.percent * 360.0D);
+            fanStart = fanStart + (nowTallyAnalysisPC.fanEnd - nowTallyAnalysisPC.fanStart);
+            if(nowTallyAnalysisPC.nextScreen != null){
+                getDetailedInformation(nowTallyAnalysisPC.nextScreen);
             }
         }
     }
@@ -509,7 +840,7 @@ public class ChartAnalysisManager {
         tallyAnalysisClArrayList.add(tallyAnalysisCl);
 
         len = tallyAnalysisClArrayList.size();
-        ArrayList<Integer> integerArrayList = createColor(len,10);
+        ArrayList<Integer> integerArrayList = createColor(len,60);
         for(int i = 0; i < len; i++){
             tallyAnalysisClArrayList.get(i).selfColor = integerArrayList.get(i);
         }

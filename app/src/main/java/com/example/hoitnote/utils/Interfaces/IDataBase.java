@@ -7,13 +7,13 @@ import com.example.hoitnote.models.Tally;
 import com.example.hoitnote.utils.commuications.Config;
 import com.example.hoitnote.utils.commuications.DataBaseFilter;
 import com.example.hoitnote.utils.enums.ActionType;
+import com.example.hoitnote.utils.enums.Theme;
 import com.example.hoitnote.utils.enums.ThirdPartyType;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public interface IDataBase {
-
 
     /*
      * 删除数据库
@@ -44,11 +44,11 @@ public interface IDataBase {
     /*
      * 保存设置
      * */
-    boolean saveConfig(Config config);
+    boolean saveConfig(Config config, Theme theme);
     /*
      * 获取设置
      * */
-    ArrayList<Config> getConfig();
+    ArrayList<Config> getConfigs();
 
 
     /*
@@ -58,7 +58,7 @@ public interface IDataBase {
     ArrayList<String> getClassification2(String classification1,boolean ifActionType,ActionType actionType);
     boolean delClassification1(String classification1,ActionType actionType);
     boolean delClassification2(String classification1, String classification2,ActionType actionType);
-    boolean addClassification(String classification1, String classification2,ActionType actionType);
+    boolean addClassification(String classification1, String classification2, ActionType actionType);
 
     /*
      * Vendor Project Member 选项的增删查

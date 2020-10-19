@@ -2,5 +2,7 @@ package com.example.hoitnote.utils.enums;
 
 public enum ActionType {
     INCOME,
-    OUTCOME
+    OUTCOME,
+    @Deprecated
+    TRANSFER
 }

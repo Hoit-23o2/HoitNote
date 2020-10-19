@@ -1,26 +1,96 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="HoitNote.DefaultTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="HoitNote.DefaultTheme" parent="Theme.AppCompat.DayNight">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorDefaultPrimary</item>
         <item name="colorPrimaryDark">@color/colorDefaultPrimaryDark</item>
+        <item name="colorPrimaryLight">@color/colorDefaultPrimaryLight</item>
         <item name="colorAccent">@color/colorDefaultSecondary</item>
+        <item name="textColorPrimary">@color/colorDefaultTextPrimary</item>
+        <item name="textColorSecondary">@color/colorDefaultTextSecondary</item>
+        <item name="colorDivider">@color/colorDefaultDivider</item>
 
         <!--My custom theme-->
         <item name="android:fitsSystemWindows">true</item>
+        <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds" tools:targetApi="lollipop">true</item>
     </style>
 
-    <style name="HoitNote.SweetTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="HoitNote.SweetTheme" parent="Theme.AppCompat.DayNight">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorSweetPrimary</item>
+        <item name="colorPrimaryLight">@color/colorSweetPrimaryLight</item>
         <item name="colorPrimaryDark">@color/colorSweetPrimaryDark</item>
         <item name="colorAccent">@color/colorSweetSecondary</item>
+        <item name="textColorPrimary">@color/colorSweetTextPrimary</item>
+        <item name="textColorSecondary">@color/colorSweetTextSecondary</item>
+        <item name="colorDivider">@color/colorSweetDivider</item>
 
         <item name="android:fitsSystemWindows">true</item>
+        <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds" tools:targetApi="lollipop">true</item>
     </style>
 
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/splash</item>
+    </style>
+
+    <!--组件样式-->
+    <!--FontIcon样式-->
+    <style name="HoitIcon">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:layout_margin">20dp</item>
+        <item name="android:textColor">?attr/textColorPrimary</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:focusable">true</item>
+        <item name="android:textAlignment" tools:targetApi="jelly_bean_mr1">center</item>
+    </style>
+    <!--输入栏样式-->
+
+    <!--标题字体-->
+
+
+    <style name="HoitGroupText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/textColorPrimary</item>
+    </style>
+
+    <style name="HoitTitleText">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/textColorPrimary</item>
+    </style>
+
+    <style name="TallyMoneyText">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">?attr/textColorPrimary</item>
+    </style>
+
+    <style name="HoitSubTitleText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">?attr/textColorSecondary</item>
+    </style>
+
+    <style name="HoitDividerText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">?attr/colorDivider</item>
+    </style>
+
+    <!--动画相关-->
+    <style name="hzs_window_anim_style">
+        <item name="android:windowEnterAnimation">@anim/hzs_show_anim</item>
+        <item name="android:windowExitAnimation">@anim/hzs_hidden_anim</item>
+    </style>
+    <style name="hzs_popup_vertical_anim_style">
+        <item name="android:windowEnterAnimation">@anim/hzs_popup_anim</item>
+        <item name="android:windowExitAnimation">@anim/hzs_popdown_anim</item>
     </style>
 
 </resources>

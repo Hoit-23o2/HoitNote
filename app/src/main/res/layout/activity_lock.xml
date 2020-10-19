@@ -4,88 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable
-            name="lockViewModel"
-            type="com.example.hoitnote.viewmodels.LockViewModel" />
+
     </data>
+
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/mainFragmentContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-    <!--<LinearLayout
-        android:gravity="center"
-        android:orientation="vertical"
+        android:id="@+id/mainContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".views.locks.LockActivity">
-        <EditText
-            android:text="@={lockViewModel.password}"
-            android:id="@+id/realCodeInput"
-            android:singleLine="true"
-            android:layout_width="1dp"
-            android:layout_height="1dp"
-            android:cursorVisible="false"
-            android:textSize="0sp"
-            android:background="@null"
-            tools:ignore="Autofill,LabelFor,TextFields" />
+        android:orientation="vertical"/>
 
-        <LinearLayout
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:layout_weight="2"
-            android:layout_width="match_parent"
-            android:layout_height="0dp">
 
-            <com.example.hoitnote.customviews.HoitPasswordFrame
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:id="@+id/hoitPasswordFrame1"
-                app:cardElevation="20dp"
-                app:passwordDisplayStyle="*"
-                android:onClick="getFocus"/>
-
-            <com.example.hoitnote.customviews.HoitPasswordFrame
-                android:layout_width="wrap_content"
-                app:cardElevation="20dp"
-                android:layout_margin="20dp"
-                android:id="@+id/hoitPasswordFrame2"
-                android:layout_height="wrap_content"
-                app:passwordDisplayStyle="*"
-                android:onClick="getFocus"/>
-
-            <com.example.hoitnote.customviews.HoitPasswordFrame
-                android:layout_width="wrap_content"
-                app:cardElevation="20dp"
-                android:id="@+id/hoitPasswordFrame3"
-                android:layout_margin="20dp"
-                android:layout_height="wrap_content"
-                app:passwordDisplayStyle="*"
-                android:onClick="getFocus"/>
-
-            <com.example.hoitnote.customviews.HoitPasswordFrame
-                android:layout_width="wrap_content"
-                android:id="@+id/hoitPasswordFrame4"
-                app:cardElevation="20dp"
-                android:layout_margin="20dp"
-                android:layout_height="wrap_content"
-                app:passwordDisplayStyle="*"
-                android:onClick="getFocus"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:gravity="center"
-            android:layout_weight="3"
-            android:layout_width="match_parent"
-            android:layout_height="0dp">
-            <Button
-                android:id="@+id/loginBtn"
-                android:onClick="login"
-                android:layout_margin="40dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/login_btn_hint" />
-        </LinearLayout>
-
-    </LinearLayout>-->
 </layout>

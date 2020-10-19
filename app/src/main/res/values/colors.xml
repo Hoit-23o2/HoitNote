@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorPopupBackground">#C0000000</color>
     <!--Default Color Combination-->
-    <color name="colorDefaultPrimary">#FFFFFF</color>
+    <color name="colorDefaultPrimary">#F6F6F6</color>
     <color name="colorDefaultPrimaryLight">#FFFFFF</color>
-    <color name="colorDefaultPrimaryDark">#B2B2B2</color>
-    <color name="colorDefaultSecondary">#FFEB3B</color>
+    <color name="colorDefaultPrimaryDark">#D3D3D3</color>
+    <color name="colorDefaultSecondary">#FFD100</color>
     <color name="colorDefaultSecondaryLight">#FBF94E</color>
     <color name="colorDefaultSecondaryDark">#FF9800</color>
 
@@ -14,12 +15,12 @@
     <color name="colorDefaultDivider">#BDBDBD</color>
 
     <!--Sweet Color Combination-->
-    <color name="colorSweetPrimary">#FFEB3B</color>
-    <color name="colorSweetPrimaryLight">#FBF94E</color>
-    <color name="colorSweetPrimaryDark">#FF9800</color>
-    <color name="colorSweetSecondary">#FFEB3B</color>
-    <color name="colorSweetSecondaryLight">#FBF94E</color>
-    <color name="colorSweetSecondaryDark">#FF9800</color>
+    <color name="colorSweetPrimary">#F6F6F6</color>
+    <color name="colorSweetPrimaryLight">#FFFFFF</color>
+    <color name="colorSweetPrimaryDark">#D3D3D3</color>
+    <color name="colorSweetSecondary">#EFC7C2</color>
+    <color name="colorSweetSecondaryLight">#FFE8D8</color>
+    <color name="colorSweetSecondaryDark">#EDC7CF</color>
 
     <color name="colorSweetTextAndIcons">#212121</color>
     <color name="colorSweetTextPrimary">#212121</color>

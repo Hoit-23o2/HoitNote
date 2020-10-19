@@ -7,6 +7,14 @@ public class Constants {
     public static String currentTheme = "current_theme";
     public static String theme = "theme";
 
+    public static String defaultColorPrimary = "#F6F6F6";
+    public static String defaultColorAccent = "#FFD100";
+    public static String defaultColorPrimaryLight = "#FFFFFF";
+
+    public static String sweetColorPrimary = "#F6F6F6";
+    public static String sweetColorAccent = "#EFC7C2";
+    public static String sweetColorPrimaryLight = "#FFFFFF";
+
     /*
     * Splash Related:
     * */
@@ -17,18 +25,70 @@ public class Constants {
     /*
     * LockActivity Related:
     * */
-    public static int totalWrongCount = 5;
+    public static int totalWrongCount = 3;
     public static String passwordNotEnough = "密码位数不足";
     public static String passwordWrong = "密码错误";
     public static String passwordWrongTips = "您还剩下错误的机会:";
-    public static String passwordPass = "解锁成功";
+
 
     public static String passwordStatue = "password_statue";
     public static String currentPasswordStatue = "current_password_statue";
-    public static int notPassTime = 10; //十分钟
-    public static int passTime = 0;     //0分钟
+    public static int notPassTime = 10; //10s
+    public static float notPassTimeFraction = 0.0001f; //10s
+    public static int passTime = 0;     //0s
+
+    public static String fingerPrintNotSupportHardWare = "您的系统版本过低，不支持指纹功能";
+    public static String fingerPrintNotEnrolled = "至少录入一个指纹";
+    public static String fingerPrintNotSupport = "您的手机不支持指纹功能";
+
+    public static String patternLock = "手势解锁";
+    public static String traditionalLock = "密码解锁";
+    public static String fingerprintLock = "指纹解锁";
+    public static String patternRegistration = "注册手势";
+    public static String traditionalRegistration = "密码注册";
+    public static String fingerprintRegistration = "指纹功能无法开启";
+    public static String patternSettingTip1 = "请绘制上一次的手势";
+    public static String patternSettingTip2 = "设置新的手势";
+    public static String traditionalSettingTip1 = "请输入上一次的密码";
+    public static String traditionalSettingTip2 = "设置新的密码";
+    public static String fingerprintSetting = "请在安卓系统级别修改指纹";
+
+    public static String registrationSuccess = "注册成功";
+    public static String loginSuccess = "解锁成功";
+    public static String registrationFalse = "注册失败，密码重复";
+    public static String loginFalse = "解锁失败";
+    public static String settingSuccess = "设置成功";
+    public static String settingFalse = "设置失败，密码重复";
+
+    public static String registrationBtnText = "注  册";
+    public static String settingBtnText = "修  改";
+    public static String confirmBtnText = "确  定";
+    public static String loginBtnText = "登  录";
+
+    /*
+    * Main Activity Related
+    * */
+    public static String noneAccountCode = "xxxxxxxx";
+    public static String noneAccountName = "Unkonw";
+
+    public static String accountCodeSameHint = "已有账号";
+    public static String accountCodeNotEnoughHint = "账号位数不足";
+
+    /*
+    * Analysis Activity Related
+    * */
+
+    public static String analysisParamTag = "current_account";
 
 
+    /*
+    * Setting Activity Related
+    * */
+    public static int animDelayDuration = 200;
+
+    /*
+    * Data base related
+    * */
     public static int databaseVersion = 1;
     public static String databaseFileName = "hoit.db";  //数据库文件名
 
@@ -84,4 +144,19 @@ public class Constants {
     public static String AccountColumn_an = "accountName";
     public static String AccountColumn_ac = "accountCode";
 
+
+    /*
+    * BlueTooth Related
+    * */
+
+    public static final int MSG_SEND_SUCCESS = 0;
+    public static final int MSG_SEND_FAILURE = 1;
+    public static final int MSG_RECEIVE_SUCCESS = 2;
+    public static final int MSG_RECEIVE_FAILURE = 3;
+    public static final int MSG_CONNECT_SUCCESS = 4;
+    public static final int MSG_CONNECT_FAILURE = 5;
+    public static final int MSG_LISTEN_FAILURE = 6;
+    public static final int MSG_Is_Connected = 7;
+
+    public static String deviceNotSupport = "设备不支持蓝牙";
 }

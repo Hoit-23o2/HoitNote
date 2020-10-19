@@ -1,5 +1,7 @@
 package com.example.hoitnote.viewmodels;
 
+import android.content.Context;
+
 import androidx.databinding.Bindable;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.LiveData;
@@ -9,8 +11,8 @@ import com.example.hoitnote.models.Sample;
 
 public class SampleViewModel extends BaseViewModel {
 
-    public SampleViewModel(){
-
+    public SampleViewModel(Context context){
+        super(context);
     }
     /*
     * 实现方式一，利用NotifyPropertyChanged

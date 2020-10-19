@@ -65,7 +65,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         sqLiteDatabase.execSQL(Constants.createConfigTable);
         sqLiteDatabase.execSQL(Constants.createThirdPartyTable);
         sqLiteDatabase.execSQL(Constants.createAccountTable);
-        Toast.makeText(mContext,"数据库创建完毕",Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext,"数据库创建完毕", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -178,7 +178,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         actionStr = actionStr + " order by "
                 + Constants.tallyTableColumn_date + " desc, "
                 + Constants.tallyTableColumn_time + " desc";
-        cursor = App.hoitDataBase.rawQuery(actionStr,null);
+        cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
         if(cursor.moveToFirst()){
             do{
                 Tally newTally = new Tally();
@@ -197,7 +197,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 String accountName,accountCode;
                 String accountString = cursor.getString(cursor.getColumnIndex(Constants.tallyTableColumn_account));
                 int i = accountString.indexOf(" ");
-                accountName = accountString.substring(0,i - 1);
+                accountName = accountString.substring(0,i);
                 accountCode = accountString.substring(i + 1);
                 newTally.setAccount(new Account(accountName,accountCode));
 
@@ -224,7 +224,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 + Constants.tallyTableColumn_member + ") "
                 + "values(?,?,?,?,?,?,?,?,?,?,?)";
 
-        App.hoitDataBase.execSQL(actionStr,new Object[]{tally.getMoney(),
+        App.sqLiteDatabase.execSQL(actionStr,new Object[]{tally.getMoney(),
                 tally.getAccount().getAccountName() + " " + tally.getAccount().getAccountCode(),
                 tally.getActionType().ordinal(),
                 tally.getDate(),
@@ -238,7 +238,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
 
         long strid;
         boolean ret = false;
-        Cursor cursor = App.hoitDataBase.rawQuery("select last_insert_rowid() from "+ Constants.tallyTableName, null);
+        Cursor cursor = App.sqLiteDatabase.rawQuery("select last_insert_rowid() from "+ Constants.tallyTableName, null);
         if (cursor.moveToFirst()) {
             strid = cursor.getLong(0);
             tally.setId(strid);
@@ -252,7 +252,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
     public boolean modifyTally(long id, Tally tally)  {
         String actionStr = "select * from " + Constants.tallyTableName + " "
                 + "where id=" + id;
-        Cursor cursor = App.hoitDataBase.rawQuery(actionStr,null);
+        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
         if(cursor.moveToFirst()){
             cursor.close();
             actionStr = "update " + Constants.tallyTableName + " set "
@@ -269,7 +269,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                     + Constants.tallyTableColumn_vendor + "=? "
                     + "where id=" + id;
 
-            App.hoitDataBase.execSQL(actionStr,new Object[]{tally.getMoney(),
+            App.sqLiteDatabase.execSQL(actionStr,new Object[]{tally.getMoney(),
                     tally.getAccount().getAccountName() + " " + tally.getAccount().getAccountCode(),
                     tally.getActionType().ordinal(),
                     tally.getClassification1(),
@@ -291,12 +291,12 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
     public boolean delTally(long id) {
         String actionStr = "select * from " + Constants.tallyTableName + " "
                 + "where id=" + id;
-        Cursor cursor = App.hoitDataBase.rawQuery(actionStr,null);
+        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
         if(cursor.moveToFirst()){
             cursor.close();
             actionStr = "delete from " + Constants.tallyTableName + " "
                     + "where id=" + id;
-            App.hoitDataBase.execSQL(actionStr);
+            App.sqLiteDatabase.execSQL(actionStr);
             return true;
         }else{
             cursor.close();
@@ -310,50 +310,73 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
     }
 
     @Override
-    public boolean saveConfig(Config config) {
+    public boolean saveConfig(Config config, Theme theme) {
         String sql = "select count(*) from "+Constants.configTableName;
-        Cursor cursor = App.hoitDataBase.rawQuery(sql, null);
+        Cursor cursor = App.sqLiteDatabase.rawQuery(sql, null);
         cursor.moveToFirst();
         long count = cursor.getLong(0);
         boolean ret;
-        if(count == 0){
-            ContentValues mContentValues = new ContentValues();
-            mContentValues.put(Constants.configTableColumn_ct,(config.getCurrentTheme()).ordinal());
-            mContentValues.put(Constants.configTableColumn_pw,config.getPassword());
-            mContentValues.put(Constants.configTableColumn_pws,config.getPasswordStyle().ordinal());
-            App.hoitDataBase.insert(Constants.configTableName,null,mContentValues);
-            mContentValues.clear();
-            ret = true;     //添加
-        }else{
-            cursor.close();
-            sql = "select * from "+Constants.configTableName;
-            cursor = App.hoitDataBase.rawQuery(sql, null);
-            cursor.moveToFirst();
-            ret = true;
-            do{
-                int id = cursor.getInt(cursor.getColumnIndex("id"));
-                int passwordStyle = cursor.getInt(cursor.getColumnIndex(Constants.configTableColumn_pws));
-                if(passwordStyle == config.getPasswordStyle().ordinal()){
-                    String actionStr = "update "+Constants.configTableName
-                            + " set " + Constants.configTableColumn_ct + "=" + config.getCurrentTheme().ordinal() + ", "
-                            + Constants.configTableColumn_pw + "=" + "'" + config.getPassword()+ "'" + " "
-                            + "where id="+id;
-                    App.hoitDataBase.execSQL(actionStr);
-                    ret = false;        //覆盖
-                }else{
-                    String actionStr = "update "+Constants.configTableName
-                            + " set " + Constants.configTableColumn_ct + "=" + config.getCurrentTheme().ordinal() + " "
-                            + "where id="+id;
-                    App.hoitDataBase.execSQL(actionStr);
-                }
-            }while(cursor.moveToNext());
-            if(ret){
+        if(config != null){
+            if(count == 0){
                 ContentValues mContentValues = new ContentValues();
                 mContentValues.put(Constants.configTableColumn_ct,(config.getCurrentTheme()).ordinal());
                 mContentValues.put(Constants.configTableColumn_pw,config.getPassword());
                 mContentValues.put(Constants.configTableColumn_pws,config.getPasswordStyle().ordinal());
-                App.hoitDataBase.insert(Constants.configTableName,null,mContentValues);
+                App.sqLiteDatabase.insert(Constants.configTableName,null,mContentValues);
                 mContentValues.clear();
+                ret = true;     //添加
+            }else{
+                cursor.close();
+                sql = "select * from "+Constants.configTableName;
+                cursor = App.sqLiteDatabase.rawQuery(sql, null);
+                cursor.moveToFirst();
+                ret = true;
+                do{
+                    int id = cursor.getInt(cursor.getColumnIndex("id"));
+                    int passwordStyle = cursor.getInt(cursor.getColumnIndex(Constants.configTableColumn_pws));
+                    if(passwordStyle == config.getPasswordStyle().ordinal()){
+                        String password = cursor.getString(cursor.getColumnIndex(Constants.configTableColumn_pw));
+                        if(password.equals(config.getPassword())){
+                            ret = false;        //覆盖
+                        }else{
+                            String actionStr = "update "+Constants.configTableName
+                                    + " set " + Constants.configTableColumn_ct + "=" + config.getCurrentTheme().ordinal() + ", "
+                                    + Constants.configTableColumn_pw + "=" + "'" + config.getPassword()+ "'" + " "
+                                    + "where id="+id;
+                            App.sqLiteDatabase.execSQL(actionStr);
+                        }
+                    }else{
+                        String actionStr = "update "+Constants.configTableName
+                                + " set " + Constants.configTableColumn_ct + "=" + config.getCurrentTheme().ordinal() + " "
+                                + "where id="+id;
+                        App.sqLiteDatabase.execSQL(actionStr);
+                    }
+                }while(cursor.moveToNext());
+                if(ret){
+                    ContentValues mContentValues = new ContentValues();
+                    mContentValues.put(Constants.configTableColumn_ct,(config.getCurrentTheme()).ordinal());
+                    mContentValues.put(Constants.configTableColumn_pw,config.getPassword());
+                    mContentValues.put(Constants.configTableColumn_pws,config.getPasswordStyle().ordinal());
+                    App.sqLiteDatabase.insert(Constants.configTableName,null,mContentValues);
+                    mContentValues.clear();
+                }
+            }
+        }else{
+            if(count == 0){
+                ret = false;     //添加
+            }else{
+                cursor.close();
+                sql = "select * from "+Constants.configTableName;
+                cursor = App.sqLiteDatabase.rawQuery(sql, null);
+                cursor.moveToFirst();
+                ret = true;
+                do{
+                    int id = cursor.getInt(cursor.getColumnIndex("id"));
+                    String actionStr = "update "+Constants.configTableName
+                            + " set " + Constants.configTableColumn_ct + "=" + theme.ordinal() + " "
+                            + "where id="+id;
+                    App.sqLiteDatabase.execSQL(actionStr);
+                }while(cursor.moveToNext());
             }
         }
         cursor.close();
@@ -361,11 +384,11 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
     }
 
     @Override
-    public ArrayList<Config> getConfig() {
+    public ArrayList<Config> getConfigs() {
         Config config;
         ArrayList<Config> configList = new ArrayList<>();
         String sql = "select count(*) from "+Constants.configTableName;
-        Cursor cursor = App.hoitDataBase.rawQuery(sql, null);
+        Cursor cursor = App.sqLiteDatabase.rawQuery(sql, null);
         cursor.moveToFirst();
         long count = cursor.getLong(0);
         cursor.close();
@@ -373,7 +396,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
             return null;
         }
         sql = "select * from "+Constants.configTableName;
-        cursor = App.hoitDataBase.rawQuery(sql, null);
+        cursor = App.sqLiteDatabase.rawQuery(sql, null);
         cursor.moveToFirst();
         do{
             config = new Config();
@@ -398,7 +421,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
             actionStr = "select * from " + Constants.classificationTableName
                     + " order by " + Constants.classificationColumn_c1 +  " asc";
         }
-        Cursor cursor = App.hoitDataBase.rawQuery(actionStr,null);
+        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
         if(cursor.moveToFirst()){
             do{
                 String newClassification1 = cursor.getString(cursor.getColumnIndex(Constants.classificationColumn_c1));
@@ -431,7 +454,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                     + Constants.classificationColumn_c1 + "='" + classification1 + "'"
                     + " order by " + Constants.classificationColumn_c2 +  " asc";
         }
-        Cursor cursor = App.hoitDataBase.rawQuery(actionStr,null);
+        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
         if(cursor.moveToFirst()){
             do{
                 String newClassification2 = cursor.getString(cursor.getColumnIndex(Constants.classificationColumn_c2));
@@ -455,7 +478,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         String actionStr = "select * from " + Constants.classificationTableName + " where "
                 + Constants.classificationColumn_c1 + "='" + classification1 + "' "
                 + "and " + Constants.classificationColumn_actionType + "=" + actionType.ordinal();
-        Cursor cursor = App.hoitDataBase.rawQuery(actionStr,null);
+        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
         boolean ret = true;
         if(!cursor.moveToFirst()){
             ret = false;
@@ -464,7 +487,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         actionStr = "delete from " + Constants.classificationTableName + " where "
                 + Constants.classificationColumn_c1 + "='" + classification1 + "' "
                 + "and " + Constants.classificationColumn_actionType + "=" + actionType.ordinal();
-        App.hoitDataBase.execSQL(actionStr);
+        App.sqLiteDatabase.execSQL(actionStr);
         return ret;
     }
 
@@ -474,7 +497,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 + Constants.classificationColumn_c1 + "='" + classification1 + "' and "
                 + Constants.classificationColumn_c2 + "='" + classification2 + "' and "
                 + Constants.classificationColumn_actionType + "=" + actionType.ordinal();
-        Cursor cursor = App.hoitDataBase.rawQuery(actionStr,null);
+        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
         boolean ret = true;
         if(!cursor.moveToFirst()){
             ret = false;
@@ -484,7 +507,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 + Constants.classificationColumn_c1 + "='" + classification1 + "' and "
                 + Constants.classificationColumn_c2 + "='" + classification2 + "' and "
                 + Constants.classificationColumn_actionType + "=" + actionType.ordinal();
-        App.hoitDataBase.execSQL(actionStr);
+        App.sqLiteDatabase.execSQL(actionStr);
         return ret;
     }
 
@@ -495,7 +518,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 + Constants.classificationColumn_c1 + "='" + classification1 + "' and "
                 + Constants.classificationColumn_c2 + "='" + classification2 + "' and "
                 + Constants.classificationColumn_actionType + "=" + actionType.ordinal();
-        Cursor cursor = App.hoitDataBase.rawQuery(actionStr,null);
+        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
         if(cursor.moveToFirst()){
             ret = false;
         }else{
@@ -504,7 +527,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                     + Constants.classificationColumn_c2 + ", "
                     + Constants.classificationColumn_actionType + ") "
                     + "values(?,?,?)";
-            App.hoitDataBase.execSQL(actionStr,new Object[]{classification1,classification2,actionType.ordinal()});
+            App.sqLiteDatabase.execSQL(actionStr,new Object[]{classification1,classification2,actionType.ordinal()});
         }
         cursor.close();
         return ret;
@@ -514,7 +537,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
     public ArrayList<String> getThirdParties(ThirdPartyType thirdPartyType) {
         String actionStr = "select * from " + Constants.ThirdPartyTableName + " where "
                 + Constants.ThirdPartyColumn_tp + "=" + thirdPartyType.ordinal();
-        Cursor cursor = App.hoitDataBase.rawQuery(actionStr,null);
+        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
         ArrayList<String> thirdPartyList = new ArrayList<>();
         if(cursor.moveToFirst()){
             do{
@@ -532,13 +555,13 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         String actionStr = "select * from " + Constants.ThirdPartyTableName + " where "
                 + Constants.ThirdPartyColumn_tp + "=" + thirdPartyType.ordinal() + " and "
                 + Constants.ThirdPartyColumn_ct + "=?";
-        Cursor cursor = App.hoitDataBase.rawQuery(actionStr,new String[]{field});
+        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,new String[]{field});
         if(cursor.moveToFirst()){
             ret = true;
             actionStr = "delete from " + Constants.ThirdPartyTableName + " where "
                     + Constants.ThirdPartyColumn_tp + "=" + thirdPartyType.ordinal() + " and "
                     + Constants.ThirdPartyColumn_ct + "=?";
-            App.hoitDataBase.execSQL(actionStr,new String[]{field});
+            App.sqLiteDatabase.execSQL(actionStr,new String[]{field});
         }
         cursor.close();
         return ret;
@@ -550,14 +573,14 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         String actionStr = "select * from " + Constants.ThirdPartyTableName + " where "
                 + Constants.ThirdPartyColumn_tp + "=" + thirdPartyType.ordinal() + " and "
                 + Constants.ThirdPartyColumn_ct + "=?";
-        Cursor cursor = App.hoitDataBase.rawQuery(actionStr,new String[]{field});
+        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,new String[]{field});
         if(!cursor.moveToFirst()){
             ret = true;
             actionStr = "insert into " + Constants.ThirdPartyTableName + " ("
                     + Constants.ThirdPartyColumn_tp + ", "
                     + Constants.ThirdPartyColumn_ct + ") "
                     + "values(?,?)";
-            App.hoitDataBase.execSQL(actionStr,new Object[]{thirdPartyType.ordinal(),field});
+            App.sqLiteDatabase.execSQL(actionStr,new Object[]{thirdPartyType.ordinal(),field});
         }
         cursor.close();
         return ret;
@@ -566,7 +589,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
     @Override
     public ArrayList<Account> getAccounts() {
         String actionStr = "select * from " + Constants.AccountTableName;
-        Cursor cursor = App.hoitDataBase.rawQuery(actionStr,null);
+        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
         ArrayList<Account> accountArrayList = new ArrayList<>();
         if(cursor.moveToFirst()){
             do{
@@ -585,12 +608,12 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         boolean ret = false;
         String actionStr = "select * from " + Constants.AccountTableName + " where "
                 + Constants.AccountColumn_ac + "=?";
-        Cursor cursor = App.hoitDataBase.rawQuery(actionStr,new String[]{account.getAccountCode()});
+        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,new String[]{account.getAccountCode()});
         if(cursor.moveToFirst()){
             ret = true;
             actionStr = "delete from " + Constants.AccountTableName + " where "
                     + Constants.AccountColumn_ac + "=?";
-            App.hoitDataBase.execSQL(actionStr,new String[]{account.getAccountCode()});
+            App.sqLiteDatabase.execSQL(actionStr,new String[]{account.getAccountCode()});
         }
         cursor.close();
         return ret;
@@ -601,18 +624,17 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         boolean ret = false;
         String actionStr = "select * from " + Constants.AccountTableName + " where "
                 + Constants.AccountColumn_ac + "=?";
-        Cursor cursor = App.hoitDataBase.rawQuery(actionStr,new String[]{account.getAccountCode()});
+        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,new String[]{account.getAccountCode()});
         if(!cursor.moveToFirst()){
             ret = true;
             actionStr = "insert into " + Constants.AccountTableName + " ("
                     + Constants.AccountColumn_an + ", "
                     + Constants.AccountColumn_ac + ") "
                     + "values(?,?)";
-            App.hoitDataBase.execSQL(actionStr,new Object[]{account.getAccountName(),account.getAccountCode()});
+            App.sqLiteDatabase.execSQL(actionStr,new Object[]{account.getAccountName(),account.getAccountCode()});
         }
         cursor.close();
         return ret;
     }
 
 }
-

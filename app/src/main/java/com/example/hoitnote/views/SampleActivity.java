@@ -19,7 +19,7 @@ public class SampleActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final ActivitySampleBinding binding = DataBindingUtil.setContentView(this,R.layout.activity_sample);
-        final SampleViewModel vm = new SampleViewModel();
+        final SampleViewModel vm = new SampleViewModel(context);
         binding.setVm(vm);
         final int[] i = {0};
         binding.sample1Btn.setOnClickListener(new View.OnClickListener() {

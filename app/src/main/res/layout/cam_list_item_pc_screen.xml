@@ -1,9 +1,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-        <variable
-            name="tally"
-            type="com.example.myproject02.model.Tally" />
+
     </data>
 
     <LinearLayout
@@ -20,7 +18,7 @@
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:layout_marginTop="5dp"
-            android:background="@color/colorAccent"
+            android:background="?attr/colorAccent"
             />
 
         <LinearLayout
@@ -34,8 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:textSize="14sp"
-                android:ellipsize="end"
-                />
+                android:ellipsize="end" />
 
             <TextView
                 android:id="@+id/tv_screen_aands"
@@ -44,9 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:textSize="14sp"
-                android:ellipsize="end"
-                />
-
+                android:ellipsize="end" />
 
         </LinearLayout>
 

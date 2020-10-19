@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.daimajia.swipe.SwipeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="70dp">
+    <!-- Bottom View Start-->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:background="#66ddff00"
+        android:id="@+id/bottom_wrapper"
+        android:layout_width="100dp"
+        android:weightSum="1"
+        android:layout_height="match_parent">
+        <!--What you want to show-->
+        <TextView
+            android:id="@+id/hzs_expand_item_tally_delete"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="删除"
+            android:textSize="24dp"
+            android:textColor="@android:color/white"
+            android:background="@android:color/holo_red_light"/>
+    </LinearLayout>
+    <!-- Bottom View End-->
+
+    <!-- Surface View Start -->
+    <LinearLayout
+        android:background="#ffffff"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!--What you want to show in SurfaceView-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/hzs_expand_item_tally_day"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5"
+                    android:textSize="35dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <TextView
+                    android:id="@+id/hzs_expand_item_tally_weekday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="36dp"
+                    android:text="周二"
+                    android:textSize="20dp"
+                    app:layout_constraintEnd_toEndOf="@+id/hzs_expand_item_tally_day"
+                    app:layout_constraintStart_toStartOf="@+id/hzs_expand_item_tally_day"
+                    app:layout_constraintTop_toTopOf="@+id/hzs_expand_item_tally_day" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <ImageView
+                android:id="@+id/hzs_expand_item_tally_icon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="68dp"
+                android:layout_marginLeft="68dp"
+                android:src="@drawable/hzs_food"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@android:color/holo_blue_light" />
+
+            <TextView
+                android:id="@+id/hzs_expand_item_tally_classname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:text="早餐"
+                android:textSize="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/hzs_expand_item_tally_icon"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.372" />
+
+            <TextView
+                android:id="@+id/hzs_expand_item_tally_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="07:30"
+                android:textSize="15dp"
+                app:layout_constraintStart_toStartOf="@+id/hzs_expand_item_tally_classname"
+                app:layout_constraintTop_toBottomOf="@+id/hzs_expand_item_tally_classname" />
+
+            <TextView
+                android:id="@+id/hzs_expand_item_tally_account"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:text="现金"
+                android:textSize="15dp"
+                app:layout_constraintBottom_toBottomOf="@+id/hzs_expand_item_tally_time"
+                app:layout_constraintStart_toEndOf="@+id/hzs_expand_item_tally_time"
+                app:layout_constraintTop_toBottomOf="@+id/hzs_expand_item_tally_classname"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <TextView
+                android:id="@+id/hzs_expand_item_tally_money"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="24dp"
+                android:layout_marginRight="24dp"
+                android:text="50.0"
+                android:textSize="45dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+    <!-- Surface View End -->
+
+
+</com.daimajia.swipe.SwipeLayout>
