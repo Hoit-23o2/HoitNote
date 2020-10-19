@@ -9,4 +9,6 @@ public interface MessageConstants {
     public static final int MSG_CONNECT_FAILURE = 5;
     public static final int MSG_LISTEN_FAILURE = 6;
     public static final int MSG_Is_Connected = 7;
+    public static final int MSG_Get_SENDINFO = 8;
+    public static final int MSG_Get_RECEIVEINFO = 9;
 }

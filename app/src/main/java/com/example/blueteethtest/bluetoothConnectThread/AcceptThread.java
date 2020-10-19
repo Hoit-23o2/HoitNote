@@ -20,8 +20,11 @@ import static com.example.blueteethtest.bluetoothInterface.MessageConstants.MSG_
 //蓝牙连接线程
 public class AcceptThread extends Thread {
     private final BluetoothServerSocket mmServerSocket;
+    private BluetoothSocket socket;
+
     private static String TAG = "Bluetooth Device";
     private static String Name = "My debug server";
+
     private ReceiveMessageThread receiveMessageThread;
     private static MyHandler mHandler;
     private TextView messageText;//显示消息的文本栏
@@ -48,15 +51,16 @@ public class AcceptThread extends Thread {
     public void run() {
         BluetoothSocket socket = null;
         // Keep listening until exception occurs or a socket is returned.
-        while (!BluetoothActivity.sendFinished){
+        while (!BluetoothActivity.isSendFinished()){
             try{
                 socket = mmServerSocket.accept();//接收连接
                 if(socket!=null){
+                    BluetoothActivity.setSocket(socket);
                     //开启新线程接受数据
-                    receiveMessageThread = new ReceiveMessageThread(socket,this.mHandler,messageText);
+                    receiveMessageThread = new ReceiveMessageThread(socket,this.mHandler);
                     receiveMessageThread.start();
                 }
-                mmServerSocket.close();
+                //mmServerSocket.close();
 
             }catch (IOException e){
                 Log.e(TAG, "Socket's accept() method failed", e);
@@ -75,4 +79,9 @@ public class AcceptThread extends Thread {
             Log.e(TAG, "Could not close the connect socket", e);
         }
     }
+
+    public ReceiveMessageThread getReceiveMessageThread() {
+        return receiveMessageThread;
+    }
+
 }

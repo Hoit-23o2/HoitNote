@@ -7,8 +7,10 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +31,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.blueteethtest.ObejctToSend.Account;
+import com.example.blueteethtest.ObejctToSend.ReceiveInfo;
+import com.example.blueteethtest.ObejctToSend.SendInfo;
 import com.example.blueteethtest.ObejctToSend.Tally;
 import com.example.blueteethtest.bluetoothConnectThread.AcceptThread;
 import com.example.blueteethtest.bluetoothConnectThread.ClientThread;
@@ -36,8 +40,10 @@ import com.example.blueteethtest.bluetoothConnectThread.ClientThread;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -45,8 +51,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-import static com.example.blueteethtest.bluetoothConnectThread.ClientThread.os;
 import static com.example.blueteethtest.bluetoothInterface.MessageConstants.MSG_CONNECT_SUCCESS;
+import static com.example.blueteethtest.bluetoothInterface.MessageConstants.MSG_Get_RECEIVEINFO;
+import static com.example.blueteethtest.bluetoothInterface.MessageConstants.MSG_Get_SENDINFO;
 import static com.example.blueteethtest.bluetoothInterface.MessageConstants.MSG_Is_Connected;
 import static com.example.blueteethtest.bluetoothInterface.MessageConstants.MSG_LISTEN_FAILURE;
 import static com.example.blueteethtest.bluetoothInterface.MessageConstants.MSG_RECEIVE_FAILURE;
@@ -58,10 +65,30 @@ import static java.lang.Thread.activeCount;
 public class BluetoothActivity extends AppCompatActivity {
     private static final int REQUEST_ENABLE_BT = 2;//自行定义的局部变量，检查返回call的
     private static final int REQUEST_ACCESS_COARSE_LOCATION = 1;
-    private static boolean isConnected = false;
-    public static int testArrayIndex=0;
-    public static boolean sendFinished = false;
-    private BluetoothAdapter bluetoothAdapter;//Im蓝牙适配器
+
+    public static void setConnectState(boolean connectState) {
+        BluetoothActivity.connectState = connectState;
+    }
+
+    public static boolean isConnectState() {
+        return connectState;
+    }
+
+    private static boolean connectState = false;
+
+    public static boolean isSendFinished() {
+        return sendFinished;
+    }
+    public static void setSendFinished(boolean sendFinished) {
+        BluetoothActivity.sendFinished = sendFinished;
+    }
+    private static boolean sendFinished = false;
+
+    public static BluetoothAdapter getBluetoothAdapter() {
+        return bluetoothAdapter;
+    }
+
+    private static BluetoothAdapter bluetoothAdapter;//Im蓝牙适配器
 
     private ClientThread clientThread;//客户端线程——发送数据
     private AcceptThread acceptThread;//服务器端线程——接受数据
@@ -77,6 +104,38 @@ public class BluetoothActivity extends AppCompatActivity {
     public ArrayList<BluetoothDevice> foundDeviceList= new ArrayList<>();
     public Set<BluetoothDevice> foundDeviceSet = new HashSet<>();
 
+    //接受的设备
+    private ArrayList<Tally> tallies;
+
+    //SOCKET
+    private static BluetoothSocket socket = null;
+
+    public static BluetoothSocket getSocket() {
+        return socket;
+    }
+
+    public static void setSocket(BluetoothSocket socket) {
+        BluetoothActivity.socket = socket;
+    }
+
+    //交互消息
+    private static SendInfo sendInfo;
+    public SendInfo getSendInfo() {
+        return sendInfo;
+    }
+    public void setSendInfo(SendInfo sendInfo) {
+        this.sendInfo = sendInfo;
+    }
+
+    private static ReceiveInfo receiveInfo;
+    public ReceiveInfo getReceiveInfo() {
+        return receiveInfo;
+    }
+    public void setReceiveInfo(ReceiveInfo receiveInfo) {
+        this.receiveInfo = receiveInfo;
+    }
+
+
     //页面控件变量
     private Button sendn;
     private Button scann;
@@ -85,18 +144,28 @@ public class BluetoothActivity extends AppCompatActivity {
     private Button closen;
     private Button beChecked;
     private Toast toast;
-    private TextView messageText;
+    private static TextView messageText;
+
+
 
     //Im子线程传回信息的Handler
     //用于发送各种Toast
-    public final  MyHandler mHandler = new MyHandler(this);
+    public final  MyHandler mHandler = new MyHandler(this, tallies);
     public static class MyHandler extends Handler{
         private final WeakReference<BluetoothActivity> mActivity;
-
+        private ArrayList<Tally> tallies = new ArrayList<>();
         public MyHandler(BluetoothActivity activity){
             mActivity = new WeakReference<>(activity);
         }
 
+        public MyHandler(BluetoothActivity activity, ArrayList<Tally> tallies){
+            mActivity = new WeakReference<>(activity);
+            this.tallies = tallies;
+        }
+
+        public ArrayList<Tally> getTallies(){
+            return tallies;
+        }
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
@@ -113,19 +182,38 @@ public class BluetoothActivity extends AppCompatActivity {
                     break;
                 case MSG_RECEIVE_SUCCESS:
                     Toast.makeText(activity,"服务端接受成功",Toast.LENGTH_SHORT).show();
+                    //修改状态
+                    setSendFinished(true);
+                    //生成回复信息
+                    ReceiveInfo receiveInfo = new ReceiveInfo("接受成功");
+                    activity.setReceiveInfo(receiveInfo);
+                    //发送回复信息
+                    activity.sendReply();
+                    //展示收到的信息
+                    this.tallies = activity.acceptThread.getReceiveMessageThread().getTallies();
+                    activity.messageText.setText(tallies.get(1).getAccount().getAccountName());
                     break;
                 case MSG_RECEIVE_FAILURE:
                     Toast.makeText(activity,"服务端接受失败",Toast.LENGTH_SHORT).show();
+
                     break;
                 case MSG_CONNECT_SUCCESS:
                     Toast.makeText(activity,"客户端连接成功",Toast.LENGTH_SHORT).show();
-                    activity.isConnected = true;
+                    setConnectState(true);
                     break;
                 case MSG_LISTEN_FAILURE:
                     Toast.makeText(activity,"服务端监听线程开启失败",Toast.LENGTH_SHORT).show();
                     break;
                 case MSG_Is_Connected:
                     Toast.makeText(activity,"应用已经连接成功",Toast.LENGTH_SHORT).show();
+                    break;
+                case MSG_Get_SENDINFO:
+                    activity.setSendInfo(activity.acceptThread.getReceiveMessageThread().getSendInfo());
+                    break;
+                case MSG_Get_RECEIVEINFO:
+                    Toast.makeText(activity,"对方已接受到消息",Toast.LENGTH_SHORT).show();
+                    activity.setReceiveInfo(activity.clientThread.getReceiveMessageThread().getReceiveInfo());
+                    activity.messageText.setText(activity.getReceiveInfo().getMessage());
                     break;
             }
         }
@@ -137,6 +225,10 @@ public class BluetoothActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blue_teeth);
+
+        //初始化状态
+        setConnectState(false);
+        setSendFinished(false);
 
         sendn = (Button) findViewById(R.id.send);
         scann = (Button) findViewById(R.id.scan);
@@ -231,9 +323,6 @@ public class BluetoothActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BluetoothDevice device = pairedDeviceList.get(position);
-                //ClientThread clientThread = new ClientThread(device, BluetoothActivity.this);
-                //ClientThread clientThread = new ClientThread(device, mHandler);
-                //clientThread.start();
                 connectDevice(device);
             }
         });
@@ -242,9 +331,6 @@ public class BluetoothActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BluetoothDevice device = foundDeviceList.get(position);
-                //ClientThread clientThread = new ClientThread(device, BluetoothActivity.this);
-                //ClientThread clientThread = new ClientThread(device, mHandler);
-                //clientThread.start();
                 connectDevice(device);
             }
         });
@@ -288,13 +374,12 @@ public class BluetoothActivity extends AppCompatActivity {
                 tallies.add(tally1);
                 tallies.add(tally2);
                 tallies.add(tally3);
-                sendArrayList(tallies);
-                testArrayIndex = (testArrayIndex+1)%3;
+                sendObject(tallies);
+
             }
         });
         applypermission();
     }
-
 
     //Im搜索可用但未配对蓝牙设备，官方文件是放在onCreate外面
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -337,6 +422,16 @@ public class BluetoothActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();//解除注册
         unregisterReceiver(receiver);
+        releaseAllThread();
+    }
+
+    /**
+     *
+     */
+    private static void releaseAllThread(){
+        BluetoothActivity.setSendFinished(true);
+        BluetoothActivity.setConnectState(false);
+
     }
 
     /**
@@ -459,11 +554,8 @@ public class BluetoothActivity extends AppCompatActivity {
      */
     public void closeBluetooth(){
         if(bluetoothAdapter.isEnabled()){
-            //关闭蓝牙
             bluetoothAdapter.disable();
-            //toast = Toast.makeText(BluetoothActivity.this,"蓝牙关闭成功",Toast.LENGTH_SHORT);
-            //toast.show();
-            //清楚设别列表
+
             pairedAdapter.clear();
             pairedAdapter.notifyDataSetChanged();
             foundAdapter.clear();
@@ -498,16 +590,13 @@ public class BluetoothActivity extends AppCompatActivity {
      * @param device
      */
     public void connectDevice(BluetoothDevice device){
-        /*
-        if(!isConnected){
-            ClientThread clientThread = new ClientThread(device, mHandler);
-            clientThread.start();
 
-        }else{
-            mHandler.obtainMessage(MSG_Is_Connected).sendToTarget();
-        }
-
-         */
+//        if(!isConnectState()){
+//            clientThread = new ClientThread(device, mHandler);
+//            clientThread.start();
+//        }else{
+//            mHandler.obtainMessage(MSG_Is_Connected).sendToTarget();
+//        }
         clientThread = new ClientThread(device, mHandler);
         clientThread.start();
     }
@@ -533,8 +622,10 @@ public class BluetoothActivity extends AppCompatActivity {
         }
     }
 
+    /***************************            这部分用于传输               *********************************/
+
     /**
-     * 向服务器端发送数据
+     * 向服务器端发送字符串
      * @param msg 发送的信息
      */
     public void sendMessage(String msg){
@@ -551,7 +642,7 @@ public class BluetoothActivity extends AppCompatActivity {
     }
 
     /**
-     *向服务器端发送一个数据对象
+     * Im向服务器端发送一个数据对象
      * @param object 要传的参数
      */
     public void sendObject(final Object object){
@@ -568,21 +659,24 @@ public class BluetoothActivity extends AppCompatActivity {
     }
 
     /**
-     * 向服务器端发送数据对象列表
-     * @param arrayList
+     * 发送数据  发送方 -> 反馈方
+     * @param data
      */
-    public void sendArrayList(final ArrayList arrayList){
-        sendFinished = false;
-        new Thread(new Runnable() {
-            private MyHandler mHandler;
-            private byte[] bytes = new byte[]{};
-            @Override
-            public void run() {
-                bytes = toByteArray(arrayList);
-                writeByte(bytes);
-            }
-        }).start();
+    public void sendDataPackage(final Object data){
+        sendObject(sendInfo);//先发送 数据信息
+        sendObject(data); //后发送 数据
     }
+
+
+    /**
+     * Im传输结束后，反馈方 ->发送方
+     */
+    public void sendReply(){
+        sendObject(receiveInfo);
+    }
+
+
+    /***************************            这部分用于转换               *********************************/
 
     /**
      * Im可序列化object转比特流
@@ -680,6 +774,7 @@ public class BluetoothActivity extends AppCompatActivity {
      * 调用前必须先开启ClientThread，并且连接到远端设备的服务器
      */
     public  void writeMsg(String msg){
+        OutputStream os = clientThread.getOs();
         if(os!=null){
             try {
                 byte [] datatset= msg.getBytes("utf-8");
@@ -699,6 +794,13 @@ public class BluetoothActivity extends AppCompatActivity {
      * 调用前必须先开启ClientThread，并且连接到远端设备的服务器
      */
     public void writeByte(byte[] bytes){
+        OutputStream os = null;
+        if(clientThread!=null){
+            os = clientThread.getOs();
+        }else{
+            os = acceptThread.getReceiveMessageThread().getOs();
+        }
+
         if(os!=null){
             try {
                 byte [] datatset= bytes;
@@ -711,6 +813,7 @@ public class BluetoothActivity extends AppCompatActivity {
             }
         }
     }
+
 
     /***  这部分用于parcel  ***/
 
