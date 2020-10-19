@@ -9,8 +9,15 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.databinding.DataBindingUtil;
+
+import com.daimajia.swipe.SwipeLayout;
 import com.example.hoitnote.R;
+import com.example.hoitnote.databinding.HzsExpandItemDayMenuBinding;
+
+import com.example.hoitnote.databinding.HzsExpandItemTallyBinding;
 import com.example.hoitnote.models.flow.HzsDayData;
+import com.example.hoitnote.models.flow.HzsTally;
 import com.example.hoitnote.utils.App;
 import com.example.hoitnote.views.flow.HistoryActivity;
 
@@ -67,83 +74,68 @@ public class HzsThirdExpandableListViewAdapter extends BaseExpandableListAdapter
     @Override
     public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
         DayTotalHolder holder = null;
+        HzsExpandItemDayMenuBinding binding = null;
         if(view == null){
+            binding = DataBindingUtil.inflate(LayoutInflater.from(context),R.layout.hzs_expand_item_day_menu,viewGroup,false);
+            view = binding.getRoot();
             holder = new DayTotalHolder();
-            view = inflater.inflate(R.layout.hzs_expand_item_main_menu,viewGroup,false);
-            holder.day = (TextView)view.findViewById(R.id.hzs_expand_item_main_menu_first_header);
-            holder.weekday = (TextView)view.findViewById(R.id.hzs_expand_item_main_menu_second_header);
-            holder.balance = (TextView)view.findViewById(R.id.hzs_expand_item_main_menu_balance);
-            holder.income = (TextView)view.findViewById(R.id.hzs_expand_item_main_menu_income);
-            holder.outcome = (TextView)view.findViewById(R.id.hzs_expand_item_main_menu_outcome);
+            holder.binding = binding;
             view.setTag(holder);
         }else{
-            holder = (DayTotalHolder) view.getTag();
+            holder = (DayTotalHolder)view.getTag();
         }
-        holder.day.setText(days.get(i).getDay());
-        holder.weekday.setText(days.get(i).getWeekday());
-        holder.balance.setText(days.get(i).getBalance());
-        holder.income.setText(days.get(i).getIncome());
-        holder.outcome.setText(days.get(i).getOutcome());
+        holder.binding.setHzsDayData(days.get(i));
         return view;
     }
 
     @Override
     public View getChildView(final int i, final int i1, boolean b, View view, ViewGroup viewGroup) {
-        ThirdHolder holder = null;
+
+        HzsSecondExpandableListViewAdapter.ThirdHolder holder = null;
+        HzsExpandItemTallyBinding binding = null;
+        TextView delete = null;
         if(view == null){
-            holder = new ThirdHolder();
-            view = inflater.inflate(R.layout.hzs_expand_item_tally,viewGroup,false);
-            holder.account = (TextView)view.findViewById(R.id.hzs_expand_item_tally_account);
-            holder.day = (TextView)view.findViewById(R.id.hzs_expand_item_tally_day);
-            holder.weekday = (TextView)view.findViewById(R.id.hzs_expand_item_tally_weekday);
-            holder.icon = (ImageView)view.findViewById(R.id.hzs_expand_item_tally_icon);
-            holder.classname = (TextView)view.findViewById(R.id.hzs_expand_item_tally_classname);
-            holder.time = (TextView)view.findViewById(R.id.hzs_expand_item_tally_time);
-            holder.money = (TextView)view.findViewById(R.id.hzs_expand_item_tally_money);
-            holder.delete = (TextView)view.findViewById(R.id.hzs_expand_item_tally_delete);
+
+            binding = DataBindingUtil.inflate(LayoutInflater.from(context),R.layout.hzs_expand_item_tally,viewGroup,false);
+            holder = new HzsSecondExpandableListViewAdapter.ThirdHolder(binding);
+            view = binding.getRoot();
             view.setTag(holder);
+
         }else{
-            holder = (ThirdHolder)view.getTag();
+            holder = (HzsSecondExpandableListViewAdapter.ThirdHolder)view.getTag();
         }
-        holder.day.setText(String.valueOf(days.get(i).getData().get(i1).getDate().getDate()));
-        @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat formatter = new SimpleDateFormat("E");
-        String weekday = formatter.format(days.get(i).getData().get(i1).getDate());
-        holder.weekday.setText(weekday);
-        if(!days.get(i).getData().get(i1).getClassification2().equals("无")){
-            holder.classname.setText(days.get(i).getData().get(i1).getClassification2());
-        }else{
-            holder.classname.setText(days.get(i).getData().get(i1).getClassification1());
-        }
-        holder.time.setText(days.get(i).getData().get(i1).getTime().toString());
-        holder.account.setText(days.get(i).getData().get(i1).getAccount().getAccountName());
-        holder.money.setText(String.valueOf(days.get(i).getData().get(i1).getMoney()));
+        holder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
+        holder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, holder.swipeLayout.findViewWithTag("bottom"));
+        holder.binding.setTally(new HzsTally(days.get(i).getData().get(i1)));
+        final HzsSecondExpandableListViewAdapter.ThirdHolder finalHolder = holder;
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 App.dataBaseHelper.delTally(days.get(i).getData().get(i1).getId());
-                HistoryActivity.getInstance().refreshData();
+                days.get(i).getData().remove(i1);
+                days.get(i).refreshData();
+                if(days.get(i).getData().size() == 0){
+                    days.remove(i);
+                }
+                notifyDataSetChanged();
+                HistoryActivity.getInstance().refreshMainData();
             }
         });
         return view;
     }
 
     static class DayTotalHolder{
-        TextView day;
-        TextView weekday;
-        TextView balance;
-        TextView income;
-        TextView outcome;
+        HzsExpandItemDayMenuBinding binding;
     }
     static class ThirdHolder{
-        TextView day;
-        TextView weekday;
-        ImageView icon;
-        TextView classname;
-        TextView time;
-        TextView account;
-        TextView money;
+        HzsExpandItemTallyBinding binding;
         TextView delete;
+        SwipeLayout swipeLayout;
+        public ThirdHolder(HzsExpandItemTallyBinding binding){
+            this.binding = binding;
+            this.delete = (TextView)binding.getRoot().findViewById(R.id.hzs_expand_item_tally_delete);
+            this.swipeLayout = (SwipeLayout) binding.getRoot().findViewById(R.id.swipe);
+        }
     }
 
     @Override

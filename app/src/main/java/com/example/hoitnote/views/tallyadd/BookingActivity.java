@@ -7,6 +7,8 @@ import androidx.viewpager.widget.ViewPager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -18,10 +20,14 @@ import android.widget.Toolbar;
 import com.example.hoitnote.BaseActivity;
 import com.example.hoitnote.adapters.tallies.HzsPagerAdapter;
 import com.example.hoitnote.R;
+import com.example.hoitnote.models.Account;
 import com.example.hoitnote.models.Tally;
 import com.example.hoitnote.utils.App;
 import com.example.hoitnote.utils.constants.Constants;
+import com.example.hoitnote.utils.enums.BookingType;
 import com.example.hoitnote.utils.helpers.DataBaseHelper;
+import com.example.hoitnote.utils.helpers.NavigationHelper;
+import com.example.hoitnote.utils.helpers.ToastHelper;
 import com.example.hoitnote.views.flow.HistoryActivity;
 import com.google.android.material.tabs.TabLayout;
 
@@ -40,7 +46,8 @@ public class BookingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booking);
-
+        Account account = (Account)NavigationHelper.getNavigationParameter(this,Constants.mainParamTag);
+        ToastHelper.showToast(context,account.getAccountName(),Toast.LENGTH_SHORT);
         ActionBarInit();
         ViewPagerInit();
     }
@@ -53,9 +60,9 @@ public class BookingActivity extends BaseActivity {
         tab_title_list.add("收入");
         tab_title_list.add("转账");
 
-        outcomeFragment = new BookingOutcomeFragment();
-        incomeFragment = new BookingIncomeFragment();
-        transferFragment = new BookingTransferFragment();
+        outcomeFragment = new BookingOutcomeFragment(BookingType.OUTCOME);
+        incomeFragment = new BookingIncomeFragment(BookingType.INCOME);
+        transferFragment = new BookingTransferFragment(BookingType.TRANSFER);
 
         fragment_list.add(outcomeFragment);
         fragment_list.add(incomeFragment);
@@ -71,26 +78,39 @@ public class BookingActivity extends BaseActivity {
     private void ActionBarInit(){
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); //Enable自定义的View
-            actionBar.setCustomView(R.layout.actionbar_booking);  //绑定自定义的布局：actionbar_layout.xml
+            //actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); //Enable自定义的View
+            //actionBar.setCustomView(R.layout.actionbar_booking);  //绑定自定义的布局：actionbar_layout.xml
+            actionBar.setTitle("记一笔");
             actionBar.setDisplayHomeAsUpEnabled(true);
-            /*
-             *绑定 控件
-             * */
-            ImageButton saveButton = (ImageButton)actionBar.getCustomView().findViewById(R.id.hzs_booking_save);
 
-            /*
-             * 定义 控件的行为
-             * */
-
+            /*ImageButton saveButton = (ImageButton)actionBar.getCustomView().findViewById(R.id.hzs_booking_save);
             saveButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     saveTally();
 
                 }
-            });
+            });*/
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.hzs_booking_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.hzs_booking_menu_save:
+                saveTally();
+                break;
+        }
+        return true;
     }
 
     public void saveTally(){
@@ -109,6 +129,7 @@ public class BookingActivity extends BaseActivity {
         }
         Intent intent = new Intent(this, HistoryActivity.class);
         startActivity(intent);
+        finish();
     }
 
     @Override

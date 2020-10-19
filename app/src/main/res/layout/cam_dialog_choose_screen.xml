@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="20dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_startDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="开始时间(未限制)"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            android:textSize="24sp"
+            android:background="#E0E0E0"/>
+
+        <TextView
+            android:id="@+id/tv_endDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="结束时间(未限制)"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            android:textSize="24sp"
+            android:background="#E0E0E0"/>
+
+        <ListView
+            android:id="@+id/lv_screen"
+            android:layout_width="match_parent"
+            android:dividerHeight="2dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/bt_confirmChooseScreen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="确认选择" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

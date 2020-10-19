@@ -81,7 +81,15 @@ public class HzsDayData {
         this.day = String.valueOf(data.get(0).getDate().getDate());
         SimpleDateFormat formatter = new SimpleDateFormat("E");
         this.weekday = formatter.format(data.get(0).getDate().getDate());
-
+        refreshData();
+        this.balance = bal.toString();
+        this.income = in.toString();
+        this.outcome = out.toString();
+    }
+    public void refreshData(){
+        bal = 0.0;
+        out = 0.0;
+        in = 0.0;
         for(int i = 0;i < data.size();i++){
 
             if(data.get(i).getActionType() == ActionType.INCOME){

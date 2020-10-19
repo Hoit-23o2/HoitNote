@@ -7,6 +7,7 @@ import com.example.hoitnote.models.Tally;
 import com.example.hoitnote.utils.commuications.Config;
 import com.example.hoitnote.utils.commuications.DataBaseFilter;
 import com.example.hoitnote.utils.enums.ActionType;
+import com.example.hoitnote.utils.enums.IconType;
 import com.example.hoitnote.utils.enums.Theme;
 import com.example.hoitnote.utils.enums.ThirdPartyType;
 
@@ -70,4 +71,8 @@ public interface IDataBase {
     ArrayList<Account> getAccounts();
     boolean delAccount(Account account);
     boolean addAccount(Account account);
+
+    String getIconInformation(String iconName, IconType iconType);
+    boolean addIconInformation(String iconName, IconType iconType, String iconCode);
+    boolean delIconInformation(String iconName,IconType iconType);
 }

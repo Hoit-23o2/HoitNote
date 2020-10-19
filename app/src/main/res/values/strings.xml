@@ -40,4 +40,5 @@
     <string name="chart_cl_week">周</string>
     <string name="chart_cl_day">日</string>
     <string name="chart_cl_filter_hint">—查看方式—</string>
+    <string name="confirm_hint">确认</string>
 </resources>

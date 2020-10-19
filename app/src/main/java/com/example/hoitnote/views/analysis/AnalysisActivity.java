@@ -54,31 +54,11 @@ public class AnalysisActivity extends BaseActivity {
         fragmentTransaction.add(binding.mainContainer.getId(), analysisFragment).commit();
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            /*调用统计图*/
-            /*
-            chartAnalysisManager.setListViewPC(binding.legends);
+        initActivity();
+    }
 
-            chartAnalysisManager.setHoitNotePCView(binding.circleChart);
-            chartAnalysisManager.actImageViewPC();
-
-            chartAnalysisManager.setHoitNoteCLView(binding.linearChart);
-            chartAnalysisManager.actImageViewCl();
-
-
-            ArrayList<ContentValues> contentValuesArrayList = ChartAnalysisManager.getContentValuesTallies(
-                    App.dataBaseHelper.getTallies(null)
-            );
-
-            final ArrayList<TallyAnalysisPC> tallyAnalysisPCs = ChartAnalysisManager.analyseTalliesPC(contentValuesArrayList, new ArrayList<String>(
-                    Arrays.asList(Constants.tallyTableColumn_c1, Constants.tallyTableColumn_c2)
-            ));
-            final ArrayList<TallyAnalysisCl> tallyAnalysisCls = ChartAnalysisManager.analyseTalliesCl(contentValuesArrayList);
-
-            chartAnalysisManager.setTallyAnalysisPCListPC(tallyAnalysisPCs);
-            chartAnalysisManager.setTallyAnalysisClListCl(tallyAnalysisCls);*/
-
-        }
+    public void initActivity(){
+        showBackButton();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

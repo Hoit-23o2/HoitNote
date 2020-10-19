@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="hzsYearData"
+            type="com.example.hoitnote.models.flow.HzsYearData" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/colorSweetPrimaryDark"
+        app:layout_constraintBottom_toTopOf="parent" />
+    <TextView
+        android:id="@+id/hzs_expand_item_sub_menu_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
+        android:text="2020年"
+        android:textSize="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/hzs_expand_item_sub_menu_jieyu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="144dp"
+        android:layout_marginLeft="144dp"
+        android:text="结余"
+        android:textSize="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/hzs_expand_item_sub_menu_header"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/hzs_expand_item_sub_menu_header" />
+
+    <TextView
+        android:id="@+id/hzs_expand_item_sub_menu_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="@={hzsYearData.balance}"
+        android:textSize="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/hzs_expand_item_sub_menu_jieyu"
+        app:layout_constraintStart_toEndOf="@+id/hzs_expand_item_sub_menu_jieyu"
+        app:layout_constraintTop_toTopOf="@+id/hzs_expand_item_sub_menu_jieyu"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/colorSweetPrimaryDark"
+        app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

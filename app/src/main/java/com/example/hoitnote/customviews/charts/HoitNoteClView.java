@@ -7,12 +7,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.Shader;
 import android.icu.util.Calendar;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,7 +33,6 @@ public class HoitNoteClView extends androidx.appcompat.widget.AppCompatImageView
 
     private Context mContext;
     private ChartAnalysisManager chartAnalysisManager;
-    private Calendar calendar;
 
     //控制相关
     public boolean ifAct;      //是否激活，未激活下绘制基础统计图，不接受任何按键信息，最高优先级
@@ -57,8 +60,13 @@ public class HoitNoteClView extends androidx.appcompat.widget.AppCompatImageView
     MyCanvas myCanvasInsideChart;   //用于绘制折线统计图内部矩形中的内容
     boolean ifDrawnUlt;             //是否已经绘制了最终图
     //绘图相关
-    private static final float Chart_Dot_Radius = 10;
+    private static final float Chart_Dot_OutsideRadius = 20;
+    private static final float Chart_Dot_InsideRadius = 10;
     private static final float Chart_Line_Width = 6;
+    Paint paint = new Paint();
+    Paint paintText = new Paint();
+    Paint paintLine = new Paint();
+
     Rect viewPort;                  //视口
     Rect allImage;                  //整个图片窗口的应有大小
     //事件信息相关
@@ -69,7 +77,7 @@ public class HoitNoteClView extends androidx.appcompat.widget.AppCompatImageView
     long currentMS;
 
     //动画相关
-    private static final float ANIMATION_1_LAST = 500;       //第一动画持续时间
+    private static final float ANIMATION_1_LAST = 1000;       //第一动画持续时间
 
     private static final float ANIMATION_2_LAST = 500;         //第二动画持续时间
     private static final float ANIMATION_2_TRANS_LENGTH_P = 0.8f;   //第二动画透明过度长度百分比
@@ -114,7 +122,6 @@ public class HoitNoteClView extends androidx.appcompat.widget.AppCompatImageView
         nowDrawList = new ArrayList<>();
         allImage = new Rect();
         viewPort = new Rect();
-        calendar = Calendar.getInstance();
         myAnimationS = new MyAnimationS();
 
         TypedArray ta = mContext.obtainStyledAttributes(attrs, R.styleable.HoitNoteClView);
@@ -134,6 +141,8 @@ public class HoitNoteClView extends androidx.appcompat.widget.AppCompatImageView
         selfLineColor = Color.rgb(150,150,150);
         selfBackgroundColor = Color.rgb(255,255,255);
         selfInsideBackgroundColor = Color.rgb(255,255,255);*/
+
+        this.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
 
     public void setSelfTextColor(int selfTextColor) {
@@ -156,7 +165,7 @@ public class HoitNoteClView extends androidx.appcompat.widget.AppCompatImageView
         ifAct = true;
         ifDrawnUlt = false;
         ifMove = false;
-        ifShowLine = false;
+        ifShowLine = true;
         setAnimation(1);
         postInvalidateDelayed(EVERY_DRAW_TIME_INTERVAL);
     }
@@ -167,7 +176,7 @@ public class HoitNoteClView extends androidx.appcompat.widget.AppCompatImageView
 
         //设置时间分隔
         nowTimeDivision = "日";
-        ifShowLine = false;
+        ifShowLine = true;
         setAnimation(1);
         reDraw();
     }
@@ -362,7 +371,6 @@ public class HoitNoteClView extends androidx.appcompat.widget.AppCompatImageView
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void drawUlt(){
         if(nowDrawList.size() != 0){
-
             int len;
             int len2;
             int i,j;
@@ -375,18 +383,16 @@ public class HoitNoteClView extends androidx.appcompat.widget.AppCompatImageView
                     maxMoney = tallyAnalysisClTimeDivision.maxMoney;
                 }
             }
-            maxMoney *= 1.1;
-            //绘图
-            Paint paint = new Paint();
+            maxMoney *= 1.05;
+
             paint.setStrokeWidth(Chart_Line_Width);
             paint.setAntiAlias(true);
 
-            Paint paintText = new Paint();
             paintText.setColor(selfTextColor);
             paintText.setTextSize(26);
 
-            Paint paintLine = new Paint();
             paintLine.setColor(selfLineColor);
+
 
             //清空
             myCanvasUlt.canvas.drawColor(selfBackgroundColor);
@@ -402,17 +408,86 @@ public class HoitNoteClView extends androidx.appcompat.widget.AppCompatImageView
                 pointY = (float)((maxMoney - nowLoca) / maxMoney
                         * (myCanvasInsideChart.selfRect.bottom - myCanvasInsideChart.selfRect.top));
                 if(ifShowLine){
+                    //绘制横向条
                     myCanvasInsideChart.canvas.drawLine(0,pointY,myCanvasInsideChart.selfRect.right,pointY,paintLine);
                 }
                 String text = (int)nowLoca+"";
                 int offset = text.length() * onceOffset;
+                //绘制竖轴数据
 //                myCanvasUlt.canvas.drawText((int)nowLoca+"",
 //                        myCanvasUlt.rectIn.left - offset,
 //                        pointY + myCanvasUlt.rectIn.top + 10,paintText);
             }
-            myCanvasInsideChart.canvas.drawLine(0,myCanvasInsideChart.selfRect.bottom - 3,
-                    myCanvasInsideChart.selfRect.right,myCanvasInsideChart.selfRect.bottom - 3,paintLine);
-            //绘制点
+            myCanvasInsideChart.canvas.drawLine(0,myCanvasInsideChart.selfRect.bottom - 1,
+                    myCanvasInsideChart.selfRect.right,myCanvasInsideChart.selfRect.bottom - 1,paintLine);
+
+            //绘制渐变色背景
+            int max = 0,min = 0;
+            if(ifShowLine){
+                ArrayList<TallyAnalysisClTimeDivision.TimeAndMoney> timeAndMoneyArrayList = nowDrawList.get(len - 1).timeAndMoneyArrayList;
+                len2 = timeAndMoneyArrayList.size();
+                paint.setColor(tallyAnalysisClArrayList.get(len - 1).selfColor);
+                if(len2 > 1){
+                    for(j = 0; j < len2;j++) {
+                        pointX = j * nowSpan;
+                        if(pointX >= viewPort.left){
+                            min = j - 1;
+                            if(min < 0){
+                                min = j;
+                            }
+                            break;
+                        }
+                    }
+                    for(j = len2 - 1; j >= 0;j--) {
+                        pointX = j * nowSpan;
+                        if(pointX <= viewPort.right){
+                            max = j + 1;
+                            if(max > len2 - 1){
+                                max = j;
+                            }
+                            break;
+                        }
+                    }
+                    if(max > min){
+                        Path path = new Path();
+
+                        pointX = min * nowSpan - viewPort.left;
+                        pointY = myCanvasInsideChart.selfRect.bottom;
+                        path.moveTo(pointX,pointY);
+                        pointX = max * nowSpan - viewPort.left;
+                        path.lineTo(pointX,pointY);
+                        for(j = max;j >= min;j--){
+                            pointY = (float)((maxMoney - timeAndMoneyArrayList.get(j).Money) / maxMoney
+                                    * (myCanvasInsideChart.selfRect.bottom - myCanvasInsideChart.selfRect.top));
+                            pointX = j * nowSpan - viewPort.left;
+                            path.lineTo(pointX,pointY);
+                        }
+                        path.close();
+
+                        myCanvasInsideChart.canvas.save();
+                        myCanvasInsideChart.canvas.clipPath(path);
+
+                        Paint mPaint = new Paint();
+                        mPaint.setColor(Color.BLUE);
+                        mPaint.setAntiAlias(true);
+                        mPaint.setStrokeWidth(3);
+                        mPaint.setStyle(Paint.Style.FILL);
+                        mPaint.setTextSize(20);
+
+                        LinearGradient linearGradient = new LinearGradient(myCanvasInsideChart.selfRect.right,
+                                myCanvasInsideChart.selfRect.bottom,0,0,selfInsideBackgroundColor,
+                                tallyAnalysisClArrayList.get(len - 1).selfColor,
+                                Shader.TileMode.CLAMP);
+                        mPaint.setShader(linearGradient);
+                        myCanvasInsideChart.canvas.drawRect(0,0,myCanvasInsideChart.selfRect.right,
+                                myCanvasInsideChart.selfRect.bottom,mPaint);
+
+                        myCanvasInsideChart.canvas.restore();
+                    }
+                }
+            }
+
+            //绘制线，底部标签
             boolean ifDrawTime = true;
             for(i = 0; i < len; i++){
                 ArrayList<TallyAnalysisClTimeDivision.TimeAndMoney> timeAndMoneyArrayList = nowDrawList.get(i).timeAndMoneyArrayList;
@@ -427,17 +502,12 @@ public class HoitNoteClView extends androidx.appcompat.widget.AppCompatImageView
 
                         //显示文字,同时绘制背景竖轴
                         if(ifDrawTime){
-                            if(ifShowLine){
-                                myCanvasInsideChart.canvas.drawLine(pointX,myCanvasInsideChart.selfRect.bottom,pointX,0,paintLine);
-                            }
                             myCanvasUlt.canvas.drawText(timeAndMoneyArrayList.get(j).timeName,
                                     pointX - 20 + (myCanvasUlt.rectIn.left),
                                     myCanvasUlt.rectIn.bottom + 40,
                                     paintText);
 
                         }
-                        //绘画上一个点
-                        myCanvasInsideChart.canvas.drawCircle(pointX,pointY,Chart_Dot_Radius,paint);
                         //绘制连线
                         if(j > 0){
                             float lastX,lastY;
@@ -453,16 +523,42 @@ public class HoitNoteClView extends androidx.appcompat.widget.AppCompatImageView
                             BeforeX = (j + 1) * nowSpan - viewPort.left;
                             myCanvasInsideChart.canvas.drawLine(pointX,pointY,BeforeX,BeforeY,paint);
                         }
+                    }
+                }
+                ifDrawTime = false;
+            }
+            //绘制点，具体金额
+            for(i = 0; i < len; i++){
+                ArrayList<TallyAnalysisClTimeDivision.TimeAndMoney> timeAndMoneyArrayList = nowDrawList.get(i).timeAndMoneyArrayList;
+                len2 = timeAndMoneyArrayList.size();
+                paint.setColor(tallyAnalysisClArrayList.get(i).selfColor);
+                for(j = 0; j < len2;j++){
+                    pointX = j * nowSpan;
+                    if(pointX >= viewPort.left && pointX <= viewPort.right){
+                        pointY = (float)((maxMoney - timeAndMoneyArrayList.get(j).Money) / maxMoney
+                                * (myCanvasInsideChart.selfRect.bottom - myCanvasInsideChart.selfRect.top));
+                        pointX = pointX - viewPort.left;
+                        //画竖轴
+                        if(ifShowLine && i == len - 1){
+                            paint.setStrokeWidth(3);
+                            myCanvasInsideChart.canvas.drawLine(pointX,myCanvasInsideChart.selfRect.bottom,pointX,pointY,paint);
+                            paint.setStrokeWidth(Chart_Line_Width);
+                        }
+                        //绘画一个点
+                        paintText.setColor(selfInsideBackgroundColor);
+                        myCanvasInsideChart.canvas.drawCircle(pointX,pointY,Chart_Dot_OutsideRadius,paint);
+                        myCanvasInsideChart.canvas.drawCircle(pointX,pointY,Chart_Dot_InsideRadius,paintText);
+                        paintText.setColor(selfTextColor);
+
                         //绘制当前显示标号对应的钱
                         if(ifShowLine && i == len - 1){
                             myCanvasInsideChart.canvas.drawText((int)timeAndMoneyArrayList.get(j).Money+"",
-                                    pointX + 10,
+                                    pointX + Chart_Dot_OutsideRadius,
                                     pointY,
                                     paintText);
                         }
                     }
                 }
-                ifDrawTime = false;
             }
             myCanvasUlt.canvas.drawBitmap(myCanvasInsideChart.bitmap,myCanvasInsideChart.selfRect,myCanvasUlt.rectIn,null);
             //myCanvasUlt.canvas.drawLine(myCanvasUlt.rectIn.left,myCanvasUlt.rectIn.top,myCanvasUlt.rectIn.left,myCanvasUlt.rectIn.bottom,paintLine);
@@ -513,23 +609,30 @@ public class HoitNoteClView extends androidx.appcompat.widget.AppCompatImageView
             if (myAnimationS.XAxis < myCanvasAni.rectIn.right) {
                 float lastY, lastX;
                 float time = EVERY_DRAW_TIME_INTERVAL / 1000.0f;
-                if (myAnimationS.YAxis < myCanvasAni.rectIn.bottom) {
-                    lastY = myAnimationS.YAxis;
-                    myAnimationS.YAxis += myAnimationS.YAxisSpeed * time;
-                    if (myAnimationS.YAxis > myCanvasAni.rectIn.bottom) {
-                        myAnimationS.YAxis = myCanvasAni.rectIn.bottom;
-                    }
-                    float tmpX = myCanvasAni.rectIn.left;
-                    myCanvasAni.canvas.drawLine(tmpX, lastY, tmpX, myAnimationS.YAxis, myAnimationS.paint1);
-                } else {
-                    lastX = myAnimationS.XAxis;
-                    myAnimationS.XAxis += myAnimationS.XAxisSpeed * time;
-                    if (myAnimationS.XAxis > myCanvasAni.rectIn.right) {
-                        myAnimationS.XAxis = myCanvasAni.rectIn.right;
-                    }
-                    float tmpY = myCanvasAni.rectIn.bottom;
-                    myCanvasAni.canvas.drawLine(lastX, tmpY, myAnimationS.XAxis, tmpY, myAnimationS.paint1);
+//                if (myAnimationS.YAxis < myCanvasAni.rectIn.bottom) {
+//                    lastY = myAnimationS.YAxis;
+//                    myAnimationS.YAxis += myAnimationS.YAxisSpeed * time;
+//                    if (myAnimationS.YAxis > myCanvasAni.rectIn.bottom) {
+//                        myAnimationS.YAxis = myCanvasAni.rectIn.bottom;
+//                    }
+//                    float tmpX = myCanvasAni.rectIn.left;
+//                    myCanvasAni.canvas.drawLine(tmpX, lastY, tmpX, myAnimationS.YAxis, myAnimationS.paint1);
+//                } else {
+//                    lastX = myAnimationS.XAxis;
+//                    myAnimationS.XAxis += myAnimationS.XAxisSpeed * time;
+//                    if (myAnimationS.XAxis > myCanvasAni.rectIn.right) {
+//                        myAnimationS.XAxis = myCanvasAni.rectIn.right;
+//                    }
+//                    float tmpY = myCanvasAni.rectIn.bottom;
+//                    myCanvasAni.canvas.drawLine(lastX, tmpY, myAnimationS.XAxis, tmpY, myAnimationS.paint1);
+//                }
+                lastX = myAnimationS.XAxis;
+                myAnimationS.XAxis += myAnimationS.XAxisSpeed * time;
+                if (myAnimationS.XAxis > myCanvasAni.rectIn.right) {
+                    myAnimationS.XAxis = myCanvasAni.rectIn.right;
                 }
+                float tmpY = myCanvasAni.rectIn.bottom;
+                myCanvasAni.canvas.drawLine(lastX, tmpY, myAnimationS.XAxis, tmpY, myAnimationS.paint1);
             } else if (nowDrawList.size() != 0) {
                 setAnimation(2);
             } else {
@@ -559,7 +662,7 @@ public class HoitNoteClView extends androidx.appcompat.widget.AppCompatImageView
                             myCanvasAni.selfRect.bottom,
                             myAnimationS.paint1);
                 }
-                myCanvasAni.canvas.drawLine(myCanvasAni.rectIn.left,myCanvasAni.rectIn.top,myCanvasAni.rectIn.left,myCanvasAni.rectIn.bottom,myAnimationS.paint2);
+                //myCanvasAni.canvas.drawLine(myCanvasAni.rectIn.left,myCanvasAni.rectIn.top,myCanvasAni.rectIn.left,myCanvasAni.rectIn.bottom,myAnimationS.paint2);
                 myCanvasAni.canvas.drawLine(myCanvasAni.rectIn.left,myCanvasAni.rectIn.bottom,myCanvasAni.rectIn.right,myCanvasAni.rectIn.bottom,myAnimationS.paint2);
             }else{
                 nowAnimation = 0;
@@ -612,6 +715,7 @@ public class HoitNoteClView extends androidx.appcompat.widget.AppCompatImageView
         this.myCanvasAni = new MyCanvas();
         this.myCanvasAni.createEmptyCanvas((chartRect.right - chartRect.left),(chartRect.bottom - chartRect.top), Bitmap.Config.ARGB_8888);
         initializeViewPort();
+        initializeAllImage();
     }
 
     private void initializeViewPort(){
@@ -621,6 +725,7 @@ public class HoitNoteClView extends androidx.appcompat.widget.AppCompatImageView
             viewPort.left = 0;
             viewPort.right = myCanvasUlt.rectIn.right - myCanvasUlt.rectIn.left;
             nowSpan = (viewPort.right - viewPort.left) / 3 - 10;
+            moveRect(viewPort,-nowSpan,0);
         }
     }
 

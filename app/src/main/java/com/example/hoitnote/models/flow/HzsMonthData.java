@@ -75,12 +75,22 @@ public class HzsMonthData {
     private Double bal = 0.0;
     private Double out = 0.0;
     private Double in = 0.0;
-
-    public HzsMonthData(List<Tally> data){
+    private HzsYearData parent;
+    public HzsMonthData(List<Tally> data, HzsYearData parent){
         this.data = data;
         this.year = String.valueOf(data.get(0).getDate().getYear()+1900);
         this.month = String.valueOf(data.get(0).getDate().getMonth()+1);
 
+        refreshData();
+        this.balance = bal.toString();
+        this.income = in.toString();
+        this.outcome = out.toString();
+        this.parent = parent;
+    }
+    public void refreshData(){
+        bal = 0.0;
+        out = 0.0;
+        in = 0.0;
         for(int i = 0;i < data.size();i++){
 
             if(data.get(i).getActionType() == ActionType.INCOME){
@@ -94,7 +104,8 @@ public class HzsMonthData {
         this.balance = bal.toString();
         this.income = in.toString();
         this.outcome = out.toString();
-
-
+        if(parent != null){
+            parent.refreshData();
+        }
     }
 }

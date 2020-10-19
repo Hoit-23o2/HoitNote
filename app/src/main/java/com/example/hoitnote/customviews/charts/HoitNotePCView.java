@@ -289,14 +289,14 @@ public class HoitNotePCView extends androidx.appcompat.widget.AppCompatImageView
                             if (tallyAnalysisPC.fanStart <= angle && tallyAnalysisPC.fanEnd >= angle) {
                                 if (tallyAnalysisPC.nextScreen != null) {
 //                                Log.d("point","======="+angle+"========="+disx+"=="+disy);
-                                    chartAnalysisManager.notifyEnterTallyAnalysisPC(tallyAnalysisPC, tallyAnalysisPC.nextScreen.get(0).screen);
+                                    chartAnalysisManager.notifyEnterTallyAnalysisPC(tallyAnalysisPC);
                                 }
                                 break;
                             }
                         }
                     } else if (allDis <= chartInsideRadius) {
                         if (!tallyAnalysisPCArrayListStack.empty()) {
-                            chartAnalysisManager.notifyGoBackPc(tallyAnalysisPCArrayListStack.peek().get(0).screen);
+                            chartAnalysisManager.notifyGoBackPc();
                         }
                     }
                 } else if (ifAnimation) {

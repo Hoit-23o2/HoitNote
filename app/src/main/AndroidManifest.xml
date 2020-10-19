@@ -19,6 +19,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/HoitNote.DefaultTheme">
+
+        <activity android:name=".views.flow.ManageOptionActivity" />
+        <activity android:name=".views.flow.ChooseIconActivity" />
+        <activity android:name=".views.flow.AddOptionActivity" />
+        <activity android:name=".views.flow.ManageClassActivity"/>
+
         <activity
             android:name=".views.analysis.AnalysisActivity"
             android:parentActivityName=".MainActivity" />

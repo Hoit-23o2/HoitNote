@@ -13,6 +13,26 @@
             android:layout_height="match_parent"
             android:background="?attr/colorPrimary">
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:id="@+id/filterTabs"
+                android:layout_height="wrap_content"
+                app:layout_constraintVertical_bias="0"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/makeFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintHorizontal_bias="1"
+                app:layout_constraintBottom_toBottomOf="@id/filterTabs"
+                app:layout_constraintEnd_toEndOf="@id/filterTabs"
+                app:layout_constraintStart_toStartOf="@id/filterTabs"
+                app:layout_constraintTop_toTopOf="@id/filterTabs" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/chartContainer"
                 android:layout_width="match_parent"

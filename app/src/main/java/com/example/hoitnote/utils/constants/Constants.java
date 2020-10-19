@@ -1,5 +1,8 @@
 package com.example.hoitnote.utils.constants;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Constants {
     /*
     * Theme Related: currentTheme标识当前主题，theme标识主题
@@ -73,6 +76,8 @@ public class Constants {
 
     public static String accountCodeSameHint = "已有账号";
     public static String accountCodeNotEnoughHint = "账号位数不足";
+
+    public static String mainParamTag = "current_account";
 
     /*
     * Analysis Activity Related
@@ -159,4 +164,68 @@ public class Constants {
     public static final int MSG_Is_Connected = 7;
 
     public static String deviceNotSupport = "设备不支持蓝牙";
+
+
+    /*BookingActivity related
+     * */
+    public static String BookingActivityClassification1 = "classification1";
+    public static String BookingActivityClassification2 = "classification2";
+    public static String BookingActivityMoney = "money";
+    public static String BookingActivityAccount = "account";
+    public static String BookingActivityRemark= "remark";
+    public static String BookingActivityPerson = "person";
+    public static String BookingActivityStore = "store";
+    public static String BookingActivityProject = "project";
+    public static String BookingActivityHasTemp = "has_temp";
+    public static String BookingActivityIncomeAccount = "income_account";
+    public static String BookingActivityOutcomeAccount = "outcome_account";
+    /*IconActivity related
+     * */
+    public static List<String> IconFonts;
+    static {
+        IconFonts = new ArrayList<>();
+        IconFonts.add("\uf5d7");
+        IconFonts.add("\uf206");
+        IconFonts.add("\uf55e");
+        IconFonts.add("\uf030");
+        IconFonts.add("\uf5de");
+        IconFonts.add("\uf217");
+        IconFonts.add("\uf1fd");
+        IconFonts.add("\uf77d");
+        IconFonts.add("\uf5d1");
+        IconFonts.add("\uf46b");
+        IconFonts.add("\uf51b");
+        IconFonts.add("\uf522");
+        IconFonts.add("\uf06b");
+        IconFonts.add("\uf79f");
+        IconFonts.add("\uf66f");
+        IconFonts.add("\uf3d1");
+        IconFonts.add("\uf481");
+        IconFonts.add("\uf305");
+        IconFonts.add("\uf5aa");
+        IconFonts.add("\uf53f");
+        IconFonts.add("\uf1b0");
+        IconFonts.add("\uf5b0");
+        IconFonts.add("\uf549");
+        IconFonts.add("\uf2cc");
+        IconFonts.add("\uf6fc");
+        IconFonts.add("\uf7b5");
+        IconFonts.add("\uf5a2");
+        IconFonts.add("\uf51e");
+    }
+    public static String IconAdd = "\uf067";
+    public static final String TypeStringProject = "项目";
+    public static final String TypeStringMember = "成员";
+    public static final String TypeStringVendor = "商家";
+    public static int ChooseIconResultCode = 0530;
+    public static int AddOptionResultCode = 0531;
+
+    /*
+     *  IconInformation table related
+     * */
+    public static String IconInformationTableName = "IconInformationTable";
+    public static String createIconInformationTable = "CREATE TABLE IF NOT EXISTS " + IconInformationTableName + " (id integer primary key autoincrement, iconName text, iconType integer, iconCode text)";
+    public static String IconInformationColumn_in = "iconName";
+    public static String IconInformationColumn_it = "iconType";
+    public static String IconInformationColumn_ic = "iconCode";
 }

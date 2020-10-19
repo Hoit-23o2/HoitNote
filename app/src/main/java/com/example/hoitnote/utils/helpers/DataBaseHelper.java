@@ -22,6 +22,7 @@ import com.example.hoitnote.utils.commuications.DataBaseFilter;
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.ActionType;
 import com.example.hoitnote.utils.enums.FilterType;
+import com.example.hoitnote.utils.enums.IconType;
 import com.example.hoitnote.utils.enums.PasswordStyle;
 import com.example.hoitnote.utils.enums.Theme;
 import com.example.hoitnote.utils.enums.ThirdPartyType;
@@ -36,6 +37,11 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
 
     private String name;
     private Context mContext;
+    private boolean hasCreated = true;
+
+    public boolean isHasCreated() {
+        return hasCreated;
+    }
 
     public DataBaseHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -65,6 +71,8 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         sqLiteDatabase.execSQL(Constants.createConfigTable);
         sqLiteDatabase.execSQL(Constants.createThirdPartyTable);
         sqLiteDatabase.execSQL(Constants.createAccountTable);
+        sqLiteDatabase.execSQL(Constants.createIconInformationTable);
+        hasCreated = false;
         Toast.makeText(mContext,"数据库创建完毕", Toast.LENGTH_LONG).show();
     }
 
@@ -415,11 +423,11 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         String actionStr;
         if(ifActionType){
             actionStr = "select * from " + Constants.classificationTableName + " "
-                    + "where " + Constants.classificationColumn_actionType + "=" + actionType.ordinal() + " "
-                    + "order by " + Constants.classificationColumn_c1 +  " asc";
+                    + "where " + Constants.classificationColumn_actionType + "=" + actionType.ordinal() + " ";
+//                    + "order by " + Constants.classificationColumn_c1 +  " asc";
         }else{
-            actionStr = "select * from " + Constants.classificationTableName
-                    + " order by " + Constants.classificationColumn_c1 +  " asc";
+            actionStr = "select * from " + Constants.classificationTableName;
+//                    + " order by " + Constants.classificationColumn_c1 +  " asc";
         }
         Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
         if(cursor.moveToFirst()){
@@ -447,12 +455,12 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         if(ifActionType){
             actionStr = "select * from " + Constants.classificationTableName + " where "
                     + Constants.classificationColumn_c1 + "='" + classification1 + "' "
-                    + "and " + Constants.classificationColumn_actionType + "=" + actionType.ordinal() + " "
-                    + "order by " + Constants.classificationColumn_c2 +  " asc";
+                    + "and " + Constants.classificationColumn_actionType + "=" + actionType.ordinal() + " ";
+//                    + "order by " + Constants.classificationColumn_c2 +  " asc";
         }else{
             actionStr = "select * from " + Constants.classificationTableName + " where "
-                    + Constants.classificationColumn_c1 + "='" + classification1 + "'"
-                    + " order by " + Constants.classificationColumn_c2 +  " asc";
+                    + Constants.classificationColumn_c1 + "='" + classification1 + "'";
+//                    + " order by " + Constants.classificationColumn_c2 +  " asc";
         }
         Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
         if(cursor.moveToFirst()){
@@ -636,5 +644,55 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         cursor.close();
         return ret;
     }
+    @Override
+    public String getIconInformation(String iconName, IconType iconType) {
+        String actionStr = "select * from " + Constants.IconInformationTableName + " where "
+                + Constants.IconInformationColumn_in + "='" + iconName  +"' and "
+                + Constants.IconInformationColumn_it + "=" + iconType.ordinal();
+        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
+        String iconCode = null;
+        if(cursor.moveToFirst()){
+            iconCode = cursor.getString(cursor.getColumnIndex(Constants.IconInformationColumn_ic));
+        }
+        cursor.close();
+        return iconCode;
+    }
 
+    @Override
+    public boolean addIconInformation(String iconName, IconType iconType, String iconCode) {
+        boolean ret = false;
+        String actionStr = "select * from " + Constants.IconInformationTableName + " where "
+                + Constants.IconInformationColumn_in + "='" + iconName + "' and "
+                + Constants.IconInformationColumn_it + "=" + iconType.ordinal();
+        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
+        if(!cursor.moveToFirst()){
+            ret = true;
+            actionStr = "insert into " + Constants.IconInformationTableName + " ("
+                    + Constants.IconInformationColumn_in + ", "
+                    + Constants.IconInformationColumn_it + ", "
+                    + Constants.IconInformationColumn_ic + ") "
+                    + "values(?,?,?)";
+            App.sqLiteDatabase.execSQL(actionStr,new Object[]{iconName,iconType.ordinal(),iconCode});
+        }
+        cursor.close();
+        return ret;
+    }
+
+    @Override
+    public boolean delIconInformation(String iconName, IconType iconType) {
+        boolean ret = false;
+        String actionStr = "select * from " + Constants.IconInformationTableName + " where "
+                + Constants.IconInformationColumn_in + "='" + iconName + "' and "
+                + Constants.IconInformationColumn_it + "=" + iconType.ordinal();
+        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
+        if(cursor.moveToFirst()){
+            ret = true;
+            actionStr = "delete from " + Constants.IconInformationTableName + " where "
+                    + Constants.IconInformationColumn_in + "='" + iconName + "' and "
+                    + Constants.IconInformationColumn_it + "=" + iconType.ordinal();
+            App.sqLiteDatabase.execSQL(actionStr,null);
+        }
+        cursor.close();
+        return ret;
+    }
 }

@@ -139,7 +139,7 @@ public class CAMPCListAdapter extends BaseAdapter {
         public void onClick(View v) {
             TallyAnalysisPC tallyAnalysisPC = nowShowList.get(position);
             if(tallyAnalysisPC.nextScreen != null){
-                chartAnalysisManager.notifyEnterTallyAnalysisPC(tallyAnalysisPC,tallyAnalysisPC.nextScreen.get(0).screen);
+                chartAnalysisManager.notifyEnterTallyAnalysisPC(tallyAnalysisPC);
             }
         }
     }
