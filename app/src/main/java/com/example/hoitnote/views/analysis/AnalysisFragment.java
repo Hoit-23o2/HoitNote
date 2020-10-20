@@ -13,6 +13,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.hoitnote.R;
 import com.example.hoitnote.adapters.analysis.AnalysisFragmentAdapter;
@@ -49,7 +50,7 @@ public class AnalysisFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(
                 inflater,
                 R.layout.fragment_analysis,
@@ -57,6 +58,20 @@ public class AnalysisFragment extends Fragment {
                 false
         );
         binding.analysisContainer.setAdapter(new AnalysisFragmentAdapter(this, this.fragments));
+        binding.analysisContainer.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                if(((AnalysisActivity)context).analysisSelectorItem != null){
+                    if(position == 0){
+                        ((AnalysisActivity)context).hideSelectorItem();
+                    }
+                    else{
+                        ((AnalysisActivity)context).displaySelectorItem();
+                    }
+                }
+            }
+        });
         return binding.getRoot();
     }
 }

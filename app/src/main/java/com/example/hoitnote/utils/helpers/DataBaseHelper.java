@@ -38,6 +38,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
     private String name;
     private Context mContext;
     private boolean hasCreated = true;
+    private SQLiteDatabase sqLiteDatabase;
 
     public boolean isHasCreated() {
         return hasCreated;
@@ -186,7 +187,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         actionStr = actionStr + " order by "
                 + Constants.tallyTableColumn_date + " desc, "
                 + Constants.tallyTableColumn_time + " desc";
-        cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
+        cursor = sqLiteDatabase.rawQuery(actionStr,null);
         if(cursor.moveToFirst()){
             do{
                 Tally newTally = new Tally();
@@ -232,7 +233,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 + Constants.tallyTableColumn_member + ") "
                 + "values(?,?,?,?,?,?,?,?,?,?,?)";
 
-        App.sqLiteDatabase.execSQL(actionStr,new Object[]{tally.getMoney(),
+        sqLiteDatabase.execSQL(actionStr,new Object[]{tally.getMoney(),
                 tally.getAccount().getAccountName() + " " + tally.getAccount().getAccountCode(),
                 tally.getActionType().ordinal(),
                 tally.getDate(),
@@ -246,7 +247,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
 
         long strid;
         boolean ret = false;
-        Cursor cursor = App.sqLiteDatabase.rawQuery("select last_insert_rowid() from "+ Constants.tallyTableName, null);
+        Cursor cursor = sqLiteDatabase.rawQuery("select last_insert_rowid() from "+ Constants.tallyTableName, null);
         if (cursor.moveToFirst()) {
             strid = cursor.getLong(0);
             tally.setId(strid);
@@ -260,7 +261,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
     public boolean modifyTally(long id, Tally tally)  {
         String actionStr = "select * from " + Constants.tallyTableName + " "
                 + "where id=" + id;
-        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
+        Cursor cursor = sqLiteDatabase.rawQuery(actionStr,null);
         if(cursor.moveToFirst()){
             cursor.close();
             actionStr = "update " + Constants.tallyTableName + " set "
@@ -277,7 +278,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                     + Constants.tallyTableColumn_vendor + "=? "
                     + "where id=" + id;
 
-            App.sqLiteDatabase.execSQL(actionStr,new Object[]{tally.getMoney(),
+            sqLiteDatabase.execSQL(actionStr,new Object[]{tally.getMoney(),
                     tally.getAccount().getAccountName() + " " + tally.getAccount().getAccountCode(),
                     tally.getActionType().ordinal(),
                     tally.getClassification1(),
@@ -299,12 +300,12 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
     public boolean delTally(long id) {
         String actionStr = "select * from " + Constants.tallyTableName + " "
                 + "where id=" + id;
-        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
+        Cursor cursor = sqLiteDatabase.rawQuery(actionStr,null);
         if(cursor.moveToFirst()){
             cursor.close();
             actionStr = "delete from " + Constants.tallyTableName + " "
                     + "where id=" + id;
-            App.sqLiteDatabase.execSQL(actionStr);
+            sqLiteDatabase.execSQL(actionStr);
             return true;
         }else{
             cursor.close();
@@ -320,7 +321,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
     @Override
     public boolean saveConfig(Config config, Theme theme) {
         String sql = "select count(*) from "+Constants.configTableName;
-        Cursor cursor = App.sqLiteDatabase.rawQuery(sql, null);
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
         cursor.moveToFirst();
         long count = cursor.getLong(0);
         boolean ret;
@@ -330,13 +331,13 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 mContentValues.put(Constants.configTableColumn_ct,(config.getCurrentTheme()).ordinal());
                 mContentValues.put(Constants.configTableColumn_pw,config.getPassword());
                 mContentValues.put(Constants.configTableColumn_pws,config.getPasswordStyle().ordinal());
-                App.sqLiteDatabase.insert(Constants.configTableName,null,mContentValues);
+                sqLiteDatabase.insert(Constants.configTableName,null,mContentValues);
                 mContentValues.clear();
                 ret = true;     //添加
             }else{
                 cursor.close();
                 sql = "select * from "+Constants.configTableName;
-                cursor = App.sqLiteDatabase.rawQuery(sql, null);
+                cursor = sqLiteDatabase.rawQuery(sql, null);
                 cursor.moveToFirst();
                 ret = true;
                 do{
@@ -351,13 +352,13 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                                     + " set " + Constants.configTableColumn_ct + "=" + config.getCurrentTheme().ordinal() + ", "
                                     + Constants.configTableColumn_pw + "=" + "'" + config.getPassword()+ "'" + " "
                                     + "where id="+id;
-                            App.sqLiteDatabase.execSQL(actionStr);
+                            sqLiteDatabase.execSQL(actionStr);
                         }
                     }else{
                         String actionStr = "update "+Constants.configTableName
                                 + " set " + Constants.configTableColumn_ct + "=" + config.getCurrentTheme().ordinal() + " "
                                 + "where id="+id;
-                        App.sqLiteDatabase.execSQL(actionStr);
+                        sqLiteDatabase.execSQL(actionStr);
                     }
                 }while(cursor.moveToNext());
                 if(ret){
@@ -365,7 +366,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                     mContentValues.put(Constants.configTableColumn_ct,(config.getCurrentTheme()).ordinal());
                     mContentValues.put(Constants.configTableColumn_pw,config.getPassword());
                     mContentValues.put(Constants.configTableColumn_pws,config.getPasswordStyle().ordinal());
-                    App.sqLiteDatabase.insert(Constants.configTableName,null,mContentValues);
+                    sqLiteDatabase.insert(Constants.configTableName,null,mContentValues);
                     mContentValues.clear();
                 }
             }
@@ -375,7 +376,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
             }else{
                 cursor.close();
                 sql = "select * from "+Constants.configTableName;
-                cursor = App.sqLiteDatabase.rawQuery(sql, null);
+                cursor = sqLiteDatabase.rawQuery(sql, null);
                 cursor.moveToFirst();
                 ret = true;
                 do{
@@ -383,7 +384,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                     String actionStr = "update "+Constants.configTableName
                             + " set " + Constants.configTableColumn_ct + "=" + theme.ordinal() + " "
                             + "where id="+id;
-                    App.sqLiteDatabase.execSQL(actionStr);
+                    sqLiteDatabase.execSQL(actionStr);
                 }while(cursor.moveToNext());
             }
         }
@@ -396,7 +397,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         Config config;
         ArrayList<Config> configList = new ArrayList<>();
         String sql = "select count(*) from "+Constants.configTableName;
-        Cursor cursor = App.sqLiteDatabase.rawQuery(sql, null);
+        Cursor cursor = sqLiteDatabase.rawQuery(sql, null);
         cursor.moveToFirst();
         long count = cursor.getLong(0);
         cursor.close();
@@ -404,7 +405,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
             return null;
         }
         sql = "select * from "+Constants.configTableName;
-        cursor = App.sqLiteDatabase.rawQuery(sql, null);
+        cursor = sqLiteDatabase.rawQuery(sql, null);
         cursor.moveToFirst();
         do{
             config = new Config();
@@ -429,7 +430,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
             actionStr = "select * from " + Constants.classificationTableName;
 //                    + " order by " + Constants.classificationColumn_c1 +  " asc";
         }
-        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
+        Cursor cursor = sqLiteDatabase.rawQuery(actionStr,null);
         if(cursor.moveToFirst()){
             do{
                 String newClassification1 = cursor.getString(cursor.getColumnIndex(Constants.classificationColumn_c1));
@@ -462,7 +463,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                     + Constants.classificationColumn_c1 + "='" + classification1 + "'";
 //                    + " order by " + Constants.classificationColumn_c2 +  " asc";
         }
-        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
+        Cursor cursor = sqLiteDatabase.rawQuery(actionStr,null);
         if(cursor.moveToFirst()){
             do{
                 String newClassification2 = cursor.getString(cursor.getColumnIndex(Constants.classificationColumn_c2));
@@ -486,7 +487,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         String actionStr = "select * from " + Constants.classificationTableName + " where "
                 + Constants.classificationColumn_c1 + "='" + classification1 + "' "
                 + "and " + Constants.classificationColumn_actionType + "=" + actionType.ordinal();
-        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
+        Cursor cursor = sqLiteDatabase.rawQuery(actionStr,null);
         boolean ret = true;
         if(!cursor.moveToFirst()){
             ret = false;
@@ -495,7 +496,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         actionStr = "delete from " + Constants.classificationTableName + " where "
                 + Constants.classificationColumn_c1 + "='" + classification1 + "' "
                 + "and " + Constants.classificationColumn_actionType + "=" + actionType.ordinal();
-        App.sqLiteDatabase.execSQL(actionStr);
+        sqLiteDatabase.execSQL(actionStr);
         return ret;
     }
 
@@ -505,7 +506,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 + Constants.classificationColumn_c1 + "='" + classification1 + "' and "
                 + Constants.classificationColumn_c2 + "='" + classification2 + "' and "
                 + Constants.classificationColumn_actionType + "=" + actionType.ordinal();
-        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
+        Cursor cursor = sqLiteDatabase.rawQuery(actionStr,null);
         boolean ret = true;
         if(!cursor.moveToFirst()){
             ret = false;
@@ -515,7 +516,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 + Constants.classificationColumn_c1 + "='" + classification1 + "' and "
                 + Constants.classificationColumn_c2 + "='" + classification2 + "' and "
                 + Constants.classificationColumn_actionType + "=" + actionType.ordinal();
-        App.sqLiteDatabase.execSQL(actionStr);
+        sqLiteDatabase.execSQL(actionStr);
         return ret;
     }
 
@@ -526,7 +527,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 + Constants.classificationColumn_c1 + "='" + classification1 + "' and "
                 + Constants.classificationColumn_c2 + "='" + classification2 + "' and "
                 + Constants.classificationColumn_actionType + "=" + actionType.ordinal();
-        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
+        Cursor cursor = sqLiteDatabase.rawQuery(actionStr,null);
         if(cursor.moveToFirst()){
             ret = false;
         }else{
@@ -535,7 +536,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                     + Constants.classificationColumn_c2 + ", "
                     + Constants.classificationColumn_actionType + ") "
                     + "values(?,?,?)";
-            App.sqLiteDatabase.execSQL(actionStr,new Object[]{classification1,classification2,actionType.ordinal()});
+            sqLiteDatabase.execSQL(actionStr,new Object[]{classification1,classification2,actionType.ordinal()});
         }
         cursor.close();
         return ret;
@@ -545,7 +546,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
     public ArrayList<String> getThirdParties(ThirdPartyType thirdPartyType) {
         String actionStr = "select * from " + Constants.ThirdPartyTableName + " where "
                 + Constants.ThirdPartyColumn_tp + "=" + thirdPartyType.ordinal();
-        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
+        Cursor cursor = sqLiteDatabase.rawQuery(actionStr,null);
         ArrayList<String> thirdPartyList = new ArrayList<>();
         if(cursor.moveToFirst()){
             do{
@@ -563,13 +564,13 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         String actionStr = "select * from " + Constants.ThirdPartyTableName + " where "
                 + Constants.ThirdPartyColumn_tp + "=" + thirdPartyType.ordinal() + " and "
                 + Constants.ThirdPartyColumn_ct + "=?";
-        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,new String[]{field});
+        Cursor cursor = sqLiteDatabase.rawQuery(actionStr,new String[]{field});
         if(cursor.moveToFirst()){
             ret = true;
             actionStr = "delete from " + Constants.ThirdPartyTableName + " where "
                     + Constants.ThirdPartyColumn_tp + "=" + thirdPartyType.ordinal() + " and "
                     + Constants.ThirdPartyColumn_ct + "=?";
-            App.sqLiteDatabase.execSQL(actionStr,new String[]{field});
+            sqLiteDatabase.execSQL(actionStr,new String[]{field});
         }
         cursor.close();
         return ret;
@@ -581,14 +582,14 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         String actionStr = "select * from " + Constants.ThirdPartyTableName + " where "
                 + Constants.ThirdPartyColumn_tp + "=" + thirdPartyType.ordinal() + " and "
                 + Constants.ThirdPartyColumn_ct + "=?";
-        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,new String[]{field});
+        Cursor cursor = sqLiteDatabase.rawQuery(actionStr,new String[]{field});
         if(!cursor.moveToFirst()){
             ret = true;
             actionStr = "insert into " + Constants.ThirdPartyTableName + " ("
                     + Constants.ThirdPartyColumn_tp + ", "
                     + Constants.ThirdPartyColumn_ct + ") "
                     + "values(?,?)";
-            App.sqLiteDatabase.execSQL(actionStr,new Object[]{thirdPartyType.ordinal(),field});
+            sqLiteDatabase.execSQL(actionStr,new Object[]{thirdPartyType.ordinal(),field});
         }
         cursor.close();
         return ret;
@@ -597,7 +598,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
     @Override
     public ArrayList<Account> getAccounts() {
         String actionStr = "select * from " + Constants.AccountTableName;
-        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
+        Cursor cursor = sqLiteDatabase.rawQuery(actionStr,null);
         ArrayList<Account> accountArrayList = new ArrayList<>();
         if(cursor.moveToFirst()){
             do{
@@ -616,12 +617,12 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         boolean ret = false;
         String actionStr = "select * from " + Constants.AccountTableName + " where "
                 + Constants.AccountColumn_ac + "=?";
-        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,new String[]{account.getAccountCode()});
+        Cursor cursor = sqLiteDatabase.rawQuery(actionStr,new String[]{account.getAccountCode()});
         if(cursor.moveToFirst()){
             ret = true;
             actionStr = "delete from " + Constants.AccountTableName + " where "
                     + Constants.AccountColumn_ac + "=?";
-            App.sqLiteDatabase.execSQL(actionStr,new String[]{account.getAccountCode()});
+            sqLiteDatabase.execSQL(actionStr,new String[]{account.getAccountCode()});
         }
         cursor.close();
         return ret;
@@ -632,14 +633,14 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         boolean ret = false;
         String actionStr = "select * from " + Constants.AccountTableName + " where "
                 + Constants.AccountColumn_ac + "=?";
-        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,new String[]{account.getAccountCode()});
+        Cursor cursor = sqLiteDatabase.rawQuery(actionStr,new String[]{account.getAccountCode()});
         if(!cursor.moveToFirst()){
             ret = true;
             actionStr = "insert into " + Constants.AccountTableName + " ("
                     + Constants.AccountColumn_an + ", "
                     + Constants.AccountColumn_ac + ") "
                     + "values(?,?)";
-            App.sqLiteDatabase.execSQL(actionStr,new Object[]{account.getAccountName(),account.getAccountCode()});
+            sqLiteDatabase.execSQL(actionStr,new Object[]{account.getAccountName(),account.getAccountCode()});
         }
         cursor.close();
         return ret;
@@ -649,7 +650,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         String actionStr = "select * from " + Constants.IconInformationTableName + " where "
                 + Constants.IconInformationColumn_in + "='" + iconName  +"' and "
                 + Constants.IconInformationColumn_it + "=" + iconType.ordinal();
-        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
+        Cursor cursor = sqLiteDatabase.rawQuery(actionStr,null);
         String iconCode = null;
         if(cursor.moveToFirst()){
             iconCode = cursor.getString(cursor.getColumnIndex(Constants.IconInformationColumn_ic));
@@ -664,7 +665,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         String actionStr = "select * from " + Constants.IconInformationTableName + " where "
                 + Constants.IconInformationColumn_in + "='" + iconName + "' and "
                 + Constants.IconInformationColumn_it + "=" + iconType.ordinal();
-        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
+        Cursor cursor = sqLiteDatabase.rawQuery(actionStr,null);
         if(!cursor.moveToFirst()){
             ret = true;
             actionStr = "insert into " + Constants.IconInformationTableName + " ("
@@ -672,7 +673,7 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                     + Constants.IconInformationColumn_it + ", "
                     + Constants.IconInformationColumn_ic + ") "
                     + "values(?,?,?)";
-            App.sqLiteDatabase.execSQL(actionStr,new Object[]{iconName,iconType.ordinal(),iconCode});
+            sqLiteDatabase.execSQL(actionStr,new Object[]{iconName,iconType.ordinal(),iconCode});
         }
         cursor.close();
         return ret;
@@ -684,15 +685,19 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         String actionStr = "select * from " + Constants.IconInformationTableName + " where "
                 + Constants.IconInformationColumn_in + "='" + iconName + "' and "
                 + Constants.IconInformationColumn_it + "=" + iconType.ordinal();
-        Cursor cursor = App.sqLiteDatabase.rawQuery(actionStr,null);
+        Cursor cursor = sqLiteDatabase.rawQuery(actionStr,null);
         if(cursor.moveToFirst()){
             ret = true;
             actionStr = "delete from " + Constants.IconInformationTableName + " where "
                     + Constants.IconInformationColumn_in + "='" + iconName + "' and "
                     + Constants.IconInformationColumn_it + "=" + iconType.ordinal();
-            App.sqLiteDatabase.execSQL(actionStr,null);
+            sqLiteDatabase.execSQL(actionStr,null);
         }
         cursor.close();
         return ret;
+    }
+
+    public void setSqLiteDatabase(SQLiteDatabase sqLiteDatabase) {
+        this.sqLiteDatabase = sqLiteDatabase;
     }
 }

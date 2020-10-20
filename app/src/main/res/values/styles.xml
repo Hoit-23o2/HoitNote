@@ -42,17 +42,28 @@
         <item name="android:textSize">24sp</item>
         <item name="android:layout_margin">20dp</item>
         <item name="android:textColor">?attr/textColorPrimary</item>
-        <item name="android:foreground">?attr/selectableItemBackground</item>
         <item name="android:clickable">true</item>
         <item name="android:gravity">center</item>
         <item name="android:focusable">true</item>
+        <item name="android:foreground">@drawable/ripple_circular_shape</item>
         <item name="android:textAlignment" tools:targetApi="jelly_bean_mr1">center</item>
     </style>
-    <!--输入栏样式-->
+
+    <style name="HoitIconUnclickable" parent="HoitIcon">
+        <item name="android:clickable">false</item>
+        <item name="android:focusable">false</item>
+        <item name="android:foreground">@null</item>
+    </style>
+
+    <!--popUp样式-->
+    <style name="HoitPopupViewStyle">
+        <item name="android:layout_margin">30dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
 
     <!--标题字体-->
-
-
     <style name="HoitGroupText">
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
@@ -88,6 +99,7 @@
         <item name="android:windowEnterAnimation">@anim/hzs_show_anim</item>
         <item name="android:windowExitAnimation">@anim/hzs_hidden_anim</item>
     </style>
+
     <style name="hzs_popup_vertical_anim_style">
         <item name="android:windowEnterAnimation">@anim/hzs_popup_anim</item>
         <item name="android:windowExitAnimation">@anim/hzs_popdown_anim</item>

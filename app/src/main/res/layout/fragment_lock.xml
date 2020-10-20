@@ -53,7 +53,6 @@
                 style="@style/HoitIcon"/>
 
             <com.example.hoitnote.customviews.FontAwesome
-                android:foreground="?actionBarItemBackground"
                 android:id="@+id/syncSettings"
                 android:onClick="@{(v)->lockFragment.switchTheme(v)}"
                 style="@style/HoitIcon"

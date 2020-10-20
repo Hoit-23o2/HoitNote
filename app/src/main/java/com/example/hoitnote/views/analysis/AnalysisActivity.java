@@ -9,6 +9,9 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.ContentValues;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 
 import com.example.hoitnote.BaseActivity;
 import com.example.hoitnote.R;
@@ -59,6 +62,7 @@ public class AnalysisActivity extends BaseActivity {
 
     public void initActivity(){
         showBackButton();
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -85,6 +89,33 @@ public class AnalysisActivity extends BaseActivity {
         fragments.add(chartPCFragment);
         fragments.add(chartClFragment);
         return fragments;
+    }
+
+    MenuItem analysisSelectorItem;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.analysis_selector_menu, menu);
+        analysisSelectorItem = menu.findItem(R.id.analysis_selector);
+        analysisSelectorItem.setActionView(R.layout.menu_analysis);
+        analysisSelectorItem.getActionView().findViewById(R.id.selectorBtn).
+                setOnClickListener(
+                        new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View view) {
+                chartAnalysisManager.showDialog();
+            }
+        });
+        hideSelectorItem();
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public void hideSelectorItem(){
+        analysisSelectorItem.getActionView().animate().alpha(0).start();
+    }
+
+    public void displaySelectorItem(){
+        analysisSelectorItem.getActionView().animate().alpha(1).start();
     }
 
 

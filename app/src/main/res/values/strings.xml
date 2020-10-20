@@ -41,4 +41,6 @@
     <string name="chart_cl_day">日</string>
     <string name="chart_cl_filter_hint">—查看方式—</string>
     <string name="confirm_hint">确认</string>
+    <string name="selector_icon"></string>
+    <string name="selector_hint">筛选</string>
 </resources>

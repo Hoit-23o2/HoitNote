@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,8 @@ import android.widget.PopupWindow;
 import android.widget.Toast;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.widget.ViewPager2;
@@ -101,18 +105,20 @@ public class MainActivity extends BaseActivity {
 
     /*点击添加加号后添加一个账户*/
     public void addAccount(View view) {
-        final Dialog dialog = new Dialog(context);
+        final AlertDialog alertDialog;
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         final PopupwindowAddaccountBinding popupViewBinding;
         popupViewBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
                 R.layout.popupwindow_addaccount,
-                (ViewGroup) binding.getRoot(),
+                null,
                 false
         );
-       
-        dialog.setContentView(popupViewBinding.getRoot());
 
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        //dialog.setContentView(popupViewBinding.getRoot());
+        alertDialog = builder.setView(popupViewBinding.getRoot()).create();
+        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
                 String accountName = popupViewBinding.accountNameField.getText().toString();
@@ -151,10 +157,11 @@ public class MainActivity extends BaseActivity {
         popupViewBinding.addAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.dismiss();
+                alertDialog.dismiss();
             }
         });
-        dialog.show();
+
+        alertDialog.show();
     }
 
     // create an action bar button

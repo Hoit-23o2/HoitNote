@@ -27,7 +27,11 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         /*初始化数据库*/
         App.dataBaseHelper = new DataBaseHelper(this,Constants.databaseFileName,null,Constants.databaseVersion);
-        App.sqLiteDatabase = App.dataBaseHelper.getWritableDatabase();
+        App.dataBaseHelper.setSqLiteDatabase(App.dataBaseHelper.getReadableDatabase());
+        /*初始化备份数据库*/
+        App.backupDataBaseHelper = new DataBaseHelper(this, Constants.backupDatabaseFileName, null, Constants.databaseVersion);
+        App.backupDataBaseHelper.setSqLiteDatabase(App.backupDataBaseHelper.getReadableDatabase());
+
         App.fileHelper = new FileHelper();
 
         ThemeHelper.initUI(this);

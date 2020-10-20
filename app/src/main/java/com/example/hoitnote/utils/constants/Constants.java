@@ -95,7 +95,9 @@ public class Constants {
     * Data base related
     * */
     public static int databaseVersion = 1;
+
     public static String databaseFileName = "hoit.db";  //数据库文件名
+    public static String backupDatabaseFileName = "backup_hoit.db";  //数据库文件名
 
     /*
      * config table related
