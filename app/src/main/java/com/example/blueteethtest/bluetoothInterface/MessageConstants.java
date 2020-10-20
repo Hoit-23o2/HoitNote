@@ -11,4 +11,6 @@ public interface MessageConstants {
     public static final int MSG_Is_Connected = 7;
     public static final int MSG_Get_SENDINFO = 8;
     public static final int MSG_Get_RECEIVEINFO = 9;
+    public static final int MSG_Get_DATAPACKAGE = 10;
+
 }

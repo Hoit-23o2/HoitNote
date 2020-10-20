@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.example.blueteethtest.BluetoothActivity;
 import com.example.blueteethtest.BluetoothActivity.MyHandler;
 import com.example.blueteethtest.ObejctToSend.Account;
+import com.example.blueteethtest.ObejctToSend.DataPackage;
 import com.example.blueteethtest.ObejctToSend.ReceiveInfo;
 import com.example.blueteethtest.ObejctToSend.SendInfo;
 import com.example.blueteethtest.ObejctToSend.Tally;
@@ -19,6 +20,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 import static com.example.blueteethtest.BluetoothActivity.toObject;
+import static com.example.blueteethtest.bluetoothInterface.MessageConstants.MSG_Get_DATAPACKAGE;
 import static com.example.blueteethtest.bluetoothInterface.MessageConstants.MSG_Get_RECEIVEINFO;
 import static com.example.blueteethtest.bluetoothInterface.MessageConstants.MSG_Get_SENDINFO;
 import static com.example.blueteethtest.bluetoothInterface.MessageConstants.MSG_RECEIVE_FAILURE;
@@ -30,6 +32,12 @@ public class ReceiveMessageThread extends Thread {
     private OutputStream os;
 
     private ArrayList<Tally> tallies;
+
+    public DataPackage getDataPackage() {
+        return dataPackage;
+    }
+
+    private DataPackage dataPackage;
 
     private SendInfo sendInfo;
     private ReceiveInfo receiveInfo;
@@ -93,7 +101,11 @@ public class ReceiveMessageThread extends Thread {
                         }else if(object instanceof SendInfo){
                             sendInfo = (SendInfo)object;
                             this.mHandler.obtainMessage(MSG_Get_SENDINFO).sendToTarget();
-                        }else {
+                        }else if(object instanceof DataPackage){
+                            dataPackage = (DataPackage)object;
+                            this.mHandler.obtainMessage(MSG_Get_DATAPACKAGE).sendToTarget();
+                        }
+                        else {
                             Log.d("null object","+++++++++++++++++++++++++++++++++++++");
                         }
                         //is.close();

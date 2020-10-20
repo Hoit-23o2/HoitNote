@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.blueteethtest.ObejctToSend.Account;
+import com.example.blueteethtest.ObejctToSend.DataPackage;
 import com.example.blueteethtest.ObejctToSend.ReceiveInfo;
 import com.example.blueteethtest.ObejctToSend.SendInfo;
 import com.example.blueteethtest.ObejctToSend.Tally;
@@ -52,6 +53,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import static com.example.blueteethtest.bluetoothInterface.MessageConstants.MSG_CONNECT_SUCCESS;
+import static com.example.blueteethtest.bluetoothInterface.MessageConstants.MSG_Get_DATAPACKAGE;
 import static com.example.blueteethtest.bluetoothInterface.MessageConstants.MSG_Get_RECEIVEINFO;
 import static com.example.blueteethtest.bluetoothInterface.MessageConstants.MSG_Get_SENDINFO;
 import static com.example.blueteethtest.bluetoothInterface.MessageConstants.MSG_Is_Connected;
@@ -215,6 +217,10 @@ public class BluetoothActivity extends AppCompatActivity {
                     activity.setReceiveInfo(activity.clientThread.getReceiveMessageThread().getReceiveInfo());
                     activity.messageText.setText(activity.getReceiveInfo().getMessage());
                     break;
+                case MSG_Get_DATAPACKAGE:
+                    Toast.makeText(activity,"收到DataPackage",Toast.LENGTH_SHORT).show();
+                    DataPackage dataPackage = activity.acceptThread.getReceiveMessageThread().getDataPackage();
+                    activity.messageText.setText(dataPackage.getAllTallies().get(1).getAccount().getAccountName());
             }
         }
     }
@@ -374,7 +380,10 @@ public class BluetoothActivity extends AppCompatActivity {
                 tallies.add(tally1);
                 tallies.add(tally2);
                 tallies.add(tally3);
-                sendObject(tallies);
+
+                DataPackage dataPackage = new DataPackage();
+                dataPackage.setAllTallies(tallies);
+                sendObject(dataPackage);
 
             }
         });
