@@ -35,6 +35,7 @@ public class HoitNotePCView extends androidx.appcompat.widget.AppCompatImageView
     //控制相关
     public boolean ifAct;      //是否激活，未激活下绘制基础统计图，不接受任何按键信息，最高优先级
     public boolean ifAnimation;     //是否正在绘制动画
+    public boolean ifNotifyDraw;
 
     //视图大小相关
     int viewWidth,viewHeight;
@@ -133,6 +134,7 @@ public class HoitNotePCView extends androidx.appcompat.widget.AppCompatImageView
 
     public void actSelf(){
         ifAct = true;
+        ifNotifyDraw = true;
         setAnimation(1,null);
         reDraw();
         myBitmapSGoBack = loadMyBitmapSTrans(getResources(), R.drawable.analy_back, Color.rgb(255,255,255));
@@ -148,6 +150,7 @@ public class HoitNotePCView extends androidx.appcompat.widget.AppCompatImageView
 
     public void setTallyAnalysisPCArrayList(ArrayList<TallyAnalysisPC> tallyAnalysisPCArrayList) {
         this.tallyAnalysisPCArrayList = tallyAnalysisPCArrayList;
+        ifNotifyDraw = true;
         setAnimation(1,null);
         reDraw();
     }
@@ -308,11 +311,16 @@ public class HoitNotePCView extends androidx.appcompat.widget.AppCompatImageView
         return super.onTouchEvent(event);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if(ifAct){
             if(!ifDrawnUlt){
+                if(ifNotifyDraw){
+                    chartAnalysisManager.notifyDrawPC();
+                    ifNotifyDraw = false;
+                }
                 drawUlt();
             }
             if(ifAnimation && nowAnimation != 0){

@@ -8,7 +8,10 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
+import androidx.databinding.DataBindingUtil;
+
 import com.example.hoitnote.R;
+import com.example.hoitnote.databinding.HzsExpandItemYearMenuBinding;
 import com.example.hoitnote.models.flow.HzsYearData;
 import com.example.hoitnote.views.flow.HzsCustomExpandableListView;
 
@@ -20,6 +23,9 @@ public class HzsFirstExpandableListViewAdapter extends BaseExpandableListAdapter
     private Context context;
     private LayoutInflater inflater;
 
+    public List<HzsYearData> getYears() {
+        return years;
+    }
     public HzsFirstExpandableListViewAdapter(List<HzsYearData> years, Context context){
         this.years = years;
         this.context = context;
@@ -64,17 +70,17 @@ public class HzsFirstExpandableListViewAdapter extends BaseExpandableListAdapter
     @Override
     public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
         FirstHolder holder = null;
+        HzsExpandItemYearMenuBinding binding;
         if(view == null){
             holder = new FirstHolder();
-            view = inflater.inflate(R.layout.hzs_expand_item_sub_menu,viewGroup,false);
-            holder.balance = (TextView)view.findViewById(R.id.hzs_expand_item_sub_menu_balance);
-            holder.year = (TextView)view.findViewById(R.id.hzs_expand_item_sub_menu_header);
+            binding = DataBindingUtil.inflate(LayoutInflater.from(context),R.layout.hzs_expand_item_year_menu,viewGroup,false);
+            view = binding.getRoot();
+            holder.binding = binding;
             view.setTag(holder);
         }else{
             holder = (FirstHolder)view.getTag();
         }
-        holder.year.setText(years.get(i).getYear() + "年");
-        holder.balance.setText(years.get(i).getBalance());
+        holder.binding.setHzsYearData(years.get(i));
         return view;
     }
 
@@ -84,7 +90,7 @@ public class HzsFirstExpandableListViewAdapter extends BaseExpandableListAdapter
         if(lv == null){
             lv = new HzsCustomExpandableListView(context);
         }
-        HzsSecondExpandableListViewAdapter secondAdapter = new HzsSecondExpandableListViewAdapter(years.get(i).getMonthDataList(),context);
+        HzsSecondExpandableListViewAdapter secondAdapter = new HzsSecondExpandableListViewAdapter(years.get(i).getMonthDataList(),context, i,i1,this);
         lv.setAdapter(secondAdapter);
         return lv;
     }
@@ -95,7 +101,7 @@ public class HzsFirstExpandableListViewAdapter extends BaseExpandableListAdapter
     }
 
     static class FirstHolder{
-        TextView year;
-        TextView balance;
+        HzsExpandItemYearMenuBinding binding;
     }
+
 }

@@ -69,6 +69,22 @@ public class HistoryActivity extends BaseActivity{
     public static final int SEASON = 2;
     public static final int MONTH = 3;
     public static final int DAY = 4;
+    public int getYear() {
+        return year;
+    }
+
+    public String getSeason() {
+        return season;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,24 +104,57 @@ public class HistoryActivity extends BaseActivity{
         return instance;
     }
 
-    public void refreshData(){
+    public void refreshMainData(){
+        Double bal = 0.0;
+        Double in = 0.0;
+        Double out = 0.0;
         switch (mode){
             case TOTAL:
-                showDataAsTotal();
+                List<HzsYearData> totalData = getTotalData();
+                for(HzsYearData data:totalData){
+                    bal += data.getBal();
+                    in += data.getIn();
+                    out += data.getOut();
+                }
                 break;
             case YEAR:
-                showDataAsYear();
+                List<HzsMonthData> yearData = getYearData(year-1900);
+                for(HzsMonthData data:yearData){
+                    bal += data.getBal();
+                    in += data.getIn();
+                    out += data.getOut();
+                }
                 break;
             case SEASON:
-                showDataAsSeason();
+                List<HzsMonthData> seasonData = getSeasonData(year-1900,season);
+                for(HzsMonthData data:seasonData){
+                    bal += data.getBal();
+                    in += data.getIn();
+                    out += data.getOut();
+                }
                 break;
             case MONTH:
-                showDataAsMonth();
+                List<HzsDayData> monthData = getMonthData(year-1900,month-1);
+                for(HzsDayData data:monthData){
+                    bal += data.getBal();
+                    in += data.getIn();
+                    out += data.getOut();
+                }
                 break;
             case DAY:
-                showDataAsDay();
+                List<Tally> dayData = getDayData(year-1900,month-1,day);
+                for(Tally data:dayData){
+                    if(data.getActionType() == ActionType.OUTCOME){
+                        bal -= data.getMoney();
+                        out += data.getMoney();
+                    }else{
+                        bal += data.getMoney();
+                        in += data.getMoney();
+                    }
+                }
                 break;
         }
+        showMainData(bal.toString(),out.toString(),in.toString());
     }
     private void showMainData(String balance,String outcome,String income){
         TextView balanceTextView = findViewById(R.id.hzs_history_balance);
@@ -470,10 +519,9 @@ public class HistoryActivity extends BaseActivity{
     /*
      * get开头的函数year必须减1900, show开头的函数则不用
      * */
-    private List<HzsYearData> getTotalData(){
+    public List<HzsYearData> getTotalData(){
         DataBaseFilter filter = new DataBaseFilter(null,null,-1,null,null,null);
         List<Tally> tallyData = App.dataBaseHelper.getTallies(filter);
-        
         List<HzsYearData> yearData = new ArrayList<>();
         if(tallyData.size()>0){
             int lastYear = tallyData.get(0).getDate().getYear();
@@ -494,7 +542,7 @@ public class HistoryActivity extends BaseActivity{
         return yearData;
     }
 
-    private List<HzsMonthData> getYearData(int year){
+    public List<HzsMonthData> getYearData(int year){
         Date startDate = new Date(year,0,1);
         Date endDate = new Date(year,11,31);
         DataBaseFilter filter = new DataBaseFilter(startDate,endDate,-1,null,null,null);
@@ -509,7 +557,7 @@ public class HistoryActivity extends BaseActivity{
                     singleMonth.add(tallyData.get(i));
                     i += 1;
                 }
-                HzsMonthData hzsMonthData = new HzsMonthData(singleMonth);
+                HzsMonthData hzsMonthData = new HzsMonthData(singleMonth, null);
                 monthData.add(hzsMonthData);
                 if(i<tallyData.size()){
                     lastMonth = tallyData.get(i).getDate().getMonth();
@@ -518,7 +566,7 @@ public class HistoryActivity extends BaseActivity{
         }
         return monthData;
     }
-    private List<HzsMonthData> getSeasonData(int year, String season){
+    public List<HzsMonthData> getSeasonData(int year, String season){
 
         Date startDate;
         Date endDate;
@@ -552,7 +600,7 @@ public class HistoryActivity extends BaseActivity{
                     singleMonth.add(tallyData.get(i));
                     i += 1;
                 }
-                HzsMonthData hzsMonthData = new HzsMonthData(singleMonth);
+                HzsMonthData hzsMonthData = new HzsMonthData(singleMonth, null);
                 monthData.add(hzsMonthData);
                 if(i<tallyData.size()){
                     lastMonth = tallyData.get(i).getDate().getMonth();
@@ -561,7 +609,7 @@ public class HistoryActivity extends BaseActivity{
         }
         return monthData;
     }
-    private List<HzsDayData> getMonthData(int year,int month){
+    public List<HzsDayData> getMonthData(int year,int month){
         Date startDate = new Date(year,month,1);
         Date endDate = new Date(year,month,getDaysOfMonth(year,month));
         DataBaseFilter filter = new DataBaseFilter(startDate,endDate,-1,null,null,null);
@@ -585,7 +633,7 @@ public class HistoryActivity extends BaseActivity{
         }
         return dayData;
     }
-    private List<Tally> getDayData(int year, int month,int day){
+    public List<Tally> getDayData(int year, int month,int day){
         Date startDate = new Date(year,month,day);
         Date endDate = new Date(year,month,day);
         DataBaseFilter filter = new DataBaseFilter(startDate,endDate,-1,null,null,null);

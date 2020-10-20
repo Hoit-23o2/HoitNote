@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="classification"
+            type="String" />
+    </data>
+    <com.daimajia.swipe.SwipeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <!-- Bottom View Start-->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:background="#66ddff00"
+            android:id="@+id/bottom_wrapper"
+            android:layout_width="100dp"
+            android:weightSum="1"
+            android:layout_height="match_parent"
+            android:tag="bottom">
+            <!--What you want to show-->
+            <TextView
+                android:id="@+id/hzs_expand_item_add_class_delete"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="删除"
+                android:textSize="24dp"
+                android:textColor="@android:color/white"
+                android:background="@android:color/holo_red_light"/>
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/colorSweetPrimary">
+            <com.example.hoitnote.customviews.FontAwesome
+                android:id="@+id/class_icon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:text="@string/security_icon"
+                android:textSize="40dp"
+                android:textColor="@android:color/holo_blue_bright"
+                android:gravity="center"/>
+            <TextView
+                android:id="@+id/class_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@={classification}"
+                android:textSize="24sp"
+                android:textColor="@color/colorDefaultTextPrimary"
+                android:gravity="center_vertical|left"
+                android:paddingLeft="20dp"/>
+
+        </LinearLayout>
+    </com.daimajia.swipe.SwipeLayout>
+
+
+</layout>

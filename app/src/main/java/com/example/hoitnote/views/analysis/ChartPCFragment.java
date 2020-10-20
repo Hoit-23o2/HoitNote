@@ -50,14 +50,20 @@ public class ChartPCFragment extends Fragment {
         );
         chartAnalysisManager.setHoitNotePCView(binding.circleChart);
         chartAnalysisManager.setListViewPC(binding.legendsList);
+        chartAnalysisManager.setRecyclerViewShowScreen(binding.filterTabs);
         chartAnalysisManager.actImageViewPC();
 
+        ArrayList<String> markScreenList = new ArrayList<>(
+                Arrays.asList(Constants.tallyTableColumn_c1, Constants.tallyTableColumn_c2));
         /*初始化PC*/
-        ArrayList<TallyAnalysisPC> tallyAnalysisPCs = ChartAnalysisManager.analyseTalliesPC(contentValues, new ArrayList<String>(
-                Arrays.asList(Constants.tallyTableColumn_c1, Constants.tallyTableColumn_c2)
-        ));
-        chartAnalysisManager.setTallyAnalysisPCListPC(tallyAnalysisPCs);
-
+        ArrayList<TallyAnalysisPC> tallyAnalysisPCs = ChartAnalysisManager.analyseTalliesPC(contentValues, markScreenList);
+        chartAnalysisManager.setTallyAnalysisPCListPC(tallyAnalysisPCs, markScreenList);
+//        binding.filterTabs.smoothScrollToPosition(new Lisenter{
+//            @Override
+//                    public void posChanged(int pos){
+//                binding.filterTabs.scrollToPosition(pos);
+//            }
+//        })
         return binding.getRoot();
     }
 

@@ -55,7 +55,7 @@ public class HzsYearData {
     }
 
     private String year;
-    private String balance;
+    public String balance;
     private List<Tally> data = new ArrayList<>();
     private List<HzsMonthData> monthDataList = new ArrayList<>();
     private Double bal = 0.0;
@@ -84,17 +84,26 @@ public class HzsYearData {
             }else if(data.get(i).getDate().getMonth() == lastMonth){
                 tempList.add(data.get(i));
             }else{
-                HzsMonthData hzsMonthData = new HzsMonthData(tempList);
+                HzsMonthData hzsMonthData = new HzsMonthData(tempList,this);
                 monthDataList.add(hzsMonthData);
                 tempList = new ArrayList<>();
                 tempList.add(data.get(i));
-                Log.i(TAG, "HzsYearData: ");
                 lastMonth = data.get(i).getDate().getMonth();
             }
         }
-        HzsMonthData hzsMonthData = new HzsMonthData(tempList);
+        HzsMonthData hzsMonthData = new HzsMonthData(tempList,this);
         monthDataList.add(hzsMonthData);
         this.balance = bal.toString();
-
+    }
+    public void refreshData(){
+        bal = 0.0;
+        out = 0.0;
+        in = 0.0;
+        for(HzsMonthData monthData:monthDataList){
+            bal += monthData.getBal();
+            out += monthData.getOut();
+            in += monthData.getIn();
+        }
+        this.balance = bal.toString();
     }
 }

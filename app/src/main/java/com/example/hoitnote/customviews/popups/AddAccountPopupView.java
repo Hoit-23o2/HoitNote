@@ -64,11 +64,6 @@ public class AddAccountPopupView extends BaseObservable {
     }
 
     public PopupWindow showPopupWindow() {
-        //Create a View object yourself through inflater
-        /*LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.popupwindow_addaccount, null);*/
-
-        //Specify the length and width through constants
         int width = LinearLayout.LayoutParams.MATCH_PARENT;
         int height = LinearLayout.LayoutParams.MATCH_PARENT;
 

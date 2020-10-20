@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.icu.util.Calendar;
 import android.os.Build;
 import android.view.Gravity;
@@ -54,8 +55,8 @@ public class ChartAnalysisManager {
 
     //扇形统计图相关
     private HoitNotePCView hoitNotePCView;
-    private CAMPCListAdapter CAMPCListAdapter;
     private ListView myListViewPc;
+    private CAMPCListAdapter CAMPCListAdapter;
     private RecyclerView recyclerViewShowScreen;
     private CAMPCRVAdapter campcrvAdapter;
     private ContentValues screenContentValues;
@@ -72,7 +73,6 @@ public class ChartAnalysisManager {
 
     //对话框相关
     private boolean ifAnalysing = false;
-    private Button btnActDialog;
     private AlertDialog dialog;
     private ArrayList<ChooseScreenListNode> chooseScreenListNodeArrayList;      //包括一级，二级的ScreenList
     private boolean[] firstLevelCheckedList;            //一级checkedList
@@ -90,12 +90,12 @@ public class ChartAnalysisManager {
         myListViewPc = null;
         this.context = context;
         this.screenContentValues = new ContentValues();
-        this.screenContentValues.put(Constants.tallyTableColumn_c1,"一级分类");
-        this.screenContentValues.put(Constants.tallyTableColumn_c2,"二级分类");
-        this.screenContentValues.put(Constants.tallyTableColumn_project,"项目");
-        this.screenContentValues.put(Constants.tallyTableColumn_member,"成员");
-        this.screenContentValues.put(Constants.tallyTableColumn_account,"账户");
-        this.screenContentValues.put(Constants.tallyTableColumn_vendor,"商家");
+        this.screenContentValues.put(Constants.tallyTableColumn_c1,"分类一");
+        this.screenContentValues.put(Constants.tallyTableColumn_c2,"分类二");
+        this.screenContentValues.put(Constants.tallyTableColumn_project,"项   目");
+        this.screenContentValues.put(Constants.tallyTableColumn_member,"成   员");
+        this.screenContentValues.put(Constants.tallyTableColumn_account,"账   户");
+        this.screenContentValues.put(Constants.tallyTableColumn_vendor,"商   家");
 
         //初始化Cl
         hoitNoteCLView = null;
@@ -146,6 +146,7 @@ public class ChartAnalysisManager {
         }
         if(campcrvAdapter != null){
             campcrvAdapter.setScreenMarkList(screenMarkList);
+            recyclerViewShowScreen.smoothScrollToPosition(0);
         }
     }
 
@@ -160,6 +161,7 @@ public class ChartAnalysisManager {
                 }
                 if(campcrvAdapter != null){
                     campcrvAdapter.enterOnce();
+                    recyclerViewShowScreen.smoothScrollToPosition(campcrvAdapter.nowPosition);
                 }
             }
         }else {
@@ -168,6 +170,7 @@ public class ChartAnalysisManager {
             }
             if(campcrvAdapter != null){
                 campcrvAdapter.enterOnce();
+                recyclerViewShowScreen.smoothScrollToPosition(campcrvAdapter.nowPosition);
             }
         }
     }
@@ -183,6 +186,7 @@ public class ChartAnalysisManager {
                 }
                 if(campcrvAdapter != null){
                     campcrvAdapter.goBack();
+                    recyclerViewShowScreen.smoothScrollToPosition(campcrvAdapter.nowPosition);
                 }
             }
         }else {
@@ -191,7 +195,17 @@ public class ChartAnalysisManager {
             }
             if(campcrvAdapter != null){
                 campcrvAdapter.goBack();
+                recyclerViewShowScreen.smoothScrollToPosition(campcrvAdapter.nowPosition);
             }
+        }
+    }
+
+    public void notifyDrawPC(){
+        if(recyclerViewShowScreen != null){
+            campcrvAdapter.notifyDataSetChanged();
+        }
+        if(myListViewPc != null){
+            CAMPCListAdapter.notifyDataSetChanged();
         }
     }
 
@@ -271,6 +285,15 @@ public class ChartAnalysisManager {
         }
     }
 
+    public void notifyDrawCL(){
+        if(myListViewClSignName != null){
+            CAMSgClListAdapter.notifyDataSetChanged();
+        }
+        if(myListViewClTimeDivision != null){
+            CAMTdClListAdapter.notifyDataSetChanged();
+        }
+    }
+
     public void setBackgroundColorCl(int color){
         if(hoitNoteCLView != null){
             hoitNoteCLView.setSelfBackgroundColor(color);
@@ -307,19 +330,19 @@ public class ChartAnalysisManager {
         mTvStartTime.setText("");
         mTvEndTime.setText("");
         dialog.show();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         //设置对话框大小
-        Window window = dialog.getWindow();
-        WindowManager.LayoutParams lp = Objects.requireNonNull(window).getAttributes();
-        lp.gravity = Gravity.BOTTOM ;
-        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        window.setAttributes(lp);
-        window.setGravity(Gravity.BOTTOM);
+//        Window window = dialog.getWindow();
+//        WindowManager.LayoutParams lp = Objects.requireNonNull(window).getAttributes();
+//        lp.gravity = Gravity.BOTTOM ;
+//        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+//        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//        window.setAttributes(lp);
+//        window.setGravity(Gravity.BOTTOM);
         //window.getDecorView().setPadding( 0 , 0 , 0 , 0 );
     }
 
-    public void setBtnActDialog(Button btnActDialog){
-        this.btnActDialog = btnActDialog;
+    public void setBtnActDialog(View btnActDialog){
         btnActDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -334,12 +357,12 @@ public class ChartAnalysisManager {
         int i,j,len,len2;
         ArrayList<String> stringArrayList;
         chooseScreenListNodeArrayList = new ArrayList<>();
-        chooseScreenListNodeArrayList.add(new ChooseScreenListNode("一级分类",Constants.tallyTableColumn_c1));
-        chooseScreenListNodeArrayList.add(new ChooseScreenListNode("二级分类",Constants.tallyTableColumn_c2));
-        chooseScreenListNodeArrayList.add(new ChooseScreenListNode("账户",Constants.tallyTableColumn_account));
-        chooseScreenListNodeArrayList.add(new ChooseScreenListNode("成员",Constants.tallyTableColumn_member));
-        chooseScreenListNodeArrayList.add(new ChooseScreenListNode("项目",Constants.tallyTableColumn_project));
-        chooseScreenListNodeArrayList.add(new ChooseScreenListNode("商家",Constants.tallyTableColumn_vendor));
+        chooseScreenListNodeArrayList.add(new ChooseScreenListNode("分类一",Constants.tallyTableColumn_c1));
+        chooseScreenListNodeArrayList.add(new ChooseScreenListNode("分类二",Constants.tallyTableColumn_c2));
+        chooseScreenListNodeArrayList.add(new ChooseScreenListNode("账   户",Constants.tallyTableColumn_account));
+        chooseScreenListNodeArrayList.add(new ChooseScreenListNode("成   员",Constants.tallyTableColumn_member));
+        chooseScreenListNodeArrayList.add(new ChooseScreenListNode("项   目",Constants.tallyTableColumn_project));
+        chooseScreenListNodeArrayList.add(new ChooseScreenListNode("商   家",Constants.tallyTableColumn_vendor));
 
         //获取一级分类
         chooseScreenListNodeArrayList.get(0).content = App.dataBaseHelper.getAllClassification1(false,ActionType.INCOME);
@@ -516,7 +539,8 @@ public class ChartAnalysisManager {
         //建立对话框
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View view = LayoutInflater.from(context).inflate(R.layout.cam_dialog_choose_screen,null);
-        dialog = builder.setTitle("选择要分析的内容").setView(view).create();
+        dialog = builder.setView(view).create();
+
         //获取，设置Screen-ListView
         ListView mLvDialogScreen;                   //一级Screen的ListView
         CAMFirstScreenListAdapter CAMFirstScreenListAdapter;    //一级Screen的ListView的适配器

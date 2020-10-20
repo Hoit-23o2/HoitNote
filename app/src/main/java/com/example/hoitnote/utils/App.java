@@ -14,9 +14,10 @@ import java.util.ArrayList;
 * 全局静态变量
 * */
 public class App {
-    public static SQLiteDatabase sqLiteDatabase;
     @SuppressLint("StaticFieldLeak")
     public static DataBaseHelper dataBaseHelper;
+    @SuppressLint("StaticFieldLeak")
+    public static DataBaseHelper BackupDataBaseHelper;
     @SuppressLint("StaticFieldLeak")
     public static BlueToothHelper blueToothHelper;
     public static FileHelper fileHelper;

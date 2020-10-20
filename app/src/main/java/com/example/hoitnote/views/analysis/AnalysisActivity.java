@@ -9,6 +9,8 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.ContentValues;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.example.hoitnote.BaseActivity;
 import com.example.hoitnote.R;
@@ -22,6 +24,7 @@ import com.example.hoitnote.utils.helpers.NavigationHelper;
 import com.example.hoitnote.utils.managers.ChartAnalysisManager;
 import com.example.hoitnote.viewmodels.AccountCardViewModel;
 import com.example.hoitnote.viewmodels.AnalysisViewModel;
+import com.example.hoitnote.views.settings.SettingsActivity;
 
 import java.util.ArrayList;
 
@@ -54,31 +57,11 @@ public class AnalysisActivity extends BaseActivity {
         fragmentTransaction.add(binding.mainContainer.getId(), analysisFragment).commit();
 
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            /*调用统计图*/
-            /*
-            chartAnalysisManager.setListViewPC(binding.legends);
+        initActivity();
+    }
 
-            chartAnalysisManager.setHoitNotePCView(binding.circleChart);
-            chartAnalysisManager.actImageViewPC();
-
-            chartAnalysisManager.setHoitNoteCLView(binding.linearChart);
-            chartAnalysisManager.actImageViewCl();
-
-
-            ArrayList<ContentValues> contentValuesArrayList = ChartAnalysisManager.getContentValuesTallies(
-                    App.dataBaseHelper.getTallies(null)
-            );
-
-            final ArrayList<TallyAnalysisPC> tallyAnalysisPCs = ChartAnalysisManager.analyseTalliesPC(contentValuesArrayList, new ArrayList<String>(
-                    Arrays.asList(Constants.tallyTableColumn_c1, Constants.tallyTableColumn_c2)
-            ));
-            final ArrayList<TallyAnalysisCl> tallyAnalysisCls = ChartAnalysisManager.analyseTalliesCl(contentValuesArrayList);
-
-            chartAnalysisManager.setTallyAnalysisPCListPC(tallyAnalysisPCs);
-            chartAnalysisManager.setTallyAnalysisClListCl(tallyAnalysisCls);*/
-
-        }
+    public void initActivity(){
+        showBackButton();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -105,6 +88,44 @@ public class AnalysisActivity extends BaseActivity {
         fragments.add(chartPCFragment);
         fragments.add(chartClFragment);
         return fragments;
+    }
+
+    private Menu menu;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
+        getMenuInflater().inflate(R.menu.analysis_selector, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public void hideMenu(){
+        if(menu != null){
+            for(int i = 0;i < menu.size(); i++){
+                menu.getItem(i).setVisible(false);
+                menu.getItem(i).setEnabled(false);
+            }
+        }
+    }
+
+    public void showMenu(){
+        if(menu != null){
+            for(int i = 0;i < menu.size(); i++){
+                menu.getItem(i).setVisible(true);
+                menu.getItem(i).setEnabled(true);
+            }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.analysis_selector:
+                chartAnalysisManager.showDialog();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 

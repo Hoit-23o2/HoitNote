@@ -1,9 +1,13 @@
 package com.example.hoitnote;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 import android.view.Menu;
@@ -97,12 +101,20 @@ public class MainActivity extends BaseActivity {
 
     /*点击添加加号后添加一个账户*/
     public void addAccount(View view) {
-        final AddAccountPopupView popupView = new AddAccountPopupView(view);
-        final PopupWindow popupWindow = popupView.showPopupWindow();
-        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+        final Dialog dialog = new Dialog(context);
+        final PopupwindowAddaccountBinding popupViewBinding;
+        popupViewBinding = DataBindingUtil.inflate(
+                LayoutInflater.from(context),
+                R.layout.popupwindow_addaccount,
+                (ViewGroup) binding.getRoot(),
+                false
+        );
+       
+        dialog.setContentView(popupViewBinding.getRoot());
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
-            public void onDismiss() {
-                PopupwindowAddaccountBinding popupViewBinding = popupView.getBinding();
+            public void onDismiss(DialogInterface dialogInterface) {
                 String accountName = popupViewBinding.accountNameField.getText().toString();
                 String accountCode = popupViewBinding.accountCodeField.getText().toString();
                 ToastHelper.showToast(context, accountName, Toast.LENGTH_SHORT);
@@ -133,9 +145,16 @@ public class MainActivity extends BaseActivity {
                     ToastHelper.showToast(context, Constants.accountCodeNotEnoughHint
                             , Toast.LENGTH_SHORT);
                 }
-
             }
         });
+
+        popupViewBinding.addAccountBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
     // create an action bar button
@@ -151,6 +170,8 @@ public class MainActivity extends BaseActivity {
     }
 
     public void addTally(View view) {
-        NavigationHelper.navigationNormally(context, BookingActivity.class);
+        NavigationHelper.navigationWithParameter(Constants.mainParamTag,
+                currentAccountCardFragment.getBinding().getAccountCardViewModel().getAccount(),
+                context,BookingActivity.class, false);
     }
 }

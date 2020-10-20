@@ -7,56 +7,66 @@
             name="popupView"
             type="com.example.hoitnote.customviews.popups.AddAccountPopupView" />
     </data>
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPopupBackground"
-        android:gravity="center">
+        android:background="@color/colorPopupBackground">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintWidth_percent="0.8"
+                app:layout_constraintHeight_percent="0.5"
+                app:cardCornerRadius="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintWidth_percent="0.8"
-            app:layout_constraintHeight_percent="0.5"
-            app:cardCornerRadius="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
 
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <EditText
-                    android:background="@drawable/edittext_round_outline"
-                    android:layout_margin="20dp"
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:gravity="center"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:textSize="20sp"
-                    android:ems="10"
-                    android:id="@+id/accountNameField"
-                    android:singleLine="true"
-                    android:hint="@string/account_name_hint"
-                    android:text="@={popupView.accountName}"/>
+                    android:layout_height="match_parent">
+                    <EditText
+                        android:background="@drawable/edittext_round_outline"
+                        android:layout_margin="20dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:textSize="20sp"
+                        android:ems="10"
+                        android:id="@+id/accountNameField"
+                        android:singleLine="true"
+                        android:hint="@string/account_name_hint"
+                        android:text="@={popupView.accountName}"/>
 
-                <EditText
-                    android:ems="10"
-                    android:layout_height="50dp"
-                    android:textSize="20sp"
-                    android:background="@drawable/edittext_round_outline"
-                    android:layout_width="match_parent"
-                    android:layout_margin="20dp"
-                    android:singleLine="true"
-                    android:id="@+id/accountCodeField"
-                    android:hint="@string/account_code_hint"
-                    android:text="@={popupView.accountCode}" />
-            </LinearLayout>
+                    <EditText
+                        android:ems="10"
+                        android:layout_height="50dp"
+                        android:textSize="20sp"
+                        android:background="@drawable/edittext_round_outline"
+                        android:layout_width="match_parent"
+                        android:layout_margin="20dp"
+                        android:singleLine="true"
+                        android:id="@+id/accountCodeField"
+                        android:hint="@string/account_code_hint"
+                        android:text="@={popupView.accountCode}" />
+
+                    <Button
+                        android:id="@+id/addAccountBtn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/confirm_hint"/>
+                </LinearLayout>
 
 
-        </androidx.cardview.widget.CardView>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
 
 </layout>
