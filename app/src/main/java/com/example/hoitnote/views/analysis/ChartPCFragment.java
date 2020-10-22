@@ -51,7 +51,6 @@ public class ChartPCFragment extends Fragment {
         chartAnalysisManager.setHoitNotePCView(binding.circleChart);
         chartAnalysisManager.setListViewPC(binding.legendsList);
         chartAnalysisManager.setRecyclerViewShowScreen(binding.filterTabs);
-        chartAnalysisManager.setBtnActDialog(binding.makeFilter);
         chartAnalysisManager.actImageViewPC();
 
         ArrayList<String> markScreenList = new ArrayList<>(

@@ -20,6 +20,7 @@ public class ClientThread extends Thread{
     public BlueToothHelper.BlueToothHandler mHandler;
     public BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
 
+    private ReceiveMessageThread receiveMessageThread;
     public ClientThread(BluetoothDevice device, BlueToothHelper.BlueToothHandler mHandler) {
         this.device = device;
         this.mHandler = mHandler;
@@ -43,6 +44,8 @@ public class ClientThread extends Thread{
                 {
                     // call a function here
                     // my function blocks for the application lifetime
+                    receiveMessageThread = new ReceiveMessageThread(socket,mHandler);
+                    receiveMessageThread.start();
                     break;
                 }
                 else
@@ -57,29 +60,11 @@ public class ClientThread extends Thread{
             is = socket.getInputStream();//输入到本机设备的数据流
             os = socket.getOutputStream();//输出到远端设备的数据流
 
-            //新开一个线程来发送数据，因为读出写入数据过程为阻塞过程
-            /*
-            new Thread(new Runnable( ) {
-                private Handler mHandler = ClientThread.mHandler;
-                @Override
-                public void run() {
-                    //发送测试消息
-                    write("这是另一台手机发送过来的数据");
-
-                }
-            }).start();*/
-
         } catch (IOException e) {
             e.printStackTrace();
             this.mHandler.obtainMessage(Constants.MSG_CONNECT_FAILURE).sendToTarget();
         } catch (NullPointerException E) {
             E.printStackTrace();
-        /*} catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();*/
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -93,5 +78,17 @@ public class ClientThread extends Thread{
             e.printStackTrace();
             mHandler.obtainMessage(Constants.MSG_SEND_FAILURE).sendToTarget();
         }
+    }
+
+    public OutputStream getOs() {
+        return os;
+    }
+
+    public InputStream getIs() {
+        return is;
+    }
+
+    public ReceiveMessageThread getReceiveMessageThread() {
+        return receiveMessageThread;
     }
 }

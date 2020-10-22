@@ -1,6 +1,7 @@
 package com.example.hoitnote.viewmodels;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 
 import com.example.hoitnote.customviews.AccountCardFragment;
@@ -9,6 +10,7 @@ import com.example.hoitnote.models.Tally;
 import com.example.hoitnote.utils.App;
 import com.example.hoitnote.utils.commuications.DataBaseFilter;
 import com.example.hoitnote.utils.constants.Constants;
+import com.example.hoitnote.utils.constants.Maps;
 import com.example.hoitnote.utils.enums.ActionType;
 import com.example.hoitnote.utils.enums.ClickType;
 import com.example.hoitnote.utils.enums.GroupType;
@@ -44,7 +46,7 @@ public class MainViewModel extends BaseViewModel {
     }
 
     /*
-    * 根据GroupType对Tally进行分组
+    * 根据GroupType对TallyViewModel进行分组
     * */
     public HashMap<String, ArrayList<TallyViewModel>> groupTallyViewModel(ArrayList<TallyViewModel> tallyViewModels,
                                                                           GroupType groupType){
@@ -90,51 +92,9 @@ public class MainViewModel extends BaseViewModel {
         );
 
         ArrayList<Tally> tallies = App.dataBaseHelper.getTallies(filter);
-        for (Tally tally:
-             tallies) {
-            TallyViewModel tallyViewModel = new TallyViewModel(
-                    context,
-                    tally,
-                    "2222"
-            );
-            tallyViewModels.add(tallyViewModel);
-        }
-        /*测试用*/
-        if(tallyViewModels.size() == 0){
-            tallyViewModels.add(
-                    new TallyViewModel(context, new Tally(
-                            20.0,
-                            new Date(System.currentTimeMillis()),
-                            new Time(10000),
-                            "hahah",
-                            new Account(),
-                            ActionType.INCOME,
-                            "餐饮",
-                            "早餐",
-                            "张楠",
-                            "大创",
-                            "楼下超市"
-
-                    ), "ss")
-            );
-            tallyViewModels.add(
-                    new TallyViewModel(context,new Tally(
-                            20.0,
-                            new Date(System.currentTimeMillis()-1000000000),
-                            new Time(10001),
-                            "hahah",
-                            new Account(),
-                            ActionType.INCOME,
-                            "餐  饮",
-                            "早 餐",
-                            "张楠",
-                            "大创",
-                            "楼下超市"
-
-                    ), "ss")
-            );
-        }
         /**/
-        return tallyViewModels;
+        return  parseTalliesToViewModel(tallies);
     }
+
+
 }

@@ -18,12 +18,13 @@
 
         <com.example.hoitnote.customviews.FontAwesome
             android:id="@+id/selectorBtn"
-            android:textColor="?attr/colorAccent"
             android:layout_width="wrap_content"
-            android:layout_margin="10dp"
-            android:textSize="16sp"
+            android:layout_marginLeft="5dp"
             android:layout_height="wrap_content"
             style="@style/HoitIcon"
-            android:text="@string/selector_icon"/>
+            android:textSize="20sp"
+            android:padding="10dp"
+            android:text="@string/selector_icon"
+            android:layout_marginRight="5dp" />
     </LinearLayout>
 </layout>

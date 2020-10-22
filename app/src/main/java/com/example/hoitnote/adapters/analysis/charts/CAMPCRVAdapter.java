@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.hoitnote.R;
+import com.example.hoitnote.utils.helpers.ThemeHelper;
 
 import java.util.ArrayList;
 
@@ -37,7 +38,7 @@ public class CAMPCRVAdapter extends  RecyclerView.Adapter<CAMPCRVAdapter.CAMPCRV
     public void setScreenMarkList(ArrayList<String> screenMarkList) {
         screenList = new ArrayList<>();
         if(screenMarkList == null) return;
-        screenList.add("总计");
+        screenList.add("总   计");
         int len = screenMarkList.size();
         int i;
         for(i = 0; i < len;i++){
@@ -72,9 +73,9 @@ public class CAMPCRVAdapter extends  RecyclerView.Adapter<CAMPCRVAdapter.CAMPCRV
     public void onBindViewHolder(@NonNull CAMPCRVViewHolder holder, int position) {
         holder.textView.setText(screenList.get(position));
         if(position == nowPosition) {
-            holder.textView.setBackgroundColor(Color.rgb(255,255,0));
+            holder.textView.setBackgroundColor(ThemeHelper.getAccentColor(context));
         }else{
-            holder.textView.setBackgroundColor(Color.rgb(255,255,255));
+            holder.textView.setBackgroundColor(ThemeHelper.getPrimaryColor(context));
         }
     }
 

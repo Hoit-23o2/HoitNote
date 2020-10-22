@@ -108,7 +108,35 @@
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/setting_sync"/>
+                    android:text="@string/settings_sync"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:foreground="?selectableItemBackground"
+                android:onClick="goRecycleActivity"
+                android:layout_margin="10dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:targetApi="m">
+                <com.example.hoitnote.customviews.FontAwesome
+                    android:id="@+id/recycleIcon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:text="@string/recycleIcon"
+                    style="@style/HoitIcon"
+                    tools:targetApi="lollipop" />
+
+                <TextView
+                    android:textColor="?attr/textColorPrimary"
+                    style="@style/HoitTitleText"
+                    android:layout_margin="10dp"
+                    android:textAlignment="center"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_recycle"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

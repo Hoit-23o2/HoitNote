@@ -64,7 +64,7 @@ public class AnalysisFragment extends Fragment {
                 super.onPageSelected(position);
                 if(((AnalysisActivity)context).analysisSelectorItem != null){
                     if(position == 0){
-                        ((AnalysisActivity)context).hideSelectorItem();
+                        ((AnalysisActivity)context).hideSelectorItem(true);
                     }
                     else{
                         ((AnalysisActivity)context).displaySelectorItem();

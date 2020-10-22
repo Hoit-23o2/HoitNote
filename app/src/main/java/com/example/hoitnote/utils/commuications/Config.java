@@ -2,13 +2,16 @@ package com.example.hoitnote.utils.commuications;
 
 import com.example.hoitnote.utils.enums.PasswordStyle;
 import com.example.hoitnote.utils.enums.Theme;
+
+import java.io.Serializable;
+
 /*
 * 配置模型
 * 1.当前的主题
 * 2.当前的密码
 * 3.当前的密码样式
 * */
-public class Config {
+public class Config implements Serializable {
     private Theme currentTheme;
 
     public Theme getCurrentTheme() {

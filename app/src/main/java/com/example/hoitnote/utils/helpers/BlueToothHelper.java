@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -24,9 +25,12 @@ import com.example.hoitnote.utils.Interfaces.IBlueTooth;
 import com.example.hoitnote.utils.commuications.DataPackage;
 import com.example.hoitnote.utils.commuications.bluetooth.AcceptThread;
 import com.example.hoitnote.utils.commuications.bluetooth.ClientThread;
+import com.example.hoitnote.utils.commuications.bluetooth.ReceiveInfo;
+import com.example.hoitnote.utils.commuications.bluetooth.SendInfo;
 import com.example.hoitnote.utils.constants.Constants;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -38,22 +42,66 @@ public class BlueToothHelper implements IBlueTooth {
     private static final int REQUEST_ACCESS_COARSE_LOCATION = 1;
     private static boolean isConnected = false;
     public static int testArrayIndex=0;
-    public static boolean sendFinished = false;
+    private static boolean sendFinished = false;
 
     private BluetoothAdapter bluetoothAdapter;//Im蓝牙适配器
 
-    ClientThread clientThread;//客户端线程——发送数据
-    AcceptThread acceptThread;//服务器端线程——接受数据
+    ClientThread clientThread = null;//客户端线程——发送数据
+    AcceptThread acceptThread = null;//服务器端线程——接受数据
     Context context;
     BaseActivity activity;
     public final BlueToothHandler mHandler;
     Set<BluetoothDevice> foundDeviceSet = new HashSet<>();
+
+    public ArrayList<BluetoothDevice> getFoundDeviceList() {
+        return foundDeviceList;
+    }
+
     ArrayList<BluetoothDevice> foundDeviceList = new ArrayList<>();
+
+    public static boolean isSendFinished() {
+        return sendFinished;
+    }
+
+    public static void setSendFinished(boolean sendFinished) {
+        BlueToothHelper.sendFinished = sendFinished;
+    }
+
+
 
     public BlueToothHelper(BaseActivity activity){
         this.context = activity.context;
         this.activity = activity;
-        mHandler = new BlueToothHandler(activity);
+        mHandler = new BlueToothHandler(activity, this);
+    }
+
+    private static BluetoothSocket socket = null;
+
+    public static BluetoothSocket getSocket() {
+        return socket;
+    }
+
+    public static void setSocket(BluetoothSocket socket) {
+        BlueToothHelper.socket = socket;
+    }
+
+    //交互消息
+    private SendInfo sendInfo;
+    public SendInfo getSendInfo() {
+        return sendInfo;
+    }
+    public void setSendInfo(SendInfo sendInfo) {
+        this.sendInfo = sendInfo;
+    }
+
+    private ReceiveInfo receiveInfo;
+
+    public ReceiveInfo getReceiveInfo() {
+        return receiveInfo;
+    }
+
+    public void setReceiveInfo(ReceiveInfo receiveInfo) {
+        this.receiveInfo = receiveInfo;
     }
 
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -103,11 +151,26 @@ public class BlueToothHelper implements IBlueTooth {
     public static class BlueToothHandler extends Handler {
         private final WeakReference<BaseActivity> mActivity;
         Context mContext;
+        BlueToothHelper blueToothHelper;
 
-        public BlueToothHandler(BaseActivity activity){
+        public interface BlueToothHandlerListener {
+            void onDataReceived(DataPackage dataPackage);
+            void onDataSendSuccessful(ReceiveInfo receiveInfo);
+        }
+
+        private BlueToothHandlerListener blueToothHandlerListener;
+
+        public void setBlueToothHandlerListener(BlueToothHandlerListener blueToothHandlerListener) {
+            this.blueToothHandlerListener = blueToothHandlerListener;
+        }
+
+        public BlueToothHandler(BaseActivity activity, BlueToothHelper blueToothHelper){
             mActivity = new WeakReference<>(activity);
             mContext = activity.context;
+            this.blueToothHelper = blueToothHelper;
+            this.blueToothHandlerListener = null;
         }
+
 
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -125,6 +188,15 @@ public class BlueToothHelper implements IBlueTooth {
                     break;
                 case Constants.MSG_RECEIVE_SUCCESS:
                     ToastHelper.showToast(mContext,"服务端接受成功",Toast.LENGTH_SHORT);
+                    setSendFinished(true);
+                    //生成回复信息
+                    ReceiveInfo receiveInfo = new ReceiveInfo("对方接受成功");
+                    blueToothHelper.setReceiveInfo(receiveInfo);
+                    //发送回复信息
+                    blueToothHelper.sendReply();
+                    DataPackage dataPackage =  blueToothHelper.acceptThread.getReceiveMessageThread().getDataPackage();
+
+                    blueToothHandlerListener.onDataReceived(dataPackage);
                     break;
                 case Constants.MSG_RECEIVE_FAILURE:
                     ToastHelper.showToast(mContext,"服务端接受失败",Toast.LENGTH_SHORT);
@@ -139,13 +211,21 @@ public class BlueToothHelper implements IBlueTooth {
                 case Constants.MSG_Is_Connected:
                     ToastHelper.showToast(mContext,"应用已经连接成功",Toast.LENGTH_SHORT);
                     break;
+                case Constants.MSG_Get_RECEIVEINFO:
+                    Toast.makeText(activity,"对方已接受到消息",Toast.LENGTH_SHORT).show();
+                    /*activity.setReceiveInfo(activity.clientThread.getReceiveMessageThread().getReceiveInfo());
+                    activity.messageText.setText(activity.getReceiveInfo().getMessage());*/
+                    receiveInfo = blueToothHelper.clientThread.getReceiveMessageThread().getReceiveInfo();
+                    blueToothHandlerListener.onDataSendSuccessful(receiveInfo);
+                    break;
             }
         }
     }
+
     @Override
     public void checkBluetoothSupport(Context context) {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if(bluetoothAdapter==null){
+        if(bluetoothAdapter == null){
             ToastHelper.showToast(context, Constants.deviceNotSupport, Toast.LENGTH_SHORT);
         }else{
             Log.d("BluetoothCheck","This device has bluetooth");
@@ -223,6 +303,7 @@ public class BlueToothHelper implements IBlueTooth {
             //这一段需要在交接的时候进行协商
             bluetoothDevices.addAll(set);
         }
+
         return bluetoothDevices;
     }
 
@@ -271,17 +352,18 @@ public class BlueToothHelper implements IBlueTooth {
 
     @Override
     public void sendDataPackage(DataPackage dataPackage) {
+        setSendInfo(new SendInfo());
+        sendInfo.setBluetoothDeviceName(bluetoothAdapter.getName());
+        sendObject(sendInfo);//先发送 数据信息
         sendObject(dataPackage);
     }
 
     private void sendObject(final Object object){
         sendFinished = false;
         new Thread(new Runnable() {
-            private BlueToothHandler mHandler;
-            private byte[] bytes = new byte[]{};
             @Override
             public void run() {
-                bytes = ConvertHelper.toByteArray(object);
+                byte[] bytes = ConvertHelper.toByteArray(object);
                 writeByte(bytes);
             }
         }).start();
@@ -293,16 +375,39 @@ public class BlueToothHelper implements IBlueTooth {
      * 调用前必须先开启ClientThread，并且连接到远端设备的服务器
      */
     public void writeByte(byte[] bytes){
-        if(ClientThread.os!=null){
+        OutputStream os = null;
+        if(clientThread!=null){
+            os = clientThread.getOs();
+        }else{
+            os = acceptThread.getReceiveMessageThread().getOs();
+        }
+
+        if(os!=null){
             try {
-                byte [] datatset= bytes;
-                ClientThread.os.write(datatset);
-                ClientThread.os.flush();
+                os.write(bytes);
+                os.flush();
                 mHandler.obtainMessage(Constants.MSG_SEND_SUCCESS).sendToTarget();
             } catch (IOException e) {
                 e.printStackTrace();
                 mHandler.obtainMessage(Constants.MSG_SEND_FAILURE).sendToTarget();
             }
         }
+    }
+
+    /**
+     * 发送数据  发送方 -> 反馈方
+     * @param data
+     */
+    public void sendDataPackage(final Object data){
+        sendObject(sendInfo);//先发送 数据信息
+        sendObject(data); //后发送 数据
+    }
+
+
+    /**
+     * Im传输结束后，反馈方 ->发送方
+     */
+    public void sendReply(){
+        sendObject(receiveInfo);
     }
 }

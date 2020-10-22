@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -19,6 +20,7 @@ import com.example.hoitnote.customviews.AccountCardFragment;
 import com.example.hoitnote.databinding.FragmentInformationBinding;
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.ClickType;
+import com.example.hoitnote.utils.helpers.DeviceHelper;
 import com.example.hoitnote.viewmodels.AccountCardViewModel;
 
 public class InformationFragment extends Fragment {
@@ -52,6 +54,13 @@ public class InformationFragment extends Fragment {
 
         binding.setAccountCardViewModel(accountCardViewModel);
         binding.informationContainer.setAlpha(0);
+
+        /*初始化1：1Container*/
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)
+                binding.cardRelatedContainer.getLayoutParams();
+        layoutParams.verticalBias = 0;
+        binding.cardRelatedContainer.setLayoutParams(layoutParams);
+
         /*长按这个Card*/
         AccountCardFragment accountCardFragment = accountCardViewModel.getAccount().
                 parseToAccountCardFragment(accountCardViewModel.context, accountCardViewModel.getClickType());
@@ -59,7 +68,22 @@ public class InformationFragment extends Fragment {
         return binding.getRoot();
     }
 
+    /*设置进入动画*/
     private void animFrame(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                int deviceHeight = DeviceHelper.getDeviceHeight(accountCardViewModel.context);
+                int deviceWidth = DeviceHelper.getDeviceWidth(accountCardViewModel.context);
+                int actionBarHeight = DeviceHelper.getActionBarHeight(accountCardViewModel.context);
+                int statueBarHeight = DeviceHelper.getStatueBarHeight(accountCardViewModel.context);
+                int navigationKeyHeight = DeviceHelper.getNavigationKeyHeight(accountCardViewModel.context);
+                int screenHeight = deviceHeight - actionBarHeight - statueBarHeight - navigationKeyHeight;
+                int transitionY = (screenHeight - deviceWidth) / 2;
+                binding.cardRelatedContainer.animate().translationY(transitionY).start();
+            }
+        }, Constants.delayDuration / 4);
+
 
         new Handler().postDelayed(new Runnable() {
             @Override

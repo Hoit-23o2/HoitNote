@@ -57,12 +57,12 @@ public class AnalysisActivity extends BaseActivity {
         fragmentTransaction.add(binding.mainContainer.getId(), analysisFragment).commit();
 
 
+
         initActivity();
     }
 
     public void initActivity(){
         showBackButton();
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -106,12 +106,15 @@ public class AnalysisActivity extends BaseActivity {
                 chartAnalysisManager.showDialog();
             }
         });
-        hideSelectorItem();
+        hideSelectorItem(false);
         return super.onCreateOptionsMenu(menu);
     }
 
-    public void hideSelectorItem(){
-        analysisSelectorItem.getActionView().animate().alpha(0).start();
+    public void hideSelectorItem(boolean isAnim){
+        if(isAnim)
+            analysisSelectorItem.getActionView().animate().alpha(0).start();
+        else
+            analysisSelectorItem.getActionView().setAlpha(0);
     }
 
     public void displaySelectorItem(){

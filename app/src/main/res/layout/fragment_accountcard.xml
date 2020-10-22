@@ -13,11 +13,15 @@
             name="accountCardViewModel"
             type="com.example.hoitnote.viewmodels.AccountCardViewModel" />
     </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center">
+        android:gravity="center"
+        tools:targetApi="lollipop">
         <androidx.cardview.widget.CardView
+            android:id="@+id/accountCard"
+            android:transitionName="@string/transition_name_card"
             android:foreground="?attr/selectableItemBackground"
             android:onClick="@{(v)->accountCardFragment.actionWhenCardClicked(v)}"
             app:cardCornerRadius="20dp"

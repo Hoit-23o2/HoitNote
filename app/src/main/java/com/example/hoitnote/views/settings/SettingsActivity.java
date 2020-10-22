@@ -44,4 +44,8 @@ public class SettingsActivity extends BaseActivity {
     public void goSyncActivity(View view) {
         NavigationHelper.navigationNormally(context, SyncSettingActivity.class);
     }
+
+    public void goRecycleActivity(View view) {
+        NavigationHelper.navigationNormally(context, RecycleActivity.class);
+    }
 }

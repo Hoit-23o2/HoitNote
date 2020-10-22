@@ -2,21 +2,22 @@ package com.example.hoitnote.utils.commuications;
 
 import com.example.hoitnote.models.Tally;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 /*
 * 定义了整体数据：
 * 1. 配置相关数据 config
 * 2. 所有账单数据 allTallies
 * */
-public class DataPackage {
-    private Config config;
+public class DataPackage implements Serializable {
+    private ArrayList<Config> configs;
 
-    public Config getConfig() {
-        return config;
+    public ArrayList<Config> getConfigs() {
+        return configs;
     }
 
-    public void setConfig(Config config) {
-        this.config = config;
+    public void setConfigs(ArrayList<Config> configs) {
+        this.configs = configs;
     }
 
     private ArrayList<Tally> allTallies;
@@ -33,8 +34,8 @@ public class DataPackage {
 
     }
 
-    public DataPackage(Config config, ArrayList<Tally> allTallies) {
-        this.config = config;
+    public DataPackage(ArrayList<Config> configs, ArrayList<Tally> allTallies) {
+        this.configs = configs;
         this.allTallies = allTallies;
     }
 }

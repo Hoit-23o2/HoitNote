@@ -1,41 +1,32 @@
 package com.example.hoitnote;
 
-import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.PopupWindow;
 import android.widget.Toast;
 import android.view.Menu;
-import android.view.MenuItem;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.hoitnote.adapters.main.AccountCardAdapter;
-import com.example.hoitnote.adapters.main.TallyRecentAdapter;
+import com.example.hoitnote.adapters.main.TallyOneExpandableAdapter;
 import com.example.hoitnote.customviews.AccountCardFragment;
-import com.example.hoitnote.customviews.popups.AddAccountPopupView;
 import com.example.hoitnote.databinding.ActivityMainBinding;
 import com.example.hoitnote.databinding.PopupwindowAddaccountBinding;
 import com.example.hoitnote.models.Account;
-import com.example.hoitnote.models.Tally;
 import com.example.hoitnote.utils.App;
-import com.example.hoitnote.utils.commuications.DataBaseFilter;
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.AccountJudgeType;
-import com.example.hoitnote.utils.enums.ActionType;
 import com.example.hoitnote.utils.enums.ClickType;
 import com.example.hoitnote.utils.enums.GroupType;
-import com.example.hoitnote.utils.enums.Theme;
+import com.example.hoitnote.utils.helpers.DeviceHelper;
 import com.example.hoitnote.utils.helpers.NavigationHelper;
 import com.example.hoitnote.utils.helpers.ThemeHelper;
 import com.example.hoitnote.utils.helpers.ToastHelper;
@@ -43,14 +34,10 @@ import com.example.hoitnote.viewmodels.AccountCardViewModel;
 import com.example.hoitnote.viewmodels.MainViewModel;
 import com.example.hoitnote.viewmodels.TallyViewModel;
 import com.example.hoitnote.views.flow.HistoryActivity;
-import com.example.hoitnote.views.settings.SettingsActivity;
 import com.example.hoitnote.views.tallyadd.BookingActivity;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.TreeMap;
 
 public class MainActivity extends BaseActivity {
     MainViewModel mainViewModel;
@@ -86,10 +73,10 @@ public class MainActivity extends BaseActivity {
                     /*分组*/
                     HashMap<String, ArrayList<TallyViewModel>> tallyViewModelWithGroups = mainViewModel.
                             groupTallyViewModel(tallyViewModels, GroupType.DATE);
-                    TallyRecentAdapter adapter = new TallyRecentAdapter(context, tallyViewModelWithGroups);
-                    binding.recentTalliesContainer.setAdapter(adapter);
+                    TallyOneExpandableAdapter adapter = new TallyOneExpandableAdapter(context, tallyViewModelWithGroups);
+                    binding.recentTalliesExpandableListView.setAdapter(adapter);
                     /*展开所有分组*/
-                    adapter.expandAllGroup(binding.recentTalliesContainer);
+                    adapter.expandAllGroup(binding.recentTalliesExpandableListView);
                     if(currentAccountCardViewModel.getAccount()!=null){
                         ToastHelper.showToast(context,"现在是:"+position+","+currentAccountCardViewModel.getAccount().getAccountName(), Toast.LENGTH_SHORT);
                     }
@@ -101,7 +88,22 @@ public class MainActivity extends BaseActivity {
         ThemeHelper.changeColorOfNavigationBar(this,
                 colorStr);
 
+        /*调整最近列表的高度*/
+        float cardFragmentRatio = 0.6f;
+        int deviceHeight = DeviceHelper.getDeviceHeight(context);
+        int deviceWidth = DeviceHelper.getDeviceWidth(context);
+        int statueBarHeight = DeviceHelper.getStatueBarHeight(context);
+        int actionBarHeight = DeviceHelper.getActionBarHeight(context);
+        float cardFragmentHeight = deviceWidth * cardFragmentRatio;
+        float recentTalliesContainerHeight = deviceHeight - cardFragmentHeight
+                - statueBarHeight - actionBarHeight;
+        ConstraintLayout.LayoutParams layoutParams =
+                (ConstraintLayout.LayoutParams) binding.recentTalliesContainer.getLayoutParams();
+        layoutParams.height = (int) recentTalliesContainerHeight;
+        binding.recentTalliesContainer.setLayoutParams(layoutParams);
     }
+
+
 
     /*点击添加加号后添加一个账户*/
     public void addAccount(View view) {
@@ -117,7 +119,8 @@ public class MainActivity extends BaseActivity {
 
         //dialog.setContentView(popupViewBinding.getRoot());
         alertDialog = builder.setView(popupViewBinding.getRoot()).create();
-        alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        if(alertDialog.getWindow() != null)
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
@@ -127,6 +130,7 @@ public class MainActivity extends BaseActivity {
                 ToastHelper.showToast(context, accountCode, Toast.LENGTH_SHORT);
                 Account newAccount = new Account(accountName,accountCode);
                 AccountJudgeType accountJudge = newAccount.checkIfAccountValid();
+                /*添加账户成功*/
                 if(accountJudge == AccountJudgeType.SUCCESSFUL){
                     App.dataBaseHelper.addAccount(newAccount);
                     AccountCardFragment newCardFragment = new AccountCardFragment(
@@ -143,10 +147,12 @@ public class MainActivity extends BaseActivity {
                     );
                     accountCardAdapter.addAccountCard(binding.accountCardBanner, newCardFragment);
                 }
+                /*账号重复*/
                 else if(accountJudge == AccountJudgeType.CODE_SAME){
                     ToastHelper.showToast(context, Constants.accountCodeSameHint
                             , Toast.LENGTH_SHORT);
                 }
+                /*账号长度不足*/
                 else if(accountJudge == AccountJudgeType.CODE_NOT_ENOUGH){
                     ToastHelper.showToast(context, Constants.accountCodeNotEnoughHint
                             , Toast.LENGTH_SHORT);
