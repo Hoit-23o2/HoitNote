@@ -80,6 +80,7 @@ public class ChartAnalysisManager {
     private ArrayList<String> chooseScreenList;         //初始化于initialDialog中,其中包含了已选中的一级Screen，而且是按选中的先后顺序排列
     private TextView mTvStartTime,mTvEndTime;           //对话框中选择时间
     ArrayList<Tally> correspondingTallies;              //初始化于getCorrespondingTallies
+    Account account;
 
 
 
@@ -94,7 +95,7 @@ public class ChartAnalysisManager {
         this.screenContentValues.put(Constants.tallyTableColumn_c2,"分类二");
         this.screenContentValues.put(Constants.tallyTableColumn_project,"项   目");
         this.screenContentValues.put(Constants.tallyTableColumn_member,"成   员");
-        this.screenContentValues.put(Constants.tallyTableColumn_account,"账   户");
+//        this.screenContentValues.put(Constants.tallyTableColumn_account,"账   户");
         this.screenContentValues.put(Constants.tallyTableColumn_vendor,"商   家");
 
         //初始化Cl
@@ -354,48 +355,83 @@ public class ChartAnalysisManager {
     }
 
     public void initializeChooseScreenListNodeArrayList(){
-        int i,j,len,len2;
+        int i,j,len,len2,nowIndex;
         ArrayList<String> stringArrayList;
         chooseScreenListNodeArrayList = new ArrayList<>();
         chooseScreenListNodeArrayList.add(new ChooseScreenListNode("分类一",Constants.tallyTableColumn_c1));
         chooseScreenListNodeArrayList.add(new ChooseScreenListNode("分类二",Constants.tallyTableColumn_c2));
-        chooseScreenListNodeArrayList.add(new ChooseScreenListNode("账   户",Constants.tallyTableColumn_account));
+//        chooseScreenListNodeArrayList.add(new ChooseScreenListNode("账   户",Constants.tallyTableColumn_account));
         chooseScreenListNodeArrayList.add(new ChooseScreenListNode("成   员",Constants.tallyTableColumn_member));
         chooseScreenListNodeArrayList.add(new ChooseScreenListNode("项   目",Constants.tallyTableColumn_project));
         chooseScreenListNodeArrayList.add(new ChooseScreenListNode("商   家",Constants.tallyTableColumn_vendor));
 
         //获取一级分类
-        chooseScreenListNodeArrayList.get(0).content = App.dataBaseHelper.getAllClassification1(false,ActionType.INCOME);
+        nowIndex = 0;
+        ArrayList<String> classification1StringList;
+        ArrayList<String> allClassification1StringList = new ArrayList<>();
+        //获取收入一级分类
+        classification1StringList = App.dataBaseHelper.getAllClassification1(true,ActionType.INCOME);
+        len = classification1StringList.size();
+        for(i = 0;i < len;i++){
+            String nowClassification = classification1StringList.get(i) + "(收入)";
+            allClassification1StringList.add(nowClassification);
+        }
+        //获取支出一级分类
+        classification1StringList = App.dataBaseHelper.getAllClassification1(true,ActionType.OUTCOME);
+        len = classification1StringList.size();
+        for(i = 0;i < len;i++){
+            String nowClassification = classification1StringList.get(i) + "(支出)";
+            allClassification1StringList.add(nowClassification);
+        }
+        chooseScreenListNodeArrayList.get(nowIndex).content = allClassification1StringList;
 
         //获取二级分类
+        nowIndex += 1;
         stringArrayList = new ArrayList<>();
-        len = chooseScreenListNodeArrayList.get(0).content.size();
+        len = allClassification1StringList.size();
         for(i = 0; i < len;i++){
-            ArrayList<String> classification2List = App.dataBaseHelper.getClassification2(chooseScreenListNodeArrayList.get(0).content.get(i),true,ActionType.INCOME);
-            len2 = classification2List.size();
-            for(j = 0; j < len2; j++){
-                stringArrayList.add(chooseScreenListNodeArrayList.get(0).content.get(i)+"-"+classification2List.get(j));
+            String nowAllClassification1 = allClassification1StringList.get(i);
+            int indexS = nowAllClassification1.indexOf("(");
+            int indexE = nowAllClassification1.indexOf(")");
+            String nowClassification1 = nowAllClassification1.substring(0,indexS);
+            String nowActionType = nowAllClassification1.substring(indexS + 1,indexE);  //截断出来的不包括括号
+            if(nowActionType.equals("收入")){
+                ArrayList<String> classification2List = App.dataBaseHelper.getClassification2(nowClassification1,true,ActionType.INCOME);
+                len2 = classification2List.size();
+                for(j = 0; j < len2; j++){
+                    stringArrayList.add(nowClassification1+"-"+classification2List.get(j)+"(收入)");
+                }
+            } else if(nowActionType.equals("支出")){
+                ArrayList<String> classification2List = App.dataBaseHelper.getClassification2(nowClassification1,true,ActionType.OUTCOME);
+                len2 = classification2List.size();
+                for(j = 0; j < len2; j++){
+                    stringArrayList.add(nowClassification1+"-"+classification2List.get(j)+"(支出)");
+                }
             }
         }
-        chooseScreenListNodeArrayList.get(1).content = stringArrayList;
+        chooseScreenListNodeArrayList.get(nowIndex).content = stringArrayList;
 
         //获取账户
-        ArrayList<Account> accountArrayList = App.dataBaseHelper.getAccounts();
-        len = accountArrayList.size();
-        stringArrayList = new ArrayList<>();
-        for(i = 0; i < len;i++){
-            stringArrayList.add(accountArrayList.get(i).getAccountName()+"\n"+accountArrayList.get(i).getAccountCode());
-        }
-        chooseScreenListNodeArrayList.get(2).content = stringArrayList;
+//        nowIndex+=1;
+//        ArrayList<Account> accountArrayList = App.dataBaseHelper.getAccounts();
+//        len = accountArrayList.size();
+//        stringArrayList = new ArrayList<>();
+//        for(i = 0; i < len;i++){
+//            stringArrayList.add(accountArrayList.get(i).getAccountName()+"\n"+accountArrayList.get(i).getAccountCode());
+//        }
+//        chooseScreenListNodeArrayList.get(nowIndex).content = stringArrayList;
 
         //获取成员
-        chooseScreenListNodeArrayList.get(3).content = App.dataBaseHelper.getThirdParties(ThirdPartyType.MEMBER);
+        nowIndex += 1;
+        chooseScreenListNodeArrayList.get(nowIndex).content = App.dataBaseHelper.getThirdParties(ThirdPartyType.MEMBER);
 
         //获取项目
-        chooseScreenListNodeArrayList.get(4).content = App.dataBaseHelper.getThirdParties(ThirdPartyType.PROJECT);
+        nowIndex += 1;
+        chooseScreenListNodeArrayList.get(nowIndex).content = App.dataBaseHelper.getThirdParties(ThirdPartyType.PROJECT);
 
         //获取商家
-        chooseScreenListNodeArrayList.get(5).content = App.dataBaseHelper.getThirdParties(ThirdPartyType.VENDOR);
+        nowIndex += 1;
+        chooseScreenListNodeArrayList.get(nowIndex).content = App.dataBaseHelper.getThirdParties(ThirdPartyType.VENDOR);
     }
 
     public void initializeCheckedList(){
@@ -406,6 +442,10 @@ public class ChartAnalysisManager {
             checkedList.add(booleans);
         }
         firstLevelCheckedList = new boolean [chooseScreenListNodeArrayList.size()];
+    }
+
+    public void setNowAccount(Account account){
+        this.account = account;
     }
 
     public void getCorrespondingTallies(){
@@ -425,19 +465,26 @@ public class ChartAnalysisManager {
         if(endDateStr.length() != 0){
             endDate = Date.valueOf(endDateStr);
         }
-        DataBaseFilter filter = new DataBaseFilter(startDate,endDate,DataBaseFilter.IDInvalid,null,null,null);
+        DataBaseFilter filter = new DataBaseFilter(startDate,endDate,DataBaseFilter.IDInvalid,null,account,null);
         correspondingTallies = App.dataBaseHelper.getTallies(filter);
         //筛选其他Screen
         lenTallies = correspondingTallies.size();
         for(i = 0; i < lenTallies; i++){
             Tally tally = correspondingTallies.get(i);
             //筛选一级分类
-            if(firstLevelCheckedList[0]){
-                checkedArray = checkedList.get(0);
+            int nowIndex = 0;
+            if(firstLevelCheckedList[nowIndex]){
+                checkedArray = checkedList.get(nowIndex);
                 lenSecondScreen = checkedArray.length;
-                content = chooseScreenListNodeArrayList.get(0).content;
+                content = chooseScreenListNodeArrayList.get(nowIndex).content;
+                String nowTallyAllClassification = "";
+                if(tally.getActionType() == ActionType.INCOME){
+                    nowTallyAllClassification = tally.getClassification1()+"(收入)";
+                }else if(tally.getActionType() == ActionType.OUTCOME){
+                    nowTallyAllClassification = tally.getClassification1()+"(支出)";
+                }
                 for(j = 0; j < lenSecondScreen ; j++){
-                    if(!checkedArray[j] && tally.getClassification1().equals(content.get(j))){
+                    if(!checkedArray[j] && nowTallyAllClassification.equals(content.get(j))){
                         removeTallyArrayList.add(tally);
                         break;
                     }
@@ -447,13 +494,19 @@ public class ChartAnalysisManager {
                 }
             }
             //筛选二级分类  "c1-c2"
-            if(firstLevelCheckedList[1]){
-                checkedArray = checkedList.get(1);
+            nowIndex += 1;
+            if(firstLevelCheckedList[nowIndex]){
+                checkedArray = checkedList.get(nowIndex);
                 lenSecondScreen = checkedArray.length;
-                content = chooseScreenListNodeArrayList.get(1).content;
-                String tallyClassification = tally.getClassification1() + "-" + tally.getClassification2();
+                content = chooseScreenListNodeArrayList.get(nowIndex).content;
+                String nowTallyAllClassification = "";
+                if(tally.getActionType() == ActionType.INCOME){
+                    nowTallyAllClassification = tally.getClassification1() + "-" + tally.getClassification2() + "(收入)";
+                }else if(tally.getActionType() == ActionType.OUTCOME){
+                    nowTallyAllClassification = tally.getClassification1() + "-" + tally.getClassification2() + "(支出)";
+                }
                 for(j = 0; j < lenSecondScreen ; j++){
-                    if(!checkedArray[j] && tallyClassification.equals(content.get(j))){
+                    if(!checkedArray[j] && nowTallyAllClassification.equals(content.get(j))){
                         removeTallyArrayList.add(tally);
                         break;
                     }
@@ -463,27 +516,29 @@ public class ChartAnalysisManager {
                 }
             }
             //筛选"账户"  "ACN\nACC"
-            if(firstLevelCheckedList[2]){
-                checkedArray = checkedList.get(2);
-                lenSecondScreen = checkedArray.length;
-                content = chooseScreenListNodeArrayList.get(2).content;
-                Account account = tally.getAccount();
-                String tallyAccount = account.getAccountName() + "\n" + account.getAccountCode();
-                for(j = 0; j < lenSecondScreen ; j++){
-                    if(!checkedArray[j] && tallyAccount.equals(content.get(j))){
-                        removeTallyArrayList.add(tally);
-                        break;
-                    }
-                }
-                if(j != lenSecondScreen){
-                    continue;
-                }
-            }
+//            nowIndex += 1;
+//            if(firstLevelCheckedList[nowIndex]){
+//                checkedArray = checkedList.get(nowIndex);
+//                lenSecondScreen = checkedArray.length;
+//                content = chooseScreenListNodeArrayList.get(nowIndex).content;
+//                Account account = tally.getAccount();
+//                String tallyAccount = account.getAccountName() + "\n" + account.getAccountCode();
+//                for(j = 0; j < lenSecondScreen ; j++){
+//                    if(!checkedArray[j] && tallyAccount.equals(content.get(j))){
+//                        removeTallyArrayList.add(tally);
+//                        break;
+//                    }
+//                }
+//                if(j != lenSecondScreen){
+//                    continue;
+//                }
+//            }
             //筛选"成员"
-            if(firstLevelCheckedList[3]){
-                checkedArray = checkedList.get(3);
+            nowIndex += 1;
+            if(firstLevelCheckedList[nowIndex]){
+                checkedArray = checkedList.get(nowIndex);
                 lenSecondScreen = checkedArray.length;
-                content = chooseScreenListNodeArrayList.get(3).content;
+                content = chooseScreenListNodeArrayList.get(nowIndex).content;
                 for(j = 0; j < lenSecondScreen ; j++){
                     if(!checkedArray[j] && tally.getMember().equals(content.get(j))){
                         removeTallyArrayList.add(tally);
@@ -495,10 +550,11 @@ public class ChartAnalysisManager {
                 }
             }
             //筛选"项目"
-            if(firstLevelCheckedList[4]){
-                checkedArray = checkedList.get(4);
+            nowIndex += 1;
+            if(firstLevelCheckedList[nowIndex]){
+                checkedArray = checkedList.get(nowIndex);
                 lenSecondScreen = checkedArray.length;
-                content = chooseScreenListNodeArrayList.get(4).content;
+                content = chooseScreenListNodeArrayList.get(nowIndex).content;
                 for(j = 0; j < lenSecondScreen ; j++){
                     if(!checkedArray[j] && tally.getProject().equals(content.get(j))){
                         removeTallyArrayList.add(tally);
@@ -510,10 +566,11 @@ public class ChartAnalysisManager {
                 }
             }
             //筛选"商家"
-            if(firstLevelCheckedList[5]){
-                checkedArray = checkedList.get(5);
+            nowIndex += 1;
+            if(firstLevelCheckedList[nowIndex]){
+                checkedArray = checkedList.get(nowIndex);
                 lenSecondScreen = checkedArray.length;
-                content = chooseScreenListNodeArrayList.get(5).content;
+                content = chooseScreenListNodeArrayList.get(nowIndex).content;
                 for(j = 0; j < lenSecondScreen ; j++){
                     if(!checkedArray[j] && tally.getVendor().equals(content.get(j))){
                         removeTallyArrayList.add(tally);

@@ -47,6 +47,7 @@ public class AnalysisActivity extends BaseActivity {
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         chartAnalysisManager = new ChartAnalysisManager(context);
+        chartAnalysisManager.setNowAccount(account);
         analysisViewModel = new AnalysisViewModel(context, chartAnalysisManager);
 
         ArrayList<Fragment> fragments = initFragments();
@@ -72,7 +73,7 @@ public class AnalysisActivity extends BaseActivity {
                         null,
                         DataBaseFilter.IDInvalid,
                         null,
-                        null,
+                        account,
                         null
                 ))
         );
