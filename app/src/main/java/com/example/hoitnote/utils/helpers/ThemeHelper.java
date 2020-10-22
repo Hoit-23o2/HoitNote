@@ -20,12 +20,28 @@ import com.example.hoitnote.SplashActivity;
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.Theme;
 
+import java.util.Random;
+
 import static android.content.Context.MODE_PRIVATE;
 /*
 * 该类用于处理主题相关的工作
 * */
 public class ThemeHelper {
+    private final static Random mRandom = new Random(System.currentTimeMillis());
 
+    /*该方法可以获取随机颜色*/
+    public static int generateColor(Context context){
+        final int baseColor = getAccentColor(context);
+        final int baseRed = Color.red(baseColor);
+        final int baseGreen = Color.green(baseColor);
+        final int baseBlue = Color.blue(baseColor);
+
+        final int red = (baseRed + mRandom.nextInt(256)) / 2;
+        final int green = (baseGreen + mRandom.nextInt(256)) / 2;
+        final int blue = (baseBlue + mRandom.nextInt(256)) / 2;
+
+        return Color.rgb(red, green, blue);
+    }
 
     public static Theme getCurrentTheme(Context context){
         SharedPreferences preferences = context.getSharedPreferences(Constants.theme, MODE_PRIVATE);

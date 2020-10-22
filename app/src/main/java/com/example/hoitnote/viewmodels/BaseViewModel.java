@@ -19,6 +19,7 @@ import com.example.hoitnote.utils.enums.ClickType;
 import com.example.hoitnote.utils.helpers.BlueToothHelper;
 import com.example.hoitnote.utils.helpers.DataBaseHelper;
 import com.example.hoitnote.utils.helpers.FileHelper;
+import com.example.hoitnote.utils.helpers.ThemeHelper;
 
 import java.io.Serializable;
 import java.sql.Date;
@@ -43,9 +44,9 @@ public class BaseViewModel extends BaseObservable  {
             TallyViewModel tallyViewModel = new TallyViewModel(
                     context,
                     tally,
-                    "2222",
-                    Color.parseColor(Constants.sweetColorAccent),
-                    Maps.actionTypeToTypeColor.get(tally.getActionType())
+                    "\uf805",
+                    ThemeHelper.generateColor(context),
+                    Maps.actionTypeToTypeColorMap.get(tally.getActionType())
             );
             tallyViewModels.add(tallyViewModel);
         }
@@ -65,8 +66,8 @@ public class BaseViewModel extends BaseObservable  {
                             "大创",
                             "楼下超市"
 
-                    ), "\uf805", Color.parseColor(Constants.sweetColorAccent),
-                            Maps.actionTypeToTypeColor.get(ActionType.INCOME))
+                    ), "\uf805", ThemeHelper.generateColor(context),
+                            Maps.actionTypeToTypeColorMap.get(ActionType.INCOME))
             );
             tallyViewModels.add(
                     new TallyViewModel(context,new Tally(
@@ -82,8 +83,8 @@ public class BaseViewModel extends BaseObservable  {
                             "大创",
                             "楼下超市"
 
-                    ), "\uf805", Color.parseColor(Constants.sweetColorAccent),
-                            Maps.actionTypeToTypeColor.get(ActionType.OUTCOME))
+                    ), "\uf805", ThemeHelper.generateColor(context),
+                            Maps.actionTypeToTypeColorMap.get(ActionType.OUTCOME))
             );
         }
         return tallyViewModels;

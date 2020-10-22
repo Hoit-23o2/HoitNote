@@ -72,6 +72,10 @@ public interface IDataBase {
     boolean delAccount(Account account);
     boolean addAccount(Account account);
 
+    /*
+    * 其他和1级：直接传一个名字
+    * * 2级：一级+二级
+    * */
     String getIconInformation(String iconName, IconType iconType);
     boolean addIconInformation(String iconName, IconType iconType, String iconCode);
     boolean delIconInformation(String iconName,IconType iconType);

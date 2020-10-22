@@ -36,6 +36,7 @@ public class HoitNoteClView extends androidx.appcompat.widget.AppCompatImageView
 
     //控制相关
     public boolean ifAct;      //是否激活，未激活下绘制基础统计图，不接受任何按键信息，最高优先级
+    public boolean ifNotifyDraw;
 
     //视图大小相关
     int viewWidth,viewHeight;
@@ -166,6 +167,7 @@ public class HoitNoteClView extends androidx.appcompat.widget.AppCompatImageView
         ifDrawnUlt = false;
         ifMove = false;
         ifShowLine = true;
+        ifNotifyDraw = true;
         setAnimation(1);
         postInvalidateDelayed(EVERY_DRAW_TIME_INTERVAL);
     }
@@ -173,7 +175,7 @@ public class HoitNoteClView extends androidx.appcompat.widget.AppCompatImageView
     public void setTallyAnalysisClArrayList(ArrayList<TallyAnalysisCl> tallyAnalysisClArrayList) {
         //获取数据列表
         this.tallyAnalysisClArrayList = tallyAnalysisClArrayList;
-
+        ifNotifyDraw = true;
         //设置时间分隔
         nowTimeDivision = "日";
         ifShowLine = true;
@@ -358,6 +360,10 @@ public class HoitNoteClView extends androidx.appcompat.widget.AppCompatImageView
         super.onDraw(canvas);
         if(ifAct){
             if(!ifDrawnUlt){
+                if(ifNotifyDraw){
+                    chartAnalysisManager.notifyDrawCL();
+                    ifNotifyDraw = false;
+                }
                 drawUlt();
             }
             if(ifAnimation){
@@ -503,7 +509,7 @@ public class HoitNoteClView extends androidx.appcompat.widget.AppCompatImageView
                         //显示文字,同时绘制背景竖轴
                         if(ifDrawTime){
                             myCanvasUlt.canvas.drawText(timeAndMoneyArrayList.get(j).timeName,
-                                    pointX - 20 + (myCanvasUlt.rectIn.left),
+                                    pointX - 40 + (myCanvasUlt.rectIn.left),
                                     myCanvasUlt.rectIn.bottom + 40,
                                     paintText);
 

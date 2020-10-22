@@ -4,6 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Constants {
+
+    /*
+    * Color Related
+    * */
+
+    public static String lightRed = "#FE7F7F";
+    public static String lightGreen = "#C4F9AC";
     /*
     * Theme Related: currentTheme标识当前主题，theme标识主题
     * */
@@ -125,6 +132,7 @@ public class Constants {
     public static String tallyTableColumn_project = "project";
     public static String tallyTableColumn_vendor = "vendor";
     public static String tallyTableColumn_time = "mTime";
+    public static String tallyTableC1C2Spliter = "&";
 
     /*
      * classification table related
@@ -232,4 +240,14 @@ public class Constants {
     public static String IconInformationColumn_in = "iconName";
     public static String IconInformationColumn_it = "iconType";
     public static String IconInformationColumn_ic = "iconCode";
+
+
+    /*
+    * Icon Related
+    * */
+    public static String PingAnKeyWord = "平安";
+    public static String JianSheKeyWord = "建设";
+    public static String ZhongGuoKeyWord = "中国银行";
+    public static String ZhongXinKeyWord = "中信";
+    public static String HuaXiaKeyWord = "华夏";
 }

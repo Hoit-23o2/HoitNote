@@ -25,29 +25,41 @@
                     android:layout_margin="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
+                    android:paddingStart="5dp"
+                    android:drawableStart="@drawable/account_name_icon"
                     android:ems="10"
                     android:id="@+id/accountNameField"
                     android:singleLine="true"
                     android:hint="@string/account_name_hint"
-                    android:text="@={popupView.accountName}"/>
+                    android:drawablePadding="5dp"
+                    android:text="@={popupView.accountName}"
+                    android:drawableLeft="@drawable/account_name_icon"
+                    android:paddingLeft="5dp" />
 
                 <EditText
+                    android:drawablePadding="5dp"
                     android:ems="10"
                     android:layout_height="50dp"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
+                    android:drawableStart="@drawable/account_code_icon"
                     android:background="@drawable/edittext_round_outline"
                     android:layout_width="match_parent"
                     android:layout_margin="20dp"
                     android:singleLine="true"
                     android:id="@+id/accountCodeField"
                     android:hint="@string/account_code_hint"
-                    android:text="@={popupView.accountCode}" />
+                    android:paddingStart="5dp"
+                    android:text="@={popupView.accountCode}"
+                    android:drawableLeft="@drawable/account_code_icon"
+                    android:paddingLeft="5dp" />
 
                 <Button
+                    android:background="@drawable/background_hoit_button"
                     android:id="@+id/addAccountBtn"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_margin="20dp"
                     android:text="@string/confirm_hint"/>
             </LinearLayout>
 

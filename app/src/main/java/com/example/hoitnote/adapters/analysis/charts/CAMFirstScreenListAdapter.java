@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -101,9 +102,9 @@ public class CAMFirstScreenListAdapter extends BaseAdapter {
             //显示一级Screen选中等级的Tv相关
             viewHolder.tVScreenLevel = convertView.findViewById(R.id.tv_screen_level);
             //显示二级具体分类的按钮相关
-            viewHolder.bTShowMore = convertView.findViewById(R.id.btn_show_more);
+            viewHolder.cbShowMore = convertView.findViewById(R.id.cb_show_more);
             viewHolder.myOnClickListener = new MyOnClickListener(position);
-            viewHolder.bTShowMore.setOnClickListener(viewHolder.myOnClickListener);
+            viewHolder.cbShowMore.setOnClickListener(viewHolder.myOnClickListener);
             //获取布局中的LinearLayout
             viewHolder.lLScreenMain = convertView.findViewById(R.id.ll_screen_main);
             //用于显示二级具体内容的ListView相关
@@ -128,7 +129,7 @@ public class CAMFirstScreenListAdapter extends BaseAdapter {
         //是否展开二级列表
         if(showMoreList[position]){
             //展开状态设置
-            viewHolder.bTShowMore.setText("收起");
+            viewHolder.cbShowMore.setChecked(true);
             //更新二级列表ListView的适配器中的各种列表。
             viewHolder.CAMSecondScreenListAdapter.setList(screenArrayList.get(position).content);
             viewHolder.CAMSecondScreenListAdapter.setCheckedList(checkedList.get(position));
@@ -146,7 +147,7 @@ public class CAMFirstScreenListAdapter extends BaseAdapter {
             viewHolder.lVMore.setLayoutParams(params);
         }else{
             //收起状态设置
-            viewHolder.bTShowMore.setText("展开");
+            viewHolder.cbShowMore.setChecked(false);
             //设置ListView的高度
             ViewGroup.LayoutParams params = viewHolder.lVMore.getLayoutParams();
             params.height = 0;
@@ -165,7 +166,7 @@ public class CAMFirstScreenListAdapter extends BaseAdapter {
 
     static class ViewHolder{
         public TextView tVScreenName,tVScreenLevel;
-        public Button bTShowMore;
+        public CheckBox cbShowMore;
         public ListView lVMore;
         public LinearLayout lLScreenMain;
         public CAMSecondScreenListAdapter CAMSecondScreenListAdapter;

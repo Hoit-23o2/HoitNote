@@ -13,6 +13,7 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/hzs_booking_tabLayout"
             android:layout_width="match_parent"
+            app:tabIndicator="@null"
             android:layout_height="wrap_content">
 
             <com.google.android.material.tabs.TabItem

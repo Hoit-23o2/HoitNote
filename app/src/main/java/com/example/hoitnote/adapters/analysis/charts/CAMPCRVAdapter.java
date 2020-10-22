@@ -23,7 +23,7 @@ public class CAMPCRVAdapter extends  RecyclerView.Adapter<CAMPCRVAdapter.CAMPCRV
     private ArrayList<String> screenList;
     private ContentValues screenContentValues;
     private Context context;
-    private int nowPosition;
+    public int nowPosition;
 
     public CAMPCRVAdapter(Context context) {
         this.context = context;

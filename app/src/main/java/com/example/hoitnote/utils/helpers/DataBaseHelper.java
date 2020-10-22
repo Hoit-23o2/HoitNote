@@ -113,10 +113,24 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 }
                 stringBuilder.append("(");
                 for (i = 0; i < lenc; i++) {
-                    stringBuilder.append(Constants.tallyTableColumn_c1);
-                    stringBuilder.append("='");
-                    stringBuilder.append(filter.getClassifications().get(i));
-                    stringBuilder.append("'");
+                    String nowC1AndC2 = filter.getClassifications().get(i);
+                    int spliterIndex = nowC1AndC2.indexOf(Constants.tallyTableC1C2Spliter);
+                    if(spliterIndex == -1){
+                        stringBuilder.append(Constants.tallyTableColumn_c1);
+                        stringBuilder.append("='");
+                        stringBuilder.append(nowC1AndC2);
+                        stringBuilder.append("'");
+                    }else{
+                        stringBuilder.append(Constants.tallyTableColumn_c1);
+                        stringBuilder.append("='");
+                        stringBuilder.append(nowC1AndC2.substring(0,spliterIndex));
+                        stringBuilder.append("'");
+                        stringBuilder.append(" and ");
+                        stringBuilder.append(Constants.tallyTableColumn_c2);
+                        stringBuilder.append("='");
+                        stringBuilder.append(nowC1AndC2.substring(spliterIndex+1));
+                        stringBuilder.append("'");
+                    }
                     if (i != lenc - 1) {
                         stringBuilder.append(" or ");
                     }

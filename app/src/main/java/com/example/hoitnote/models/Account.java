@@ -2,9 +2,11 @@ package com.example.hoitnote.models;
 
 import android.content.Context;
 
+import com.example.hoitnote.R;
 import com.example.hoitnote.customviews.AccountCardFragment;
 import com.example.hoitnote.utils.App;
 import com.example.hoitnote.utils.commuications.DataBaseFilter;
+import com.example.hoitnote.utils.constants.Maps;
 import com.example.hoitnote.utils.enums.AccountJudgeType;
 import com.example.hoitnote.utils.enums.ActionType;
 import com.example.hoitnote.utils.enums.ClickType;
@@ -12,6 +14,7 @@ import com.example.hoitnote.viewmodels.AccountCardViewModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Account implements Serializable {
     private String accountName;
@@ -79,9 +82,18 @@ public class Account implements Serializable {
                 incomes += (int)tally.getMoney();
             }
         }
+        int accountRes = R.drawable.bank_union_pay_icon;
+        for(Map.Entry<String, Integer> entry : Maps.accountNameToBankIconMap.entrySet()){
+            String keyword = entry.getKey();
+            int bankIcon = entry.getValue();
+            if(accountName.contains(keyword)){
+                accountRes = bankIcon;
+                break;
+            }
+        }
         AccountCardViewModel accountCardViewModel = new AccountCardViewModel(
                 this,
-                "",
+                accountRes,
                 String.valueOf(incomes),
                 String.valueOf(outcomes),
                 "",

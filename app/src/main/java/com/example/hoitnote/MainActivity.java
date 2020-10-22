@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
@@ -66,21 +67,15 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                currentAccountCardFragment = accountCardAdapter.getFragment(position);
-                if(currentAccountCardFragment.getBinding() != null){
-                    AccountCardViewModel currentAccountCardViewModel = currentAccountCardFragment.getBinding().getAccountCardViewModel();
-                    ArrayList<TallyViewModel> tallyViewModels = mainViewModel.getRecentTallyViewModelsByCardFragment(currentAccountCardFragment);
-                    /*分组*/
-                    HashMap<String, ArrayList<TallyViewModel>> tallyViewModelWithGroups = mainViewModel.
-                            groupTallyViewModel(tallyViewModels, GroupType.DATE);
-                    TallyOneExpandableAdapter adapter = new TallyOneExpandableAdapter(context, tallyViewModelWithGroups);
-                    binding.recentTalliesExpandableListView.setAdapter(adapter);
-                    /*展开所有分组*/
-                    adapter.expandAllGroup(binding.recentTalliesExpandableListView);
-                    if(currentAccountCardViewModel.getAccount()!=null){
-                        ToastHelper.showToast(context,"现在是:"+position+","+currentAccountCardViewModel.getAccount().getAccountName(), Toast.LENGTH_SHORT);
-                    }
+                if(position == accountCardAdapter.getItemCount() - 1){
+                    binding.recentTalliesExpandableListView.setVisibility(View.GONE);
                 }
+                else{
+                    binding.recentTalliesExpandableListView.setVisibility(View.VISIBLE);
+                    currentAccountCardFragment = accountCardAdapter.getFragment(position);
+                    updateCurrentAccountCardListView();
+                }
+
             }
         });
         int color = ThemeHelper.getPrimaryLightColor(context);
@@ -101,10 +96,39 @@ public class MainActivity extends BaseActivity {
                 (ConstraintLayout.LayoutParams) binding.recentTalliesContainer.getLayoutParams();
         layoutParams.height = (int) recentTalliesContainerHeight;
         binding.recentTalliesContainer.setLayoutParams(layoutParams);
+        /*上移动画*/
+        binding.recentTalliesContainer.setTranslationY(2000);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                binding.recentTalliesContainer.animate().translationY(0).start();
+            }
+        }, Constants.delayDuration / 4);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateCurrentAccountCardListView();
+    }
 
+    public void updateCurrentAccountCardListView(){
+        if(currentAccountCardFragment != null){
+            if(currentAccountCardFragment.getBinding() != null){
+                ArrayList<TallyViewModel> tallyViewModels = mainViewModel.getRecentTallyViewModelsByCardFragment(currentAccountCardFragment);
+                /*分组*/
+                HashMap<String, ArrayList<TallyViewModel>> tallyViewModelWithGroups = mainViewModel.
+                        groupTallyViewModel(tallyViewModels, GroupType.DATE);
+                TallyOneExpandableAdapter adapter = new TallyOneExpandableAdapter(context, tallyViewModelWithGroups);
+                binding.recentTalliesExpandableListView.setAdapter(adapter);
+                /*展开所有分组*/
+                adapter.expandAllGroup(binding.recentTalliesExpandableListView);
+            }
+        }
 
+    }
+
+    private boolean isBtnClick = false;
     /*点击添加加号后添加一个账户*/
     public void addAccount(View view) {
         final AlertDialog alertDialog;
@@ -117,46 +141,38 @@ public class MainActivity extends BaseActivity {
                 false
         );
 
-        //dialog.setContentView(popupViewBinding.getRoot());
         alertDialog = builder.setView(popupViewBinding.getRoot()).create();
         if(alertDialog.getWindow() != null)
             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
-                String accountName = popupViewBinding.accountNameField.getText().toString();
-                String accountCode = popupViewBinding.accountCodeField.getText().toString();
-                ToastHelper.showToast(context, accountName, Toast.LENGTH_SHORT);
-                ToastHelper.showToast(context, accountCode, Toast.LENGTH_SHORT);
-                Account newAccount = new Account(accountName,accountCode);
-                AccountJudgeType accountJudge = newAccount.checkIfAccountValid();
-                /*添加账户成功*/
-                if(accountJudge == AccountJudgeType.SUCCESSFUL){
-                    App.dataBaseHelper.addAccount(newAccount);
-                    AccountCardFragment newCardFragment = new AccountCardFragment(
-                            new AccountCardViewModel(
-                                    newAccount,
-                                    "",
-                                    "0",
-                                    "0",
-                                    "0",
-                                    true,
-                                    context,
-                                    ClickType.TAP
-                            )
-                    );
-                    accountCardAdapter.addAccountCard(binding.accountCardBanner, newCardFragment);
+                if(isBtnClick){
+                    String accountName = popupViewBinding.accountNameField.getText().toString();
+                    String accountCode = popupViewBinding.accountCodeField.getText().toString();
+                    ToastHelper.showToast(context, accountName, Toast.LENGTH_SHORT);
+                    ToastHelper.showToast(context, accountCode, Toast.LENGTH_SHORT);
+                    Account newAccount = new Account(accountName,accountCode);
+                    AccountJudgeType accountJudge = newAccount.checkIfAccountValid();
+                    /*添加账户成功*/
+                    if(accountJudge == AccountJudgeType.SUCCESSFUL){
+                        App.dataBaseHelper.addAccount(newAccount);
+                        AccountCardFragment newCardFragment = newAccount.parseToAccountCardFragment(context, ClickType.TAP);
+                        accountCardAdapter.addAccountCard(binding.accountCardBanner, newCardFragment);
+                    }
+                    /*账号重复*/
+                    else if(accountJudge == AccountJudgeType.CODE_SAME){
+                        ToastHelper.showToast(context, Constants.accountCodeSameHint
+                                , Toast.LENGTH_SHORT);
+                    }
+                    /*账号长度不足*/
+                    else if(accountJudge == AccountJudgeType.CODE_NOT_ENOUGH){
+                        ToastHelper.showToast(context, Constants.accountCodeNotEnoughHint
+                                , Toast.LENGTH_SHORT);
+                    }
+                    isBtnClick = false;
                 }
-                /*账号重复*/
-                else if(accountJudge == AccountJudgeType.CODE_SAME){
-                    ToastHelper.showToast(context, Constants.accountCodeSameHint
-                            , Toast.LENGTH_SHORT);
-                }
-                /*账号长度不足*/
-                else if(accountJudge == AccountJudgeType.CODE_NOT_ENOUGH){
-                    ToastHelper.showToast(context, Constants.accountCodeNotEnoughHint
-                            , Toast.LENGTH_SHORT);
-                }
+
             }
         });
 
@@ -164,6 +180,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 alertDialog.dismiss();
+                isBtnClick = true;
             }
         });
 
