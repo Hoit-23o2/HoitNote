@@ -6,12 +6,13 @@
     android:paddingLeft="5dp"
     android:paddingRight="5dp"
     android:paddingTop="5dp"
+    android:background="?attr/colorPrimary"
     android:paddingBottom="5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#E0E0E0"
+        android:background="?attr/colorPrimary"
         android:id="@+id/ll_screen_main"
         >
         <TextView
@@ -19,28 +20,36 @@
             android:layout_width="0dp"
             android:layout_weight="4"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            android:padding="5dp"
+            android:gravity="center"
+            android:layout_margin="5dp"
+            android:background="@drawable/cam_dialog_choose_1level_screen"
+            android:textSize="20sp"
             />
 
         <TextView
             android:id="@+id/tv_screen_level"
             android:layout_width="0dp"
-            android:layout_weight="4"
+            android:layout_weight="6"
+            android:gravity="center_vertical"
             android:layout_height="wrap_content"
             android:textSize="16sp"
             />
 
-        <Button
-            android:id="@+id/btn_show_more"
+        <CheckBox
+            android:id="@+id/cb_show_more"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="16sp"
-            android:layout_weight="3"/>
+            android:button="@null"
+            android:background="@drawable/cam_dialog_show_more"
+            android:layout_weight="1"/>
     </LinearLayout>
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:divider="@null"
         android:id="@+id/lv_more"
         />
 

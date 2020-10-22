@@ -9,6 +9,8 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="5dp"
+        android:background="@color/white"
         android:orientation="vertical">
 
         <TextView
@@ -18,8 +20,9 @@
             android:hint="开始时间(未限制)"
             android:gravity="center"
             android:layout_margin="10dp"
-            android:textSize="24sp"
-            android:background="#E0E0E0"/>
+            android:textSize="20sp"
+            android:padding="5dp"
+            android:background="@drawable/cam_dialog_choose_time"/>
 
         <TextView
             android:id="@+id/tv_endDate"
@@ -28,20 +31,27 @@
             android:hint="结束时间(未限制)"
             android:gravity="center"
             android:layout_margin="10dp"
-            android:textSize="24sp"
-            android:background="#E0E0E0"/>
+            android:textSize="20sp"
+            android:padding="5dp"
+            android:background="@drawable/cam_dialog_choose_time"/>
 
         <ListView
             android:id="@+id/lv_screen"
             android:layout_width="match_parent"
-            android:dividerHeight="2dp"
+            android:dividerHeight="0dp"
+            android:divider="@null"
             android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/white"
             android:layout_weight="1"/>
 
         <Button
             android:id="@+id/bt_confirmChooseScreen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textSize="20sp"
+            android:background="@drawable/cam_dialog_choose_1level_screen"
             android:text="确认选择" />
 
     </LinearLayout>
