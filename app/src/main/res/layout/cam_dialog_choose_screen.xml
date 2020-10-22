@@ -6,34 +6,104 @@
     app:cardCornerRadius="20dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="550dp"
         android:padding="5dp"
         android:background="@color/white"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_startDate"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="开始时间(未限制)"
-            android:gravity="center"
-            android:layout_margin="10dp"
-            android:textSize="20sp"
-            android:padding="5dp"
-            android:background="@drawable/cam_dialog_choose_time"/>
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/tv_endDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="结束时间(未限制)"
-            android:gravity="center"
-            android:layout_margin="10dp"
-            android:textSize="20sp"
-            android:padding="5dp"
-            android:background="@drawable/cam_dialog_choose_time"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_weight="5"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/iv_startDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="10dp"
+                    android:background="@drawable/hzs_note"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_startDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:background="@drawable/cam_dialog_choose_time"
+                    android:gravity="center"
+                    android:layout_marginTop="30dp"
+                    android:hint="开始时间(未限制)"
+                    android:textSize="12sp"
+                    android:layout_marginHorizontal="5dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_startDate"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="4"
+                android:orientation="vertical"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:text="选择时间段"/>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_margin="10dp"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/hzs_right"/>
+            </LinearLayout>
+
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_weight="5"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/iv_endDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="10dp"
+                    android:background="@drawable/hzs_note"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_endDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:background="@drawable/cam_dialog_choose_time"
+                    android:gravity="center"
+                    android:layout_marginTop="30dp"
+                    android:hint="结束时间(未限制)"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_endDate"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+
 
         <ListView
             android:id="@+id/lv_screen"
@@ -43,15 +113,15 @@
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
             android:background="@color/white"
-            android:layout_weight="1"/>
+            android:layout_weight="6"/>
 
         <Button
             android:id="@+id/bt_confirmChooseScreen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:textSize="20sp"
-            android:background="@drawable/cam_dialog_choose_1level_screen"
+            android:textSize="16sp"
+            android:background="@drawable/cam_dialog_confirm"
             android:text="确认选择" />
 
     </LinearLayout>

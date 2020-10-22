@@ -339,7 +339,7 @@ public class ChartAnalysisManager {
 //        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
 //        window.setAttributes(lp);
 //        window.setGravity(Gravity.BOTTOM);
-        //window.getDecorView().setPadding( 0 , 0 , 0 , 0 );
+//        window.getDecorView().setPadding( 0 , 0 , 0 , 0 );
     }
 
     public void setBtnActDialog(View btnActDialog){
