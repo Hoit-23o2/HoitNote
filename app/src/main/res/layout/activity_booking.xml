@@ -15,16 +15,15 @@
             android:id="@+id/hzs_booking_tabLayout"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            tl:tl_textUnselectColor = "@color/colorDefaultTextPrimary"
-            tl:tl_indicator_color="@android:color/holo_orange_dark"
-            tl:tl_indicator_corner_radius="5dp"
+            android:paddingHorizontal="10dp"
+            tl:tl_textSelectColor="?attr/textColorPrimary"
+            tl:tl_textUnselectColor = "?attr/textColorSecondary"
+            tl:tl_indicator_color="?attr/colorAccentOpacity"
+            tl:tl_indicator_corner_radius="20dp"
             tl:tl_indicator_margin_left="2dp"
             tl:tl_indicator_margin_right="2dp"
             tl:tl_indicator_style="BLOCK"
-            tl:tl_tab_space_equal = "true"
-            >
+            tl:tl_tab_space_equal = "true">
         </com.flyco.tablayout.SlidingTabLayout>
         <!--<com.google.android.material.tabs.TabLayout
             android:id="@+id/hzs_booking_tabLayout"

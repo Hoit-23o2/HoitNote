@@ -1,34 +1,13 @@
 package com.example.hoitnote.views.tallyadd;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import androidx.constraintlayout.solver.state.State;
-import androidx.fragment.app.Fragment;
-
-import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
-import com.bigkoo.pickerview.builder.TimePickerBuilder;
-import com.bigkoo.pickerview.listener.CustomListener;
-import com.bigkoo.pickerview.listener.OnOptionsSelectChangeListener;
-import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
-import com.bigkoo.pickerview.listener.OnTimeSelectListener;
-import com.bigkoo.pickerview.view.OptionsPickerView;
-import com.bigkoo.pickerview.view.TimePickerView;
 import com.example.hoitnote.R;
 import com.example.hoitnote.models.Account;
 import com.example.hoitnote.models.Tally;
@@ -36,14 +15,8 @@ import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.ActionType;
 import com.example.hoitnote.utils.enums.BookingType;
 import com.example.hoitnote.utils.helpers.BookingDataHelper;
-import com.example.hoitnote.views.flow.RecycleBinActivity;
 
 import java.sql.Time;
-import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
 
 
 public class BookingOutcomeFragment extends BookingBaseFragment {
@@ -57,7 +30,7 @@ public class BookingOutcomeFragment extends BookingBaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_booking_outcome, container, false);
+        View view = inflater.inflate(R.layout.fragment_booking, container, false);
         clickButtonInit(view);
         return view;
     }

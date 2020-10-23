@@ -9,24 +9,26 @@
     <color name="colorDefaultPrimaryLight">#FFFFFF</color>
     <color name="colorDefaultPrimaryDark">#D3D3D3</color>
     <color name="colorDefaultSecondary">#FFD100</color>
+    <color name="colorDefaultSecondaryOpacity">#88FFD100</color>
     <color name="colorDefaultSecondaryLight">#FBF94E</color>
     <color name="colorDefaultSecondaryDark">#FF9800</color>
 
     <color name="colorDefaultTextAndIcons">#212121</color>
     <color name="colorDefaultTextPrimary">#212121</color>
     <color name="colorDefaultTextSecondary">#757575</color>
-    <color name="colorDefaultDivider">#BDBDBD</color>
+    <color name="colorDefaultDivider">#E8E8E8</color>
 
     <!--Sweet Color Combination-->
     <color name="colorSweetPrimary">#F6F6F6</color>
     <color name="colorSweetPrimaryLight">#FFFFFF</color>
     <color name="colorSweetPrimaryDark">#D3D3D3</color>
     <color name="colorSweetSecondary">#EFC7C2</color>
+    <color name="colorSweetSecondaryOpacity">#88EFC7C2</color>
     <color name="colorSweetSecondaryLight">#FFE8D8</color>
     <color name="colorSweetSecondaryDark">#EDC7CF</color>
 
     <color name="colorSweetTextAndIcons">#212121</color>
     <color name="colorSweetTextPrimary">#212121</color>
     <color name="colorSweetTextSecondary">#757575</color>
-    <color name="colorSweetDivider">#BDBDBD</color>
+    <color name="colorSweetDivider">#E8E8E8</color>
 </resources>

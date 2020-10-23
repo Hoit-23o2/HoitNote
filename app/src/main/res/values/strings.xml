@@ -56,5 +56,20 @@
     <string name="selector_level_hint">选择分类级别</string>
     <string name="selector_time_hint">选择时间范围</string>
     <string name="circle_arrow_right"></string>
+    <string name="booking_money_hint">金额</string>
+    <string name="booking_project_hint">项目</string>
+    <string name="booking_remark">备注</string>
+    <string name="booking_vendor">商家</string>
+    <string name="booking_member">成员</string>
+    <string name="booking_class1">一级分类</string>
+    <string name="booking_class2">二级分类</string>
+    <string name="booking_time">时间</string>
+    <string name="booking_information">信息</string>
+    <string name="booking_money">资金</string>
+    <string name="booking_other">其它</string>
+    <string name="booking_transfer_in">转入</string>
+    <string name="booking_transfer_out">转出</string>
+    <string name="booking_transfer_exchange"></string>
+    <string name="add_tally">记一笔</string>
 
 </resources>

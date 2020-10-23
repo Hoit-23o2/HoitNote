@@ -18,6 +18,7 @@ import com.example.hoitnote.databinding.ItemTallyBinding;
 import com.example.hoitnote.databinding.ItemTallyGroupBinding;
 import com.example.hoitnote.models.Tally;
 import com.example.hoitnote.utils.constants.Constants;
+import com.example.hoitnote.utils.enums.ActionType;
 import com.example.hoitnote.viewmodels.TallyViewModel;
 
 import java.util.ArrayList;
@@ -82,8 +83,6 @@ public class TallyOneExpandableAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupId, boolean isExpanded, View convertView, ViewGroup viewGroup) {
-
-
         if(convertView == null){
             convertView = LayoutInflater.from(context).inflate(R.layout.item_tally_group,null);
             groupBinding = DataBindingUtil.bind(convertView);
@@ -92,13 +91,36 @@ public class TallyOneExpandableAdapter extends BaseExpandableListAdapter {
         else{
             groupBinding = (ItemTallyGroupBinding) convertView.getTag();
         }
-        groupBinding.groupTitle.setText(this.groupsTitle.get(groupId));
+        String groupIdStr = this.groupsTitle.get(groupId);
+        groupBinding.groupTitle.setText(groupIdStr);
+        ArrayList<TallyViewModel> tallyViewModels = talliesWithGroup.get(groupIdStr);
+        if(tallyViewModels != null){
+            int remains;
+            int incomes = 0;
+            int outcomes = 0;
+            for (TallyViewModel tallyViewModel:
+                 tallyViewModels) {
+                Tally tally = tallyViewModel.getTally();
+                if(tally.getActionType() == ActionType.INCOME)
+                    incomes += tally.getMoney();
+                else if(tally.getActionType() == ActionType.OUTCOME)
+                    outcomes += tally.getMoney();
+            }
+            remains = incomes - outcomes;
+            List<String> info = new ArrayList<>();
+            info.add(context.getString(R.string.account_remain_money) + remains);
+            info.add(context.getString(R.string.account_income) + incomes);
+            info.add(context.getString(R.string.account_outcome) + outcomes);
+            // 在代码里设置自己的动画
+            groupBinding.tipsTextView.startWithList(info, R.anim.anim_bottom_in, R.anim.anim_top_out);
+        }
+
 
         /*设置展开图标*/
         if (isExpanded) {
-            groupBinding.expandableArrow.setText(Constants.IconUpArrow);
-        } else {
             groupBinding.expandableArrow.setText(Constants.IconDownArrow);
+        } else {
+            groupBinding.expandableArrow.setText(Constants.IconUpArrow);
         }
 
         return groupBinding.getRoot();
@@ -141,6 +163,8 @@ public class TallyOneExpandableAdapter extends BaseExpandableListAdapter {
             expandableListView.expandGroup(groupId);
         }
     }
+
+
 
 
 }

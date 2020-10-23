@@ -6,9 +6,11 @@
         <item name="colorPrimaryDark">@color/colorDefaultPrimaryDark</item>
         <item name="colorPrimaryLight">@color/colorDefaultPrimaryLight</item>
         <item name="colorAccent">@color/colorDefaultSecondary</item>
+        <item name="colorAccentOpacity">@color/colorDefaultSecondaryOpacity</item>
         <item name="textColorPrimary">@color/colorDefaultTextPrimary</item>
         <item name="textColorSecondary">@color/colorDefaultTextSecondary</item>
         <item name="colorDivider">@color/colorDefaultDivider</item>
+
 
         <!--My custom theme-->
         <item name="android:fitsSystemWindows">true</item>
@@ -24,9 +26,11 @@
         <item name="colorPrimaryLight">@color/colorSweetPrimaryLight</item>
         <item name="colorPrimaryDark">@color/colorSweetPrimaryDark</item>
         <item name="colorAccent">@color/colorSweetSecondary</item>
+        <item name="colorAccentOpacity">@color/colorSweetSecondaryOpacity</item>
         <item name="textColorPrimary">@color/colorSweetTextPrimary</item>
         <item name="textColorSecondary">@color/colorSweetTextSecondary</item>
         <item name="colorDivider">@color/colorSweetDivider</item>
+
 
         <item name="android:fitsSystemWindows">true</item>
         <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
