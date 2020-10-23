@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
+
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.helpers.BlueToothHelper;
 
@@ -14,7 +15,6 @@ import java.util.UUID;
 public class AcceptThread extends Thread {
     private final BluetoothServerSocket mmServerSocket;
     private static String TAG = "Bluetooth Device";
-    private static String Name = "My debug server";
     private ReceiveMessageThread receiveMessageThread;
     private BlueToothHelper.BlueToothHandler mHandler;
 
@@ -28,7 +28,8 @@ public class AcceptThread extends Thread {
         //接收客户端的连接请求
         BluetoothServerSocket tmp = null;
         try{
-            tmp = bluetoothAdapter.listenUsingRfcommWithServiceRecord(Name,deviceUUID);
+            String name = "My debug server";
+            tmp = bluetoothAdapter.listenUsingRfcommWithServiceRecord(name,deviceUUID);
         } catch (IOException e) {
             e.printStackTrace();
             Log.e( TAG,"Socket's listen() method failed", e);
@@ -40,16 +41,17 @@ public class AcceptThread extends Thread {
 
     @Override
     public void run() {
-        BluetoothSocket socket = null;
         // Keep listening until exception occurs or a socket is returned.
-        while (!BlueToothHelper.isSendFinished()){
+        while (!BlueToothHelper.isRecieveFinished()){
             try{
-                socket = mmServerSocket.accept();//接收连接
-                if(socket!=null){
+                BluetoothSocket socket = mmServerSocket.accept();//接收连接
+                if(socket !=null){
                     //开启新线程接受数据
                     receiveMessageThread = new ReceiveMessageThread(socket,this.mHandler);
                     receiveMessageThread.start();
+                    break;
                 }
+
                 //mmServerSocket.close();
 
             }catch (IOException e){
@@ -59,6 +61,7 @@ public class AcceptThread extends Thread {
             }
 
         }
+        Log.d( "Accept","AcceptThread is finished");
     }
 
     public void cancel(){

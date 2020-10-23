@@ -112,6 +112,7 @@ public class HzsThirdExpandableListViewAdapter extends BaseExpandableListAdapter
             @Override
             public void onClick(View view) {
                 App.dataBaseHelper.delTally(days.get(i).getData().get(i1).getId());
+                App.backupDataBaseHelper.addTally(days.get(i).getData().get(i1));
                 days.get(i).getData().remove(i1);
                 days.get(i).refreshData();
                 if(days.get(i).getData().size() == 0){

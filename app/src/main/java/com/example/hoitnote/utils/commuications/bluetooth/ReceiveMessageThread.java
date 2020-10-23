@@ -46,7 +46,7 @@ public class ReceiveMessageThread extends Thread {
 
     @Override
     public void run(){
-        while (!BlueToothHelper.isSendFinished()){
+        while (!BlueToothHelper.isRecieveFinished()){
             int count=0;
             while (count==0){
                 try{
@@ -57,7 +57,7 @@ public class ReceiveMessageThread extends Thread {
                     if(is !=null){
                         is.read(buf,0,buf.length);//变量分别是缓冲区，读取起始位置，缓冲长度
                         Object object = new Object();
-                        object = ConvertHelper.toObject(buf);
+                        object = BlueToothHelper.toObject(buf);
                         if(object instanceof ReceiveInfo){
                             receiveInfo = (ReceiveInfo)object;
                             this.mHandler.obtainMessage(Constants.MSG_Get_RECEIVEINFO).sendToTarget();
@@ -69,7 +69,6 @@ public class ReceiveMessageThread extends Thread {
                             this.mHandler.obtainMessage(Constants.MSG_RECEIVE_SUCCESS).sendToTarget();
                         }
                         else {
-                            Log.d("null object","+++++++++++++++++++++++++++++++++++++");
                         }
                     }
                 } catch (Exception e) {
@@ -86,7 +85,7 @@ public class ReceiveMessageThread extends Thread {
         try{
             bluetoothSocket.close();
         } catch (IOException e) {
-
+            Log.d("null object","+++++++++++++++++++++++++++++++++++++");
         }
 
     }

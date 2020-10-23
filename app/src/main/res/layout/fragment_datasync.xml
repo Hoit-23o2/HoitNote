@@ -26,9 +26,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="@{(v)->dataSyncFragment.ReceiveDataPackage(v)}"/>
+
         <ListView
+            android:clickable="true"
             android:id="@+id/pairedDeviceListView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:focusable="true" />
     </LinearLayout>
 </layout>

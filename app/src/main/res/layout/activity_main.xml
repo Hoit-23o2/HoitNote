@@ -92,9 +92,10 @@
                     <com.example.hoitnote.customviews.FontAwesome
                         style="@style/HoitIcon"
                         android:layout_margin="10dp"
+                        android:textSize="16sp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/right_arrow" />
+                        android:text="@string/arrow_right" />
                 </LinearLayout>
 
 

@@ -17,20 +17,43 @@
             android:orientation="horizontal"
             android:background="#66ddff00"
             android:id="@+id/bottom_wrapper"
-            android:layout_width="100dp"
-            android:weightSum="1"
+            android:layout_width="210dp"
+            android:weightSum="3"
             android:layout_height="match_parent"
             android:tag="bottom">
             <!--What you want to show-->
             <TextView
-                android:id="@+id/hzs_expand_item_tally_delete"
+                android:id="@+id/restore_button"
                 android:gravity="center"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:text="删除"
-                android:textSize="24dp"
+                android:layout_weight="1"
+                android:text="恢复"
                 android:textColor="@android:color/white"
+                style="@style/HoitTitleText"
+                android:background="@android:color/holo_orange_light"/>
+
+            <TextView
+                android:id="@+id/delete_button"
+                android:gravity="center"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="删除"
+                android:textColor="@android:color/white"
+                style="@style/HoitTitleText"
                 android:background="@android:color/holo_red_light"/>
+            <CheckBox
+                android:id="@+id/checkbox_button"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@android:color/holo_blue_light"
+                android:text="选中"
+                android:textColor="@color/white"
+                style="@style/HoitTitleText"
+                />
+
         </LinearLayout>
         <!-- Bottom View End-->
 
@@ -81,14 +104,14 @@
                     android:layout_height="40dp"
                     android:layout_marginStart="68dp"
                     android:layout_marginLeft="68dp"
-                    android:text="@={tally.iconCode}"
-                    android:textSize="30dp"
+                    android:text="@string/security_icon"
+                    android:textSize="40dp"
                     android:textColor="@android:color/holo_blue_light"
                     android:gravity="center"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                     />
+                    />
 
                 <TextView
                     android:id="@+id/hzs_expand_item_tally_classname"

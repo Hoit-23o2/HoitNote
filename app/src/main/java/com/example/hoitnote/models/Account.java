@@ -47,7 +47,9 @@ public class Account implements Serializable {
 
     public AccountJudgeType checkIfAccountValid(){
         ArrayList<Account> existAccounts = App.dataBaseHelper.getAccounts();
-
+        if(accountCode.length() < 19){
+            return AccountJudgeType.CODE_NOT_ENOUGH;
+        }
         for (Account existAccount:
              existAccounts) {
             if(existAccount.accountCode.equals(this.accountCode)){

@@ -77,7 +77,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="44"
                     android:clickable="true">
-                    <TextView
+                    <com.example.hoitnote.customviews.FontAwesome
                         android:id="@+id/hzs_booking_income_first_class"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -96,7 +96,7 @@
                         android:layout_gravity="center_vertical"
                         android:clickable="false"
                         />
-                    <TextView
+                    <com.example.hoitnote.customviews.FontAwesome
                         android:id="@+id/hzs_booking_income_second_class"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -111,32 +111,7 @@
 
 
             </LinearLayout>
-            <LinearLayout
-                android:id="@+id/hzs_booking_income_account_linear"
-                android:layout_width="match_parent"
-                android:layout_height="60dp">
-                <Button
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="10"
-                    android:text="账户"
-                    android:drawableLeft="@drawable/hzs_account"
-                    android:layout_margin="5dp"
-                    android:background="@android:color/transparent"
-                    android:clickable="false"/>
-                <TextView
-                    android:id="@+id/hzs_booking_income_account_button"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="44"
-                    android:text="现金"
-                    android:textSize="15dp"
-                    android:textColor="@color/colorDefaultTextPrimary"
-                    android:gravity="center_vertical|left"
-                    android:paddingLeft="15dp"
-                    android:clickable="true"/>
 
-            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="60dp">

@@ -188,4 +188,8 @@ public class HzsAddClassExpandableListViewAdapter extends BaseExpandableListAdap
             delete = binding.getRoot().findViewById(R.id.hzs_expand_item_add_class_delete);
         }
     }
+    public void addClassificaition2(int index, String classification2){
+        classifications2.get(index).add(classifications2.get(index).size()-1,classification2);
+        notifyDataSetChanged();
+    }
 }

@@ -29,7 +29,11 @@ import com.example.hoitnote.utils.commuications.bluetooth.ReceiveInfo;
 import com.example.hoitnote.utils.commuications.bluetooth.SendInfo;
 import com.example.hoitnote.utils.constants.Constants;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -42,7 +46,7 @@ public class BlueToothHelper implements IBlueTooth {
     private static final int REQUEST_ACCESS_COARSE_LOCATION = 1;
     private static boolean isConnected = false;
     public static int testArrayIndex=0;
-    private static boolean sendFinished = false;
+    private static boolean recieveFinished = false;
 
     private BluetoothAdapter bluetoothAdapter;//Im蓝牙适配器
 
@@ -59,15 +63,13 @@ public class BlueToothHelper implements IBlueTooth {
 
     ArrayList<BluetoothDevice> foundDeviceList = new ArrayList<>();
 
-    public static boolean isSendFinished() {
-        return sendFinished;
+    public static boolean isRecieveFinished() {
+        return recieveFinished;
     }
 
-    public static void setSendFinished(boolean sendFinished) {
-        BlueToothHelper.sendFinished = sendFinished;
+    public static void setRecieveFinished(boolean recieveFinished) {
+        BlueToothHelper.recieveFinished = recieveFinished;
     }
-
-
 
     public BlueToothHelper(BaseActivity activity){
         this.context = activity.context;
@@ -125,15 +127,7 @@ public class BlueToothHelper implements IBlueTooth {
 
                         //集合数量变化，表示有新的设备加入
                         if(before_add_size != foundDeviceSet.size()){
-                            /*if(device.getName()!=null){
-                                device.getType()
-                                //foundDeviceList.add(device.getName());
-                            }else{
-                                //foundDeviceList.add("未知设备"+"\n"+device.getAddress());
-                            }*/
                             foundDeviceList.add(device);
-
-                            //foundAdapter.notifyDataSetChanged();
                         }
                         break;
                 }
@@ -153,22 +147,35 @@ public class BlueToothHelper implements IBlueTooth {
         Context mContext;
         BlueToothHelper blueToothHelper;
 
-        public interface BlueToothHandlerListener {
+        public interface BluetoothAcceptListener {
             void onDataReceived(DataPackage dataPackage);
+
+        }
+
+        private BluetoothAcceptListener bluetoothAcceptListener;
+
+
+        public void setBlueToothAcceptListener(BluetoothAcceptListener bluetoothAcceptListener) {
+            this.bluetoothAcceptListener = bluetoothAcceptListener;
+        }
+
+        public interface BluetoothClientListener{
+            void onConnectSuccess();
             void onDataSendSuccessful(ReceiveInfo receiveInfo);
         }
 
-        private BlueToothHandlerListener blueToothHandlerListener;
+        private BluetoothClientListener bluetoothClientListener;
 
-        public void setBlueToothHandlerListener(BlueToothHandlerListener blueToothHandlerListener) {
-            this.blueToothHandlerListener = blueToothHandlerListener;
+        public  void setBluetoothClientListener(BluetoothClientListener bluetoothClientListener){
+            this.bluetoothClientListener = bluetoothClientListener;
         }
+
 
         public BlueToothHandler(BaseActivity activity, BlueToothHelper blueToothHelper){
             mActivity = new WeakReference<>(activity);
             mContext = activity.context;
             this.blueToothHelper = blueToothHelper;
-            this.blueToothHandlerListener = null;
+            this.bluetoothAcceptListener = null;
         }
 
 
@@ -179,45 +186,54 @@ public class BlueToothHelper implements IBlueTooth {
                 Log.d("BlueToothHandler","========== mActivity.get()==null ============");
             }
             BaseActivity activity = mActivity.get();
+            /*variable*/
+            ReceiveInfo receiveInfo = null;
             switch (msg.what){
+                /********************          Client           ***********************/
                 case Constants.MSG_SEND_SUCCESS:
                     ToastHelper.showToast(mContext,"发送成功",Toast.LENGTH_SHORT);
                     break;
                 case Constants.MSG_SEND_FAILURE:
                     ToastHelper.showToast(mContext,"发送失败",Toast.LENGTH_SHORT);
                     break;
-                case Constants.MSG_RECEIVE_SUCCESS:
-                    ToastHelper.showToast(mContext,"服务端接受成功",Toast.LENGTH_SHORT);
-                    setSendFinished(true);
-                    //生成回复信息
-                    ReceiveInfo receiveInfo = new ReceiveInfo("对方接受成功");
-                    blueToothHelper.setReceiveInfo(receiveInfo);
-                    //发送回复信息
-                    blueToothHelper.sendReply();
-                    DataPackage dataPackage =  blueToothHelper.acceptThread.getReceiveMessageThread().getDataPackage();
-
-                    blueToothHandlerListener.onDataReceived(dataPackage);
-                    break;
-                case Constants.MSG_RECEIVE_FAILURE:
-                    ToastHelper.showToast(mContext,"服务端接受失败",Toast.LENGTH_SHORT);
-                    break;
                 case Constants.MSG_CONNECT_SUCCESS:
                     ToastHelper.showToast(mContext,"客户端连接成功",Toast.LENGTH_SHORT);
                     isConnected = true;
-                    break;
-                case Constants.MSG_LISTEN_FAILURE:
-                    ToastHelper.showToast(mContext,"服务端监听线程开启失败",Toast.LENGTH_SHORT);
+                    bluetoothClientListener.onConnectSuccess();
                     break;
                 case Constants.MSG_Is_Connected:
                     ToastHelper.showToast(mContext,"应用已经连接成功",Toast.LENGTH_SHORT);
                     break;
                 case Constants.MSG_Get_RECEIVEINFO:
-                    Toast.makeText(activity,"对方已接受到消息",Toast.LENGTH_SHORT).show();
-                    /*activity.setReceiveInfo(activity.clientThread.getReceiveMessageThread().getReceiveInfo());
-                    activity.messageText.setText(activity.getReceiveInfo().getMessage());*/
+                    ToastHelper.showToast(mContext,"对方已接受到消息",Toast.LENGTH_SHORT);
+                    setRecieveFinished(true);
                     receiveInfo = blueToothHelper.clientThread.getReceiveMessageThread().getReceiveInfo();
-                    blueToothHandlerListener.onDataSendSuccessful(receiveInfo);
+                    bluetoothClientListener.onDataSendSuccessful(receiveInfo);
                     break;
+
+                /********************          Accept           ***********************/
+                case Constants.MSG_RECEIVE_SUCCESS:
+                    ToastHelper.showToast(mContext,"服务端接受成功",Toast.LENGTH_SHORT);
+                    setRecieveFinished(true);
+                    //生成回复信息
+                    receiveInfo = new ReceiveInfo("对方接受成功");
+                    blueToothHelper.setReceiveInfo(receiveInfo);
+                    //发送回复信息
+                    blueToothHelper.sendReply();
+                    DataPackage dataPackage =  blueToothHelper.acceptThread.getReceiveMessageThread().getDataPackage();
+                    bluetoothAcceptListener.onDataReceived(dataPackage);
+                    break;
+                case Constants.MSG_RECEIVE_FAILURE:
+                    ToastHelper.showToast(mContext,"服务端接受失败",Toast.LENGTH_SHORT);
+                    break;
+                case Constants.MSG_LISTEN_FAILURE:
+                    ToastHelper.showToast(mContext,"服务端监听线程开启失败",Toast.LENGTH_SHORT);
+                    break;
+                case Constants.MSG_Get_SENDINFO:
+                    ToastHelper.showToast(mContext,"有信息即将输入",Toast.LENGTH_SHORT);
+                    Log.d("蓝牙","=============接受起始信息============");
+                    break;
+
             }
         }
     }
@@ -277,7 +293,7 @@ public class BlueToothHelper implements IBlueTooth {
 
     @Override
     public void startServer(Context context) {
-        sendFinished = false;
+        setRecieveFinished(false);
         if(bluetoothAdapter.isEnabled()){
             //开启蓝牙服务器端线程
             acceptThread = new AcceptThread(bluetoothAdapter,
@@ -354,16 +370,16 @@ public class BlueToothHelper implements IBlueTooth {
     public void sendDataPackage(DataPackage dataPackage) {
         setSendInfo(new SendInfo());
         sendInfo.setBluetoothDeviceName(bluetoothAdapter.getName());
-        sendObject(sendInfo);//先发送 数据信息
+        //sendObject(sendInfo);//先发送 数据信息
         sendObject(dataPackage);
     }
 
     private void sendObject(final Object object){
-        sendFinished = false;
+        setRecieveFinished(false);
         new Thread(new Runnable() {
             @Override
             public void run() {
-                byte[] bytes = ConvertHelper.toByteArray(object);
+                byte[] bytes = toByteArray(object);
                 writeByte(bytes);
             }
         }).start();
@@ -378,10 +394,12 @@ public class BlueToothHelper implements IBlueTooth {
         OutputStream os = null;
         if(clientThread!=null){
             os = clientThread.getOs();
-        }else{
+        }else if(acceptThread!=null){
             os = acceptThread.getReceiveMessageThread().getOs();
+        }else {
+            Log.d("蓝牙","===================没有线程===============");
         }
-
+        Log.d("蓝牙","===================写比特流===============");
         if(os!=null){
             try {
                 os.write(bytes);
@@ -391,6 +409,8 @@ public class BlueToothHelper implements IBlueTooth {
                 e.printStackTrace();
                 mHandler.obtainMessage(Constants.MSG_SEND_FAILURE).sendToTarget();
             }
+        }else {
+            Log.d("蓝牙","========os is null");
         }
     }
 
@@ -409,5 +429,70 @@ public class BlueToothHelper implements IBlueTooth {
      */
     public void sendReply(){
         sendObject(receiveInfo);
+    }
+
+    /**
+     * Im可序列化object转比特流
+     * sendObejct中会用到
+     * @param obj
+     * @return
+     */
+    public static byte[] toByteArray(Object obj)
+    {
+        byte[] bytes = null;
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+        ObjectOutputStream oos = null;
+        try
+        {
+            oos = new ObjectOutputStream(b);
+            oos.writeObject(obj);
+            bytes = b.toByteArray();
+            //oos.flush();
+        }
+        catch(Exception e)
+        {
+            Log.e("Bluetooth", "Cast exception at sending end ...");
+        }
+
+        return bytes;
+    }
+
+    /**
+     * Im比特流转可序列化对象
+     * @param bytes
+     * @return
+     */
+    public static Object toObject(byte[] bytes)
+    {
+        Object obj = null;
+        ObjectInputStream ois = null;
+
+        try
+        {
+            ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
+            return ois.readObject();
+        }
+        catch(Exception ex)
+        {
+            Log.e("Bluetooth", "Cast exception at receiving end ...");
+        }
+        return obj;
+    }
+
+
+    /*
+     * 二进制转整型的String
+     * 暂时没用到
+     * */
+    public static String bytesToIntString(byte[] bytes) {
+        String result = "";
+        for (byte aByte : bytes) {
+            String hexString = Integer.toString(aByte & 0xFF);
+            if (hexString.length() == 1) {
+                hexString = '0' + hexString;
+            }
+            result += hexString.toUpperCase();
+        }
+        return result;
     }
 }

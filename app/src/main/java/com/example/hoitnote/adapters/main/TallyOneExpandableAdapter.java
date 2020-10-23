@@ -17,6 +17,7 @@ import com.example.hoitnote.R;
 import com.example.hoitnote.databinding.ItemTallyBinding;
 import com.example.hoitnote.databinding.ItemTallyGroupBinding;
 import com.example.hoitnote.models.Tally;
+import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.viewmodels.TallyViewModel;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ import java.util.TreeMap;
 public class TallyOneExpandableAdapter extends BaseExpandableListAdapter {
     ItemTallyBinding binding;
     ItemTallyGroupBinding groupBinding;
-    HashMap<String, ArrayList<TallyViewModel>> talliesWithGroup;
+    TreeMap<String, ArrayList<TallyViewModel>> talliesWithGroup;
     ArrayList<String> groupsTitle;
     Context context;
 
@@ -81,11 +82,7 @@ public class TallyOneExpandableAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupId, boolean isExpanded, View convertView, ViewGroup viewGroup) {
-        if (isExpanded) {
 
-        } else {
-
-        }
 
         if(convertView == null){
             convertView = LayoutInflater.from(context).inflate(R.layout.item_tally_group,null);
@@ -96,11 +93,20 @@ public class TallyOneExpandableAdapter extends BaseExpandableListAdapter {
             groupBinding = (ItemTallyGroupBinding) convertView.getTag();
         }
         groupBinding.groupTitle.setText(this.groupsTitle.get(groupId));
+
+        /*设置展开图标*/
+        if (isExpanded) {
+            groupBinding.expandableArrow.setText(Constants.IconUpArrow);
+        } else {
+            groupBinding.expandableArrow.setText(Constants.IconDownArrow);
+        }
+
         return groupBinding.getRoot();
     }
 
     @Override
-    public View getChildView(int groupId, int childId, boolean b, View convertView, ViewGroup viewGroup) {
+    public View getChildView(int groupId, int childId, boolean isExpanded, View convertView, ViewGroup viewGroup) {
+
         if(convertView == null){
             convertView = LayoutInflater.from(context).inflate(R.layout.item_tally,null);
             binding = DataBindingUtil.bind(convertView);
@@ -124,7 +130,7 @@ public class TallyOneExpandableAdapter extends BaseExpandableListAdapter {
     }
 
     public TallyOneExpandableAdapter(Context context,
-                                     HashMap<String, ArrayList<TallyViewModel>> talliesWithGroup){
+                                     TreeMap<String, ArrayList<TallyViewModel>> talliesWithGroup){
         this.context = context;
         this.talliesWithGroup = talliesWithGroup;
         this.groupsTitle = new ArrayList<>(talliesWithGroup.keySet());

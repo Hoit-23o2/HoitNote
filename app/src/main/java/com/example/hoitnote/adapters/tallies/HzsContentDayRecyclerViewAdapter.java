@@ -46,6 +46,7 @@ public class HzsContentDayRecyclerViewAdapter extends RecyclerView.Adapter<HzsCo
             @Override
             public void onClick(View view) {
                 App.dataBaseHelper.delTally(tally.getId());
+                App.backupDataBaseHelper.addTally(tally);
                 singleDayData.remove(position);
                 notifyDataSetChanged();
                 HistoryActivity.getInstance().refreshMainData();

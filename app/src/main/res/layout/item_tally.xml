@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="com.example.hoitnote.utils.helpers.EnumToSrtingHelper" />
+        <import type="com.example.hoitnote.utils.helpers.ConvertHelper" />
         <variable
             name="tallyViewModel"
             type="com.example.hoitnote.viewmodels.TallyViewModel" />
@@ -76,7 +76,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="center"
-                                android:text="@{EnumToSrtingHelper.actionType2String(tallyViewModel.tally.actionType), default=支出}"
+                                android:text="@{ConvertHelper.actionType2String(tallyViewModel.tally.actionType), default=支出}"
                                 android:textAlignment="center"
                                 android:textColor="?attr/textColorPrimary" />
                         </LinearLayout>

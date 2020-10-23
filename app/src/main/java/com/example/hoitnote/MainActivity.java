@@ -27,6 +27,7 @@ import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.AccountJudgeType;
 import com.example.hoitnote.utils.enums.ClickType;
 import com.example.hoitnote.utils.enums.GroupType;
+import com.example.hoitnote.utils.helpers.BookingDataHelper;
 import com.example.hoitnote.utils.helpers.DeviceHelper;
 import com.example.hoitnote.utils.helpers.NavigationHelper;
 import com.example.hoitnote.utils.helpers.ThemeHelper;
@@ -39,6 +40,7 @@ import com.example.hoitnote.views.tallyadd.BookingActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 public class MainActivity extends BaseActivity {
     MainViewModel mainViewModel;
@@ -52,6 +54,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this,R.layout.activity_main);
         mainViewModel = new MainViewModel(context);
+        BookingDataHelper.getAccounts();
         /*从viewModel处拿取账户数据，并转换为Fragments*/
         accountCardFragments = mainViewModel.getAccountCardFragments();
         Lifecycle lifecycle = getLifecycle();
@@ -117,7 +120,7 @@ public class MainActivity extends BaseActivity {
             if(currentAccountCardFragment.getBinding() != null){
                 ArrayList<TallyViewModel> tallyViewModels = mainViewModel.getRecentTallyViewModelsByCardFragment(currentAccountCardFragment);
                 /*分组*/
-                HashMap<String, ArrayList<TallyViewModel>> tallyViewModelWithGroups = mainViewModel.
+                TreeMap<String, ArrayList<TallyViewModel>> tallyViewModelWithGroups = mainViewModel.
                         groupTallyViewModel(tallyViewModels, GroupType.DATE);
                 TallyOneExpandableAdapter adapter = new TallyOneExpandableAdapter(context, tallyViewModelWithGroups);
                 binding.recentTalliesExpandableListView.setAdapter(adapter);

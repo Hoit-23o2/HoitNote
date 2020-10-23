@@ -15,6 +15,8 @@ import com.example.hoitnote.databinding.HzsExpandItemYearMenuBinding;
 import com.example.hoitnote.models.flow.HzsYearData;
 import com.example.hoitnote.views.flow.HzsCustomExpandableListView;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class HzsFirstExpandableListViewAdapter extends BaseExpandableListAdapter {
@@ -22,9 +24,14 @@ public class HzsFirstExpandableListViewAdapter extends BaseExpandableListAdapter
     private List<HzsYearData> years;
     private Context context;
     private LayoutInflater inflater;
-
+    private List<FirstHolder> holders = new ArrayList<>();
+    private HashSet<Integer> visitedHolders = new HashSet<>();
     public List<HzsYearData> getYears() {
         return years;
+    }
+
+    public List<FirstHolder> getHolders() {
+        return holders;
     }
     public HzsFirstExpandableListViewAdapter(List<HzsYearData> years, Context context){
         this.years = years;
@@ -81,6 +88,10 @@ public class HzsFirstExpandableListViewAdapter extends BaseExpandableListAdapter
             holder = (FirstHolder)view.getTag();
         }
         holder.binding.setHzsYearData(years.get(i));
+        if(!visitedHolders.contains(i)) {
+            visitedHolders.add(i);
+            holders.add(i, holder);
+        }
         return view;
     }
 
@@ -104,4 +115,11 @@ public class HzsFirstExpandableListViewAdapter extends BaseExpandableListAdapter
         HzsExpandItemYearMenuBinding binding;
     }
 
+    public void refreshData(){
+        visitedHolders.clear();
+        for(int i=0;i<holders.size();i++){
+            holders.get(i).binding.setHzsYearData(years.get(i));
+            visitedHolders.add(i);
+        }
+    }
 }

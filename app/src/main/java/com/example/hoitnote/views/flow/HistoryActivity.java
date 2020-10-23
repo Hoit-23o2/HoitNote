@@ -1,9 +1,11 @@
 package com.example.hoitnote.views.flow;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +25,7 @@ import android.widget.Toast;
 
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
+import com.bigkoo.pickerview.listener.CustomListener;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
@@ -34,6 +37,8 @@ import com.example.hoitnote.adapters.tallies.HzsContentDayRecyclerViewAdapter;
 import com.example.hoitnote.adapters.tallies.HzsFirstExpandableListViewAdapter;
 import com.example.hoitnote.adapters.tallies.HzsSecondExpandableListViewAdapter;
 import com.example.hoitnote.adapters.tallies.HzsThirdExpandableListViewAdapter;
+import com.example.hoitnote.customviews.FontAwesome;
+import com.example.hoitnote.models.Account;
 import com.example.hoitnote.models.Tally;
 import com.example.hoitnote.models.flow.HzsDayData;
 import com.example.hoitnote.models.flow.HzsMonthData;
@@ -41,7 +46,10 @@ import com.example.hoitnote.models.flow.HzsYearData;
 import com.example.hoitnote.utils.App;
 import com.example.hoitnote.utils.commuications.DataBaseFilter;
 
+import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.ActionType;
+import com.example.hoitnote.utils.enums.BookingType;
+import com.example.hoitnote.utils.helpers.BookingDataHelper;
 
 
 import java.sql.Date;
@@ -58,12 +66,28 @@ public class HistoryActivity extends BaseActivity{
     private int year = calendar.get(Calendar.YEAR);
     private int month = calendar.get(Calendar.MONTH)+1;
     private int day = calendar.get(Calendar.DATE);
-    private String season = "秋";
-    private String classification1 = "";
-    private String classification2 = "";
+    private String season = Constants.SeasonAutumn;
+    private String classification1 = null;
+    private String classification2 = null;
+    private BookingType bookingType = BookingType.OUTCOME;
+    private ActionType filterActionType = null;
+    private String account = null;
+    private String project = null;
+    private String vendor = null;
+    private String member = null;
 
     private static HistoryActivity instance;
     private int mode = 0;
+    private Typeface tf;
+    private OptionsPickerView pvBottomClassOptions;
+    private OptionsPickerView pvBottomMemberOptions;
+    private OptionsPickerView pvBottomVendorOptions;
+
+    private List<HzsYearData> totalData;
+    private List<HzsMonthData> yearData;
+    private List<HzsMonthData> seasonData;
+    private List<HzsDayData> monthData;
+    private List<Tally> dayData;
     public static final int TOTAL = 0;
     public static final int YEAR = 1;
     public static final int SEASON = 2;
@@ -84,33 +108,69 @@ public class HistoryActivity extends BaseActivity{
     public int getDay() {
         return day;
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+        tf = ResourcesCompat.getFont(this, R.font.fontawesome5solid);
         instance = this;
         contentLayout = (LinearLayout)findViewById(R.id.hzs_history_content);
         actionBarInit();
-
-
+        DataBaseFilter filter = new DataBaseFilter(null,null,-1,null,null,null);
+        totalData = getTotalData(filter);
         showDataAsTotal();
 
         initBottomTimeframeButton();
         initBottomClassButton();
+        initBottomAccountButton();
+        initBottomProjectButton();
+        initBottomMoreInfoButton();
+        initBottomMemberButton();
+        initBottomVendorButton();
+
     }
 
     public static HistoryActivity getInstance() {
         return instance;
     }
 
+    private ArrayList<String> getFilterClassifications(){
+        if(classification1 == null){
+            return null;
+        }else if(classification2 == null){
+            ArrayList<String> res = new ArrayList<>();
+            res.add(classification1);
+            return res;
+        }else{
+            ArrayList<String> res = new ArrayList<>();
+            res.add(classification1 + Constants.tallyTableC1C2Spliter + classification2);
+            return res;
+        }
+    }
+
+    private Account getFilterAccount(){
+        if(account == null){
+            return null;
+        }else{
+            Account res = new Account();
+            String[] strings = account.split("\\s+");
+            if(strings.length > 1){
+                res.setAccountName(strings[0]);
+                res.setAccountCode(strings[1]);
+            }else{
+                res.setAccountName(strings[0]);
+            }
+            return res;
+        }
+    }
     public void refreshMainData(){
         Double bal = 0.0;
         Double in = 0.0;
         Double out = 0.0;
         switch (mode){
             case TOTAL:
-                List<HzsYearData> totalData = getTotalData();
+                DataBaseFilter filter1 = new DataBaseFilter(null,null,-1,getFilterClassifications(),getFilterAccount(),filterActionType);
+                totalData = getTotalData(filter1);
                 for(HzsYearData data:totalData){
                     bal += data.getBal();
                     in += data.getIn();
@@ -118,7 +178,10 @@ public class HistoryActivity extends BaseActivity{
                 }
                 break;
             case YEAR:
-                List<HzsMonthData> yearData = getYearData(year-1900);
+                Date startDate2 = new Date(year,0,1);
+                Date endDate2 = new Date(year,11,31);
+                DataBaseFilter filter2 = new DataBaseFilter(startDate2,endDate2,-1,getFilterClassifications(),getFilterAccount(),filterActionType);
+                yearData = getYearData(filter2);
                 for(HzsMonthData data:yearData){
                     bal += data.getBal();
                     in += data.getIn();
@@ -126,7 +189,28 @@ public class HistoryActivity extends BaseActivity{
                 }
                 break;
             case SEASON:
-                List<HzsMonthData> seasonData = getSeasonData(year-1900,season);
+                Date startDate3;
+                Date endDate3;
+                switch (season){
+                    case Constants.SeasonSpring:
+                        startDate3 = new Date(year,1,1);
+                        endDate3 = new Date(year,3,31);
+                        break;
+                    case Constants.SeasonSummer:
+                        startDate3 = new Date(year,4,1);
+                        endDate3 = new Date(year,6,31);
+                        break;
+                    case Constants.SeasonAutumn:
+                        startDate3 = new Date(year,7,1);
+                        endDate3 = new Date(year,9,30);
+                        break;
+                    default:
+                        startDate3 = new Date(year,10,1);
+                        endDate3 = new Date(year+1,0,31);
+                        break;
+                }
+                DataBaseFilter filter3 = new DataBaseFilter(startDate3,endDate3,-1,getFilterClassifications(),getFilterAccount(),filterActionType);
+                seasonData = getSeasonData(filter3);
                 for(HzsMonthData data:seasonData){
                     bal += data.getBal();
                     in += data.getIn();
@@ -134,7 +218,10 @@ public class HistoryActivity extends BaseActivity{
                 }
                 break;
             case MONTH:
-                List<HzsDayData> monthData = getMonthData(year-1900,month-1);
+                Date startDate4 = new Date(year,month,1);
+                Date endDate4 = new Date(year,month,getDaysOfMonth(year,month));
+                DataBaseFilter filter4 = new DataBaseFilter(startDate4,endDate4,-1,getFilterClassifications(),getFilterAccount(),filterActionType);
+                monthData = getMonthData(filter4);
                 for(HzsDayData data:monthData){
                     bal += data.getBal();
                     in += data.getIn();
@@ -142,7 +229,10 @@ public class HistoryActivity extends BaseActivity{
                 }
                 break;
             case DAY:
-                List<Tally> dayData = getDayData(year-1900,month-1,day);
+                Date startDate5 = new Date(year,month,day);
+                Date endDate5 = new Date(year,month,day);
+                DataBaseFilter filter5 = new DataBaseFilter(startDate5,endDate5,-1,getFilterClassifications(),getFilterAccount(),filterActionType);
+                dayData = getDayData(filter5);
                 for(Tally data:dayData){
                     if(data.getActionType() == ActionType.OUTCOME){
                         bal -= data.getMoney();
@@ -164,18 +254,37 @@ public class HistoryActivity extends BaseActivity{
         outcomeTextView.setText(outcome);
         incomeTextView.setText(income);
     }
+    private void showDataAsMode(){
+        refreshMainData();
+        switch (mode){
+            case TOTAL:
+                showDataAsTotal();
+                break;
+            case YEAR:
+                showDataAsYear();
+                break;
+            case SEASON:
+                showDataAsSeason();
+                break;
+            case MONTH:
+                showDataAsMonth();
+                break;
+            case DAY:
+                showDataAsDay();
+                break;
+        }
+    }
     private void showDataAsTotal(){
         contentLayout.removeAllViews();
-        List<HzsYearData> yearData = getTotalData();
         View totalContentView = LayoutInflater.from(this).inflate(R.layout.hzs_history_content_as_total,contentLayout,false);
-        HzsFirstExpandableListViewAdapter adapter = new HzsFirstExpandableListViewAdapter(yearData,this);
+        HzsFirstExpandableListViewAdapter adapter = new HzsFirstExpandableListViewAdapter(totalData,this);
         ExpandableListView expandableListView = (ExpandableListView)totalContentView.findViewById(R.id.hzs_history_content_as_total_expandable_listview);
         expandableListView.setAdapter(adapter);
         contentLayout.addView(totalContentView);
         Double bal = 0.0;
         Double in = 0.0;
         Double out = 0.0;
-        for(HzsYearData data:yearData){
+        for(HzsYearData data:totalData){
             bal += data.getBal();
             in += data.getIn();
             out += data.getOut();
@@ -184,10 +293,9 @@ public class HistoryActivity extends BaseActivity{
     }
     private void showDataAsYear(){
         contentLayout.removeAllViews();
-        List<HzsMonthData> monthData = getYearData(year-1900);
         View yearContentView = LayoutInflater.from(this).inflate(R.layout.hzs_history_content_as_year,contentLayout,false);
         ((Button)yearContentView.findViewById(R.id.hzs_history_content_as_year_year)).setText(String.valueOf(year)+"年");
-        HzsSecondExpandableListViewAdapter adapter = new HzsSecondExpandableListViewAdapter(monthData,this);
+        HzsSecondExpandableListViewAdapter adapter = new HzsSecondExpandableListViewAdapter(yearData,this);
         ExpandableListView yearListView = (ExpandableListView)yearContentView.findViewById(R.id.hzs_history_content_as_year_expandable_listview);
         yearListView.setAdapter(adapter);
         initYearContentButton(yearContentView);
@@ -195,7 +303,7 @@ public class HistoryActivity extends BaseActivity{
         Double bal = 0.0;
         Double in = 0.0;
         Double out = 0.0;
-        for(HzsMonthData data:monthData){
+        for(HzsMonthData data:yearData){
             bal += data.getBal();
             in += data.getIn();
             out += data.getOut();
@@ -204,12 +312,11 @@ public class HistoryActivity extends BaseActivity{
     }
     private void showDataAsSeason(){
         contentLayout.removeAllViews();
-        List<HzsMonthData> monthData = getSeasonData(year-1900,season);
         View seasonContentView = LayoutInflater.from(this).inflate(R.layout.hzs_history_content_as_season,contentLayout,false);
         ((Button)seasonContentView.findViewById(R.id.hzs_history_content_as_season_year)).setText(String.valueOf(year)+"年");
-        ((Button)seasonContentView.findViewById(R.id.hzs_history_content_as_season_season)).setText(season);
+        ((FontAwesome)seasonContentView.findViewById(R.id.hzs_history_content_as_season_season)).setText(season);
 
-        HzsSecondExpandableListViewAdapter adapter = new HzsSecondExpandableListViewAdapter(monthData,this);
+        HzsSecondExpandableListViewAdapter adapter = new HzsSecondExpandableListViewAdapter(seasonData,this);
         ExpandableListView seasonListView = (ExpandableListView)seasonContentView.findViewById(R.id.hzs_history_content_as_season_expandable_listview);
         seasonListView.setAdapter(adapter);
         initSeasonContentButton(seasonContentView);
@@ -217,7 +324,7 @@ public class HistoryActivity extends BaseActivity{
         Double bal = 0.0;
         Double in = 0.0;
         Double out = 0.0;
-        for(HzsMonthData data:monthData){
+        for(HzsMonthData data:seasonData){
             bal += data.getBal();
             in += data.getIn();
             out += data.getOut();
@@ -226,11 +333,10 @@ public class HistoryActivity extends BaseActivity{
     }
     private void showDataAsMonth(){
         contentLayout.removeAllViews();
-        List<HzsDayData> dayData = getMonthData(year-1900,month-1);
         View monthContentView = LayoutInflater.from(this).inflate(R.layout.hzs_history_content_as_month,contentLayout,false);
         ((Button)monthContentView.findViewById(R.id.hzs_history_content_as_month_year)).setText(String.valueOf(year)+"年");
         ((Button)monthContentView.findViewById(R.id.hzs_history_content_as_month_month)).setText(String.valueOf(month)+"月");
-        HzsThirdExpandableListViewAdapter adapter = new HzsThirdExpandableListViewAdapter(dayData,this);
+        HzsThirdExpandableListViewAdapter adapter = new HzsThirdExpandableListViewAdapter(monthData,this);
         ExpandableListView seasonListView = (ExpandableListView)monthContentView.findViewById(R.id.hzs_history_content_as_month_expandable_listview);
         seasonListView.setAdapter(adapter);
         initMonthContentButton(monthContentView);
@@ -238,7 +344,7 @@ public class HistoryActivity extends BaseActivity{
         Double bal = 0.0;
         Double in = 0.0;
         Double out = 0.0;
-        for(HzsDayData data:dayData){
+        for(HzsDayData data:monthData){
             bal += data.getBal();
             in += data.getIn();
             out += data.getOut();
@@ -247,7 +353,6 @@ public class HistoryActivity extends BaseActivity{
     }
     private void showDataAsDay(){
         contentLayout.removeAllViews();
-        List<Tally> dayData = getDayData(year-1900,month-1,day);
         View dayContentView = LayoutInflater.from(this).inflate(R.layout.hzs_history_content_as_day,contentLayout,false);
         ((TextView)dayContentView.findViewById(R.id.hzs_history_content_as_day_year)).setText(String.valueOf(year)+"年");
         ((TextView)dayContentView.findViewById(R.id.hzs_history_content_as_day_month)).setText(String.valueOf(month)+"日");
@@ -380,16 +485,16 @@ public class HistoryActivity extends BaseActivity{
     }
     private void initSeasonContentButton(final View view){
         Button chooseYearButton = (Button)view.findViewById(R.id.hzs_history_content_as_season_year);
-        Button chooseSeasonButton = (Button)view.findViewById(R.id.hzs_history_content_as_season_season);
+        FontAwesome chooseSeasonButton = view.findViewById(R.id.hzs_history_content_as_season_season);
         final List<String> yearsItems = new ArrayList<>();
         final List<String> seasonItems = new ArrayList<>();
         for (int i=2020;i>1969;i--){
             yearsItems.add(String.valueOf(i));
         }
-        seasonItems.add("春");
-        seasonItems.add("夏");
-        seasonItems.add("秋");
-        seasonItems.add("冬");
+        seasonItems.add(Constants.SeasonSpring);
+        seasonItems.add(Constants.SeasonSummer);
+        seasonItems.add(Constants.SeasonAutumn);
+        seasonItems.add(Constants.SeasonWinter);
         final OptionsPickerView pvOptions = new OptionsPickerBuilder(HistoryActivity.this, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
@@ -404,6 +509,7 @@ public class HistoryActivity extends BaseActivity{
                 showDataAsSeason();
             }
         }).setSubmitText("确定")//确定按钮文字
+                .setTypeface(tf)
                 .setCancelText("取消")//取消按钮文字
                 .build();
         pvOptions.setNPicker(yearsItems,seasonItems,null);
@@ -422,43 +528,125 @@ public class HistoryActivity extends BaseActivity{
 
     }
     private void initBottomClassButton(){
-        final Button bottomClassButton = (Button)findViewById(R.id.hzs_history_class_btn);
-        final List<String> options1Items = new ArrayList<>();
-        final List<List<String>> options2Items = new ArrayList<>();
-        initClassOptionItems(options1Items,options2Items);
-        final OptionsPickerView pvOptions = new OptionsPickerBuilder(HistoryActivity.this, new OnOptionsSelectListener() {
+        final TextView bottomClassButton = findViewById(R.id.hzs_history_class_btn);
+        pvBottomClassOptions = new OptionsPickerBuilder(HistoryActivity.this, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
-                classification1 = options1Items.get(options1);
-                classification2 = options2Items.get(options1).get(options2);
-                bottomClassButton.setText(classification2);
+                classification1 = BookingDataHelper.getClassifications1(bookingType).get(options1);
+                classification2 = BookingDataHelper.getClassifications2(bookingType).get(options1).get(options2);
+                if(classification1 == Constants.HzsNullString){
+                    classification1 = null;
+                }
+                if(classification2 == Constants.HzsNullString){
+                    classification2 = null;
+                }
+                String classification2WithIcon = BookingDataHelper.getClassifications2WithIcons(bookingType).get(options1).get(options2);
+                bottomClassButton.setText(classification2WithIcon);
+                showDataAsMode();
             }
-        }).setSubmitText("确定")//确定按钮文字
-                .setCancelText("取消")//取消按钮文字
-                .setTitleText("选择分类")
-                .build();
-        pvOptions.setPicker(options1Items, options2Items);
+        }).setLayoutRes(R.layout.hzs_history_class_pickerview, new CustomListener() {
+            @Override
+            public void customLayout(View v) {
+                //自定义布局中的控件初始化及事件处理
+                final TextView tvSubmit = v.findViewById(R.id.finish_button);
+                final TextView tvCancel = v.findViewById(R.id.cancel_button);
+                final TextView tvOutcome = v.findViewById(R.id.outcome_button);
+                final TextView tvIncome = v.findViewById(R.id.income_button);
+                tvSubmit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    pvBottomClassOptions.returnData();
+                    pvBottomClassOptions.dismiss();
+                    }
+                });
+                tvCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    pvBottomClassOptions.dismiss();
+                    }
+                });
+
+                tvOutcome.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    bookingType = BookingType.OUTCOME;
+                    filterActionType = ActionType.OUTCOME;
+                    pvBottomClassOptions.setPicker(BookingDataHelper.getClassifications1WithIcons(bookingType),
+                            BookingDataHelper.getClassifications2WithIcons(bookingType));
+                    }
+                });
+                tvIncome.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    bookingType = BookingType.INCOME;
+                    filterActionType = ActionType.INCOME;
+                    pvBottomClassOptions.setPicker(BookingDataHelper.getClassifications1WithIcons(bookingType),
+                            BookingDataHelper.getClassifications2WithIcons(bookingType));
+                    }
+                });
+
+            }
+        })
+                .setTypeface(tf).build();
+        pvBottomClassOptions.setPicker(BookingDataHelper.getClassifications1WithIcons(bookingType),
+                BookingDataHelper.getClassifications2WithIcons(bookingType));
         bottomClassButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(HistoryActivity.this,"Click Class Btn",Toast.LENGTH_SHORT).show();
-                pvOptions.show();
+                pvBottomClassOptions.show();
             }
         });
     }
-    private void initClassOptionItems(List<String> options1Items,List<List<String>> options2Items){
-        options1Items.add("饮食");
-        options1Items.add("娱乐");
-        List<String> options1 = new ArrayList<>();
-        options1.add("早餐");
-        options1.add("午餐");
-        options1.add("晚餐");
-        options2Items.add(options1);
-        List<String> options2 = new ArrayList<>();
-        options2.add("唱歌");
-        options2.add("游戏");
-        options2.add("电影");
-        options2Items.add(options2);
+    private void initBottomAccountButton(){
+        final TextView bottomAccountButton = findViewById(R.id.hzs_history_account_btn);
+        final List<String> items = BookingDataHelper.getAccounts();
+        final OptionsPickerView pvBottomAccountOptions = new OptionsPickerBuilder(HistoryActivity.this, new OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                account = items.get(options1);
+                if(account == Constants.HzsNullString){
+                    account = null;
+                }
+                bottomAccountButton.setText(account);
+                showDataAsMode();
+            }
+        }).setCancelText("取消")
+                .setSubmitText("完成")
+                .setTitleText("选择账户")
+                .setTypeface(tf).build();
+        pvBottomAccountOptions.setPicker(items);
+        bottomAccountButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pvBottomAccountOptions.show();
+            }
+        });
+    }
+    private void initBottomProjectButton(){
+        final TextView bottomProjectButton = findViewById(R.id.hzs_history_project_btn);
+        final List<String> items = BookingDataHelper.getProjectsWithIcons();
+        final OptionsPickerView pvBottomProjectOptions = new OptionsPickerBuilder(HistoryActivity.this, new OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                project = BookingDataHelper.getProjects().get(options1);
+                if(project == Constants.HzsNullString){
+                    project = null;
+                }
+                String projectWithIcon = items.get(options1);
+                bottomProjectButton.setText(projectWithIcon);
+                showDataAsMode();
+            }
+        }).setCancelText("取消")
+                .setSubmitText("完成")
+                .setTitleText("选择项目")
+                .setTypeface(tf).build();
+        pvBottomProjectOptions.setPicker(items);
+        bottomProjectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pvBottomProjectOptions.show();
+            }
+        });
     }
     private void initBottomTimeframeButton(){
         final Button bottomTimeframeButton = (Button)findViewById(R.id.hzs_history_time_btn);
@@ -516,11 +704,94 @@ public class HistoryActivity extends BaseActivity{
         btn3.setOnClickListener(clickListener);
         btn4.setOnClickListener(clickListener);
     }
+    private void initBottomMemberButton(){
+        final List<String> items = BookingDataHelper.getPersonsWithIcons();
+        pvBottomMemberOptions = new OptionsPickerBuilder(HistoryActivity.this, new OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                member = BookingDataHelper.getPersons().get(options1);
+                if(member == Constants.HzsNullString){
+                    member = null;
+                }
+                showDataAsMode();
+            }
+        }).setCancelText("取消")
+                .setSubmitText("完成")
+                .setTitleText("选择成员")
+                .setTypeface(tf).build();
+        pvBottomMemberOptions.setPicker(items);
+    }
+    private void initBottomVendorButton(){
+        final List<String> items = BookingDataHelper.getStoresWithIcons();
+        pvBottomVendorOptions = new OptionsPickerBuilder(HistoryActivity.this, new OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                vendor = BookingDataHelper.getStores().get(options1);
+                if(vendor == Constants.HzsNullString){
+                    vendor = null;
+                }
+                showDataAsMode();
+            }
+        }).setCancelText("取消")
+                .setSubmitText("完成")
+                .setTitleText("选择商家")
+                .setTypeface(tf).build();
+        pvBottomVendorOptions.setPicker(items);
+    }
+    private void initBottomMoreInfoButton(){
+        final TextView bottomMoreInfoButton = findViewById(R.id.hzs_history_moreinfo_btn);
+        //准备PopupWindow的布局View
+        final View popupMoreInfoView = LayoutInflater.from(this).inflate(R.layout.hzs_popup_moreinfo, null);
+        //初始化一个PopupWindow，width和height都是WRAP_CONTENT
+        final PopupWindow popupMoreInfoWindow = new PopupWindow(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        //设置PopupWindow的视图内容
+        popupMoreInfoWindow.setContentView(popupMoreInfoView);
+        //点击空白区域PopupWindow消失，这里必须先设置setBackgroundDrawable，否则点击无反应
+        popupMoreInfoWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
+        popupMoreInfoWindow.setOutsideTouchable(true);
+        //设置PopupWindow动画
+        popupMoreInfoWindow.setAnimationStyle(R.style.hzs_popup_vertical_anim_style);
+        //设置是否允许PopupWindow的范围超过屏幕范围
+        popupMoreInfoWindow.setClippingEnabled(true);
+        //设置PopupWindow消失监听
+        popupMoreInfoWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+            }
+        });
+        popupMoreInfoView.measure(View.MeasureSpec.UNSPECIFIED,View.MeasureSpec.UNSPECIFIED);
+        initPopupMoreInfoView(popupMoreInfoView,bottomMoreInfoButton,popupMoreInfoWindow);
+        bottomMoreInfoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (popupMoreInfoWindow != null) {
+                    popupMoreInfoWindow.setFocusable(true);
+                }
+                if(!popupMoreInfoWindow.isShowing()){
+                    final int[] locationTimeframeButton = new int[2];
+                    bottomMoreInfoButton.getLocationOnScreen(locationTimeframeButton);
+
+                    popupMoreInfoWindow.showAtLocation(bottomMoreInfoButton, Gravity.NO_GRAVITY,locationTimeframeButton[0],locationTimeframeButton[1]-popupMoreInfoView.getMeasuredHeight());
+                }
+            }
+        });
+    }
+
+    private void initPopupMoreInfoView(View view, TextView button, PopupWindow popupWindow) {
+        PopupMoreInfoClickListener clickListener = new PopupMoreInfoClickListener(button,popupWindow);
+        Button btn0 = (Button)view.findViewById(R.id.member_btn);
+        btn0.setTag("成员");
+        Button btn1 = (Button)view.findViewById(R.id.vendor_btn);
+        btn1.setTag("商家");
+        btn0.setOnClickListener(clickListener);
+        btn1.setOnClickListener(clickListener);
+    }
+
     /*
      * get开头的函数year必须减1900, show开头的函数则不用
      * */
-    public List<HzsYearData> getTotalData(){
-        DataBaseFilter filter = new DataBaseFilter(null,null,-1,null,null,null);
+    public List<HzsYearData> getTotalData(DataBaseFilter filter){
+        //DataBaseFilter filter = new DataBaseFilter(null,null,-1,null,null,null);
         List<Tally> tallyData = App.dataBaseHelper.getTallies(filter);
         List<HzsYearData> yearData = new ArrayList<>();
         if(tallyData.size()>0){
@@ -542,10 +813,10 @@ public class HistoryActivity extends BaseActivity{
         return yearData;
     }
 
-    public List<HzsMonthData> getYearData(int year){
-        Date startDate = new Date(year,0,1);
+    public List<HzsMonthData> getYearData(DataBaseFilter filter){
+       /* Date startDate = new Date(year,0,1);
         Date endDate = new Date(year,11,31);
-        DataBaseFilter filter = new DataBaseFilter(startDate,endDate,-1,null,null,null);
+        DataBaseFilter filter = new DataBaseFilter(startDate,endDate,-1,null,null,null);*/
         List<Tally> tallyData = App.dataBaseHelper.getTallies(filter);
         List<HzsMonthData> monthData = new ArrayList<>();
         if(tallyData.size()>0){
@@ -566,20 +837,20 @@ public class HistoryActivity extends BaseActivity{
         }
         return monthData;
     }
-    public List<HzsMonthData> getSeasonData(int year, String season){
+    public List<HzsMonthData> getSeasonData(DataBaseFilter filter){
 
-        Date startDate;
+        /*Date startDate;
         Date endDate;
         switch (season){
-            case "春":
+            case Constants.SeasonSpring:
                 startDate = new Date(year,1,1);
                 endDate = new Date(year,3,31);
                 break;
-            case "夏":
+            case Constants.SeasonSummer:
                 startDate = new Date(year,4,1);
                 endDate = new Date(year,6,31);
                 break;
-            case "秋":
+            case Constants.SeasonAutumn:
                 startDate = new Date(year,7,1);
                 endDate = new Date(year,9,30);
                 break;
@@ -588,7 +859,7 @@ public class HistoryActivity extends BaseActivity{
                 endDate = new Date(year+1,0,31);
                 break;
         }
-        DataBaseFilter filter = new DataBaseFilter(startDate,endDate,-1,null,null,null);
+        DataBaseFilter filter = new DataBaseFilter(startDate,endDate,-1,null,null,null);*/
         List<Tally> tallyData = App.dataBaseHelper.getTallies(filter);
         List<HzsMonthData> monthData = new ArrayList<>();
         if(tallyData.size()>0){
@@ -609,10 +880,10 @@ public class HistoryActivity extends BaseActivity{
         }
         return monthData;
     }
-    public List<HzsDayData> getMonthData(int year,int month){
-        Date startDate = new Date(year,month,1);
+    public List<HzsDayData> getMonthData(DataBaseFilter filter){
+        /*Date startDate = new Date(year,month,1);
         Date endDate = new Date(year,month,getDaysOfMonth(year,month));
-        DataBaseFilter filter = new DataBaseFilter(startDate,endDate,-1,null,null,null);
+        DataBaseFilter filter = new DataBaseFilter(startDate,endDate,-1,null,null,null);*/
         List<Tally> tallyData = App.dataBaseHelper.getTallies(filter);
         List<HzsDayData> dayData = new ArrayList<>();
         if(tallyData.size()>0){
@@ -633,10 +904,10 @@ public class HistoryActivity extends BaseActivity{
         }
         return dayData;
     }
-    public List<Tally> getDayData(int year, int month,int day){
-        Date startDate = new Date(year,month,day);
+    public List<Tally> getDayData(DataBaseFilter filter){
+        /*Date startDate = new Date(year,month,day);
         Date endDate = new Date(year,month,day);
-        DataBaseFilter filter = new DataBaseFilter(startDate,endDate,-1,null,null,null);
+        DataBaseFilter filter = new DataBaseFilter(startDate,endDate,-1,null,null,null);*/
         List<Tally> tallyData = App.dataBaseHelper.getTallies(filter);
         return tallyData;
     }
@@ -687,35 +958,63 @@ public class HistoryActivity extends BaseActivity{
             switch (tag){
                 case "总":
                     mode = TOTAL;
+                    refreshMainData();
                     showDataAsTotal();
                     button.setText(tag);
                     popupWindow.dismiss();
                     break;
                 case "年":
                     mode = YEAR;
+                    refreshMainData();
                     showDataAsYear();
                     button.setText(tag);
                     popupWindow.dismiss();
                     break;
                 case "季":
                     mode = SEASON;
+                    refreshMainData();
                     showDataAsSeason();
                     button.setText(tag);
                     popupWindow.dismiss();
                     break;
                 case "月":
                     mode = MONTH;
+                    refreshMainData();
                     showDataAsMonth();
                     button.setText(tag);
                     popupWindow.dismiss();
                     break;
                 case "日":
                     mode = DAY;
+                    refreshMainData();
                     showDataAsDay();
                     button.setText(tag);
                     popupWindow.dismiss();
                     break;
 
+            }
+        }
+    }
+
+    public class PopupMoreInfoClickListener implements View.OnClickListener{
+        private TextView button;
+        private PopupWindow popupWindow;
+        public PopupMoreInfoClickListener(TextView button, PopupWindow popupWindow){
+            this.button = button;
+            this.popupWindow = popupWindow;
+        }
+        @Override
+        public void onClick(View view) {
+            String tag = (String)view.getTag();
+            switch (tag){
+                case "成员":
+                    pvBottomMemberOptions.show();
+                    popupWindow.dismiss();
+                    break;
+                case "商家":
+                    pvBottomVendorOptions.show();
+                    popupWindow.dismiss();
+                    break;
             }
         }
     }

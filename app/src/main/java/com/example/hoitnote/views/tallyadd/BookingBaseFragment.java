@@ -35,11 +35,9 @@ import java.util.List;
 import java.util.TimeZone;
 
 public class BookingBaseFragment extends Fragment {
-    protected LinearLayout allItemsLinearLayout;
     protected BookingType bookingType;
     private ActionType actionType;
     protected boolean hasTemp;
-    protected String accountString;
     protected String timeString;
     protected String personString;
     protected String storeString;
@@ -62,7 +60,6 @@ public class BookingBaseFragment extends Fragment {
     protected OptionsPickerView pvClassificationOptions;
     protected TextView firstClassTextView;
     protected TextView secondClassTextView;
-    protected TextView accountTextView;
     protected List<String> classifications1;
     protected List<List<String>> classifications2;
     protected List<String> personItems;
@@ -162,9 +159,9 @@ public class BookingBaseFragment extends Fragment {
     protected void refreshPickerView(){
         if(pvClassificationOptions != null){
             classifications1.clear();
-            classifications1.addAll(BookingDataHelper.getClassifications1(bookingType));
+            classifications1.addAll(BookingDataHelper.getClassifications1WithIcons(bookingType));
             classifications2.clear();
-            classifications2.addAll(BookingDataHelper.getClassifications2(bookingType));
+            classifications2.addAll(BookingDataHelper.getClassifications2WithIcons(bookingType));
             pvClassificationOptions.setPicker(classifications1,classifications2);
             firstClassString = classifications1.get(0);
             secondClassString = classifications2.get(0).get(0);
@@ -268,7 +265,7 @@ public class BookingBaseFragment extends Fragment {
             }
         });
     }
-    protected void accountButtonInit(View view){
+    /*protected void accountButtonInit(View view){
         final View chooseAccountButton = view.findViewById(R.id.hzs_booking_account_button);
         final List<String> accountItems = BookingDataHelper.getAccounts();
         accountTextView = view.findViewById(R.id.hzs_booking_account_button);
@@ -290,7 +287,7 @@ public class BookingBaseFragment extends Fragment {
                 pvOptions.show();
             }
         });
-    }
+    }*/
     protected void timeButtonInit(View view){
         TimeZone tz = TimeZone.getTimeZone("Asia/Shanghai");
         TimeZone.setDefault(tz);

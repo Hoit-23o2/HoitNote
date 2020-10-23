@@ -28,12 +28,14 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3">
-            <Button
+            <com.example.hoitnote.customviews.FontAwesome
                 android:id="@+id/hzs_history_content_as_season_season"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="春"
+                android:gravity="center"
                 android:textSize="24dp"
+                style="@style/HoitTitleText"
                 android:background="@android:color/transparent"/>
 
             <ImageView
@@ -45,17 +47,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/hzs_history_content_as_season_season_icon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/hzs_flower"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.12"
-                app:layout_constraintStart_toStartOf="@+id/hzs_history_content_as_season_season"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="@android:color/holo_red_light" />
         </androidx.constraintlayout.widget.ConstraintLayout>
         <TextView
             android:id="@+id/hzs_history_content_as_season_jieyu"

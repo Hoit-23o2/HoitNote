@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.hoitnote.models.Account;
 import com.example.hoitnote.utils.App;
+import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.ActionType;
 import com.example.hoitnote.utils.enums.BookingType;
 import com.example.hoitnote.utils.enums.IconType;
@@ -96,19 +97,64 @@ public class BookingDataHelper {
 
 
     public static List<String> getAccounts() {
-        return accounts;
+
+        List<Account> list = App.dataBaseHelper.getAccounts();
+        List<String> accountsList = new ArrayList<>();
+        for(Account account:list){
+            if(account.getAccountCode() == null || account.getAccountCode() == ""){
+                accountsList.add(account.getAccountName());
+            }else{
+                accountsList.add(account.getAccountName()+" "+account.getAccountCode());
+            }
+        }
+        return accountsList;
     }
 
     public static List<String> getPersons() {
         return App.dataBaseHelper.getThirdParties(ThirdPartyType.MEMBER);
     }
 
+    public static List<String> getPersonsWithIcons(){
+        List<String> list = App.dataBaseHelper.getThirdParties(ThirdPartyType.MEMBER);
+        List<String> stringList = new ArrayList<>();
+        for(String string:list){
+            String iconCode = App.dataBaseHelper.getIconInformation(string,IconType.MEMBER);
+            stringList.add(iconCode+" "+string);
+        }
+        return stringList;
+    }
+
     public static List<String> getStores() {
         return App.dataBaseHelper.getThirdParties(ThirdPartyType.VENDOR);
     }
 
+    public static List<String> getStoresWithIcons(){
+        List<String> list = App.dataBaseHelper.getThirdParties(ThirdPartyType.VENDOR);
+        List<String> stringList = new ArrayList<>();
+        for(String string:list){
+            String iconCode = App.dataBaseHelper.getIconInformation(string,IconType.VENDOR);
+            stringList.add(iconCode+" "+string);
+        }
+        return stringList;
+    }
     public static List<String> getProjects() {
         return App.dataBaseHelper.getThirdParties(ThirdPartyType.PROJECT);
+    }
+    public static List<String> getProjectsWithIcons(){
+        List<String> list = App.dataBaseHelper.getThirdParties(ThirdPartyType.PROJECT);
+        List<String> stringList = new ArrayList<>();
+        for(String string:list){
+            String iconCode = App.dataBaseHelper.getIconInformation(string,IconType.PROJECT);
+            stringList.add(iconCode+" "+string);
+        }
+        return stringList;
+    }
+    public static Account getNowAccount() {
+        return nowAccount;
+    }
+
+    public static void setNowAccount(Account nowAccount) {
+        BookingDataHelper.nowAccount = nowAccount;
     }
 
     private static List<String> outcomeClassifications1 = new ArrayList<>();
@@ -119,6 +165,7 @@ public class BookingDataHelper {
     private static List<String> persons = new ArrayList<>();
     private static List<String> stores = new ArrayList<>();
     private static List<String> projects = new ArrayList<>();
+    private static Account nowAccount;
     static {
         if(!App.dataBaseHelper.isHasCreated()){
             initClassifications();
@@ -180,31 +227,41 @@ public class BookingDataHelper {
         App.dataBaseHelper.addIconInformation("其它收入" + "礼金收入", IconType.INCOMECLASS2,"\uf5d7");
         App.dataBaseHelper.addIconInformation("其它收入" + "中奖收入", IconType.INCOMECLASS2,"\uf5d7");
         App.dataBaseHelper.addIconInformation("其它收入" + "经营所得", IconType.INCOMECLASS2,"\uf5d7");
+        App.dataBaseHelper.addIconInformation("转账收入", IconType.INCOMECLASS1,Constants.IconIncome);
+        App.dataBaseHelper.addIconInformation("转账收入" + "转账收入", IconType.INCOMECLASS2,Constants.IconIncome);
+        App.dataBaseHelper.addIconInformation("转账支出", IconType.OUTCOMECLASS1,Constants.IconOutcome);
+        App.dataBaseHelper.addIconInformation("转账支出" + "转账支出", IconType.OUTCOMECLASS2,Constants.IconOutcome);
     }
     private static void initPersons(){
+        addPerson("无");
         addPerson("我");
         addPerson("伴侣");
         addPerson("父亲");
         addPerson("母亲");
+        App.dataBaseHelper.addIconInformation("无", IconType.MEMBER, Constants.IconNormal);
         App.dataBaseHelper.addIconInformation("我", IconType.MEMBER,"\uf5d7");
         App.dataBaseHelper.addIconInformation("伴侣", IconType.MEMBER,"\uf5d7");
         App.dataBaseHelper.addIconInformation("父亲", IconType.MEMBER,"\uf5d7");
         App.dataBaseHelper.addIconInformation("母亲", IconType.MEMBER,"\uf5d7");
     }
     private static void initStores(){
+        addStore("无");
         addStore("饭堂");
         addStore("商场");
         addStore("超市");
         addStore("银行");
+        App.dataBaseHelper.addIconInformation("无", IconType.VENDOR,Constants.IconNormal);
         App.dataBaseHelper.addIconInformation("饭堂", IconType.VENDOR,"\uf5d7");
         App.dataBaseHelper.addIconInformation("商场", IconType.VENDOR,"\uf5d7");
         App.dataBaseHelper.addIconInformation("超市", IconType.VENDOR,"\uf5d7");
         App.dataBaseHelper.addIconInformation("银行", IconType.VENDOR,"\uf5d7");
     }
     private static void initProjects(){
+        addProject("无");
         addProject("回家过年");
         addProject("出差");
         addProject("旅游");
+        App.dataBaseHelper.addIconInformation("无", IconType.PROJECT,Constants.IconNormal);
         App.dataBaseHelper.addIconInformation("回家过年", IconType.PROJECT,"\uf5d7");
         App.dataBaseHelper.addIconInformation("出差", IconType.PROJECT,"\uf5d7");
         App.dataBaseHelper.addIconInformation("旅游", IconType.PROJECT,"\uf5d7");

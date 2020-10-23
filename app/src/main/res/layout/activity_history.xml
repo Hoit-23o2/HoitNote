@@ -112,6 +112,7 @@
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
                 android:gravity="center"
+                style="@style/HoitTitleText"
                 android:text="总"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -138,13 +139,14 @@
             android:layout_width="80dp"
             android:layout_height="match_parent">
 
-            <Button
+            <com.example.hoitnote.customviews.FontAwesome
                 android:id="@+id/hzs_history_class_btn"
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
                 android:gravity="center"
                 android:text="分类"
+                style="@style/HoitTitleText"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -165,22 +167,26 @@
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
             android:background="@color/colorDefaultTextPrimary"/>
-        <Button
+        <com.example.hoitnote.customviews.FontAwesome
             android:id="@+id/hzs_history_account_btn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:text="账户"
+            android:gravity="center"
+            style="@style/HoitTitleText"
             android:layout_weight="1"
             android:background="@android:color/transparent"/>
         <ImageView
             android:layout_width="0.5dp"
             android:layout_height="match_parent"
             android:background="@color/colorDefaultTextPrimary"/>
-        <Button
+        <com.example.hoitnote.customviews.FontAwesome
             android:id="@+id/hzs_history_project_btn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:text="项目"
+            style="@style/HoitTitleText"
+            android:gravity="center"
             android:layout_weight="1"
             android:background="@android:color/transparent"/>
         <ImageView
@@ -191,13 +197,14 @@
             android:layout_width="80dp"
             android:layout_height="match_parent">
 
-            <Button
+            <com.example.hoitnote.customviews.FontAwesome
                 android:id="@+id/hzs_history_moreinfo_btn"
                 android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
                 android:gravity="center"
                 android:text="更多"
+                style="@style/HoitTitleText"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

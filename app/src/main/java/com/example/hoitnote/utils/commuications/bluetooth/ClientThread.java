@@ -13,9 +13,8 @@ import java.io.OutputStream;
 import java.util.UUID;
 
 public class ClientThread extends Thread{
-    public  static OutputStream os;
-    private InputStream is;
-    String message;
+    public  static OutputStream os=null;
+    private InputStream is=null;
     public BluetoothDevice device = null;
     public BlueToothHelper.BlueToothHandler mHandler;
     public BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
@@ -53,9 +52,6 @@ public class ClientThread extends Thread{
                     socket.close();
                 }
             }
-
-            ///Toast.makeText(context,"连接成功",Toast.LENGTH_SHORT).show();
-            //连接成功，向BluetoothActivity中的BlueToothHandler传消息
             this.mHandler.obtainMessage(Constants.MSG_CONNECT_SUCCESS).sendToTarget();
             is = socket.getInputStream();//输入到本机设备的数据流
             os = socket.getOutputStream();//输出到远端设备的数据流

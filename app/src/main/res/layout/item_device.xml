@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+        <import type="com.example.hoitnote.utils.helpers.ConvertHelper"/>
+        <variable
+            name="bluetoothViewModel"
+            type="com.example.hoitnote.viewmodels.BlueToothViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:focusable="false"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:focusable="false"
+            android:id="@+id/mainContainer"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <androidx.cardview.widget.CardView
+                android:layout_width="50dp"
+                android:focusable="false"
+                android:layout_height="50dp"
+                app:cardElevation="0dp"
+                android:layout_margin="20dp"
+                app:cardCornerRadius="25dp">
+                <com.example.hoitnote.customviews.FontAwesome
+                    style="@style/HoitIcon"
+                    android:focusable="false"
+                    android:layout_width="match_parent"
+                    android:text="@{ConvertHelper.bluetoothDevice2Icon(bluetoothViewModel.bluetoothDevice)}"
+                    android:layout_height="match_parent"/>
+            </androidx.cardview.widget.CardView>
+
+
+            <LinearLayout
+                android:gravity="center"
+                android:focusable="false"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:focusable="false"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text='@{bluetoothViewModel.bluetoothDevice.getName(), default="VIVO NEX S"}'
+                    style="@style/HoitTitleText"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="HardcodedText" />
+
+                <com.example.hoitnote.customviews.FontAwesome
+                    android:focusable="false"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/HoitIcon"
+                    android:visibility="@{bluetoothViewModel.hasPaired ? View.VISIBLE : View.GONE}"
+                    android:text="@string/circle_arrow_right"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

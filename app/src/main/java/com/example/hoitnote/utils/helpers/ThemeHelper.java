@@ -31,7 +31,7 @@ public class ThemeHelper {
 
     /*该方法可以获取随机颜色*/
     public static int generateColor(Context context){
-        final int baseColor = getAccentColor(context);
+        final int baseColor = Color.WHITE;
         final int baseRed = Color.red(baseColor);
         final int baseGreen = Color.green(baseColor);
         final int baseBlue = Color.blue(baseColor);

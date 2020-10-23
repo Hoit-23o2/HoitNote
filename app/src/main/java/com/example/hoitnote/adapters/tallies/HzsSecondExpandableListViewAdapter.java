@@ -122,14 +122,16 @@ public class HzsSecondExpandableListViewAdapter extends BaseExpandableListAdapte
             @Override
             public void onClick(View view) {
                 App.dataBaseHelper.delTally(months.get(i).getData().get(i1).getId());
+                App.backupDataBaseHelper.addTally(months.get(i).getData().get(i1));
                 months.get(i).getData().remove(i1);
                 months.get(i).refreshData();
+                parentAdapter.refreshData();
                 if(months.get(i).getData().size() == 0){
                     months.remove(i);
                     if(parentAdapter != null){
                         if(parentAdapter.getYears().get(id1).getMonthDataList().size() == 0){
                             parentAdapter.getYears().remove(id1);
-
+                            parentAdapter.getHolders().remove(id1);
                         }
                         parentAdapter.notifyDataSetChanged();
                     }
