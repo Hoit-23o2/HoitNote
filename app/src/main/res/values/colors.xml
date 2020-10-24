@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="lightRed">#FE7F7F</color>
+    <color name="lightGreen">#C4F9AC</color>
     <color name="colorPopupBackground">#C0000000</color>
+
     <!--Default Color Combination-->
     <color name="colorDefaultPrimary">#F6F6F6</color>
     <color name="colorDefaultPrimaryLight">#FFFFFF</color>

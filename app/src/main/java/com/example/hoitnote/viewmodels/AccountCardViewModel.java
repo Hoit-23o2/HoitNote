@@ -20,7 +20,7 @@ import java.io.Serializable;
 
 public class AccountCardViewModel extends BaseViewModel{
     private Account account;
-    private String backgroundUrl;
+    private int bankIcon;
     private String incomes;
     private String outcomes;
     private String transfer;
@@ -36,13 +36,13 @@ public class AccountCardViewModel extends BaseViewModel{
     * clickType:该Card是否可点击
     * isCard:该Card是否为Card，（可能是加号）
     * */
-    public AccountCardViewModel(Account account, String backgroundUrl,
+    public AccountCardViewModel(Account account, int bankIcon,
                                 String incomes, String outcomes,
                                 String transfer, boolean isCard,
                                 Context context, ClickType clickType) {
         super(context);
         this.account = account;
-        this.backgroundUrl = backgroundUrl;
+        this.bankIcon = bankIcon;
         this.incomes = incomes;
         this.outcomes = outcomes;
         this.transfer = transfer;
@@ -61,15 +61,13 @@ public class AccountCardViewModel extends BaseViewModel{
     }
 
     @Bindable
-    public String getBackgroundUrl() {
-        return backgroundUrl;
+    public int getBankIcon() {
+        return bankIcon;
     }
 
-    @BindingAdapter("backgroundUrl")//类似Converter
-    public void setBackgroundUrl(ImageView imageView, String backgroundUrl) {
-        this.backgroundUrl = backgroundUrl;
-        Glide.with(imageView.getContext()).load(backgroundUrl).error(R.drawable.ic_launcher_foreground).into(imageView);
-        notifyPropertyChanged(BR.backgroundUrl);
+    @BindingAdapter("bankIcon")//类似Converter
+    public static void setBankIcon(ImageView imageView, int backIcon) {
+        imageView.setImageResource(backIcon);
     }
 
     @Bindable

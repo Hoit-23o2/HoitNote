@@ -12,20 +12,21 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:background="?attr/colorPrimary"
         android:id="@+id/ll_screen_main"
         >
+
         <TextView
             android:id="@+id/tv_screen_name"
+            style="@style/HoitTitleText"
             android:layout_width="0dp"
-            android:layout_weight="3"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:gravity="center"
             android:layout_margin="5dp"
-            android:background="@drawable/cam_dialog_choose_1level_screen"
-            android:textSize="20sp"
-            />
+            android:layout_weight="3"
+            android:background="@drawable/background_hoit_button"
+            android:gravity="center"
+            android:padding="5dp" />
 
         <TextView
             android:id="@+id/tv_screen_level"
@@ -33,15 +34,16 @@
             android:layout_weight="6"
             android:gravity="center_vertical"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
+            style="@style/HoitSubTitleText"
             />
 
         <CheckBox
             android:id="@+id/cb_show_more"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
             android:button="@null"
+            style="@style/HoitIcon"
+            android:textSize="16sp"
             android:background="@drawable/cam_dialog_show_more"
             android:layout_weight="1"/>
     </LinearLayout>

@@ -4,6 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Constants {
+
+    /*
+    * Color Related
+    * */
+
+    public static String lightRed = "#FE7F7F";
+    public static String lightGreen = "#C4F9AC";
     /*
     * Theme Related: currentTheme标识当前主题，theme标识主题
     * */
@@ -95,9 +102,9 @@ public class Constants {
     * Data base related
     * */
     public static int databaseVersion = 1;
-    public static String databaseFileName = "hoit.db";  //数据库文件名
 
-    public static String backUpDatabaseFileName = "backup_hoit.db";  //数据库文件名
+    public static String databaseFileName = "hoit.db";  //数据库文件名
+    public static String backupDatabaseFileName = "backup_hoit.db";  //数据库文件名
 
     /*
      * config table related
@@ -125,6 +132,7 @@ public class Constants {
     public static String tallyTableColumn_project = "project";
     public static String tallyTableColumn_vendor = "vendor";
     public static String tallyTableColumn_time = "mTime";
+    public static String tallyTableC1C2Spliter = "&";
 
     /*
      * classification table related
@@ -164,6 +172,8 @@ public class Constants {
     public static final int MSG_CONNECT_FAILURE = 5;
     public static final int MSG_LISTEN_FAILURE = 6;
     public static final int MSG_Is_Connected = 7;
+    public static final int MSG_Get_SENDINFO = 8;
+    public static final int MSG_Get_RECEIVEINFO = 9;
 
     public static String deviceNotSupport = "设备不支持蓝牙";
 
@@ -230,4 +240,14 @@ public class Constants {
     public static String IconInformationColumn_in = "iconName";
     public static String IconInformationColumn_it = "iconType";
     public static String IconInformationColumn_ic = "iconCode";
+
+
+    /*
+    * Icon Related
+    * */
+    public static String PingAnKeyWord = "平安";
+    public static String JianSheKeyWord = "建设";
+    public static String ZhongGuoKeyWord = "中国银行";
+    public static String ZhongXinKeyWord = "中信";
+    public static String HuaXiaKeyWord = "华夏";
 }

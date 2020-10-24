@@ -45,6 +45,14 @@ public class DataBaseFilter {
     * */
     private ArrayList<String> classifications;
 
+    /*
+    * 根据ThirdParty查找
+    * */
+    private String projectName = null;
+    private String memberName = null;
+    private String vendorName = null;
+
+
     public ArrayList<String> getClassifications() {
         return classifications;
     }
@@ -78,6 +86,20 @@ public class DataBaseFilter {
         this.actionType = actionType;
     }
 
+    public DataBaseFilter(Date startDate, Date endDate,
+                          int id, ArrayList<String> classifications, Account account,
+                          ActionType actionType, String projectName, String memberName, String vendorName) {
+        this.actionType = actionType;
+        this.account = account;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.id = id;
+        this.classifications = classifications;
+        this.projectName = projectName;
+        this.memberName = memberName;
+        this.vendorName = vendorName;
+    }
+
     /*
     * 预测Filter的类型
     * */
@@ -103,5 +125,17 @@ public class DataBaseFilter {
 
     public void setActionType(ActionType actionType) {
         this.actionType = actionType;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public String getMemberName() {
+        return memberName;
+    }
+
+    public String getVendorName() {
+        return vendorName;
     }
 }

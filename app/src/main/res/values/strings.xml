@@ -10,15 +10,16 @@
     <string name="traditional_registration">密码注册</string>
     <string name="fingerprint_registration">指纹功能无法开启</string>
     <string name="settings">设置</string>
-    <string name="settings_title">设  置</string>
-    <string name="settings_theme">主  题</string>
-    <string name="settings_security">安  全</string>
+    <string name="settings_title">设&#160;&#160;&#160;置</string>
+    <string name="settings_theme">主&#160;&#160;&#160;题</string>
+    <string name="settings_security">安&#160;&#160;&#160;全</string>
+    <string name="settings_sync">同&#160;&#160;&#160;步</string>
+    <string name="settings_recycle">回收站</string>
     <string name="setting_traditional">设置密码</string>
     <string name="setting_pattern">设置手势</string>
     <string name="setting_fingerprint">设置指纹</string>
     <string name="sweet_theme">甜蜜</string>
     <string name="default_theme">默认</string>
-    <string name="setting_sync">同  步</string>
     <string name="right_arrow"></string>
     <string name="check_more">查看更多</string>
     <string name="account_name_hint">账户名</string>
@@ -41,4 +42,18 @@
     <string name="chart_cl_day">日</string>
     <string name="chart_cl_filter_hint">—查看方式—</string>
     <string name="confirm_hint">确认</string>
+    <string name="selector_icon"></string>
+    <string name="selector_hint">筛选</string>
+    <string name="transition_name_card">transition_card</string>
+    <string name="recycleIcon"></string>
+    <string name="recycle_recover_hint">恢复</string>
+    <string name="recycle_delete_hint">删除</string>
+    <string name="recycle_select_all">全选</string>
+    <string name="recycle_unselect_all">取消</string>
+    <string name="empty_hint">空空如也</string>
+    <string name="arrow_right"></string>
+    <string name="clock_icon"></string>
+    <string name="selector_level_hint">选择分类级别</string>
+    <string name="selector_time_hint">选择时间范围</string>
+
 </resources>

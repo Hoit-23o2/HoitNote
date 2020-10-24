@@ -1,16 +1,20 @@
 package com.example.hoitnote.customviews;
 
 import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import com.example.hoitnote.BaseActivity;
 import com.example.hoitnote.R;
 import com.example.hoitnote.databinding.FragmentAccountcardBinding;
 import com.example.hoitnote.models.Account;
@@ -51,6 +55,7 @@ public class AccountCardFragment extends Fragment {
     }
 
     /*当点击Fragment后应该执行的动作*/
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void actionWhenCardClicked(View v){
         switch (accountViewModel.getClickType()){
             case TAP:
@@ -61,6 +66,7 @@ public class AccountCardFragment extends Fragment {
                         AnalysisActivity.class,
                         false
                 );
+                ((BaseActivity)(accountViewModel.context)).overridePendingTransition(0, 0);
                 break;
             case NONE:
                 break;

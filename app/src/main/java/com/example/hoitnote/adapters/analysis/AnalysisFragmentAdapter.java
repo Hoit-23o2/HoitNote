@@ -4,7 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.app.hubert.guide.NewbieGuide;
+import com.app.hubert.guide.model.GuidePage;
+import com.example.hoitnote.R;
 import com.example.hoitnote.viewmodels.AnalysisViewModel;
+import com.example.hoitnote.views.analysis.ChartClFragment;
+import com.example.hoitnote.views.analysis.ChartPCFragment;
+import com.example.hoitnote.views.analysis.InformationFragment;
 
 import java.util.ArrayList;
 

@@ -16,7 +16,7 @@ import com.example.hoitnote.utils.managers.ChartAnalysisManager;
 import java.util.ArrayList;
 
 public class AnalysisViewModel extends BaseViewModel {
-    public ChartAnalysisManager chartAnalysisManager;
+    ChartAnalysisManager chartAnalysisManager;
 
     public AnalysisViewModel(Context context, ChartAnalysisManager chartAnalysisManager) {
         super(context);

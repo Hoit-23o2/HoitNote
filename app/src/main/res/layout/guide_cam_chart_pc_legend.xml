@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="accountCardViewModel"
+            type="com.example.hoitnote.viewmodels.AccountCardViewModel" />
+    </data>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginLeft="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="18sp"
+            android:background="@drawable/guide_cam_text_rect"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="此处显示图例\n点击其中一个图例可以进行深入分析"
+            />
+
+<!--        <ImageView-->
+<!--            android:layout_width="50dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:background="@drawable/guide_cam_arrow_down"/>-->
+    </LinearLayout>
+
+</layout>

@@ -2,12 +2,33 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-
+        <variable
+            name="dataSyncFragment"
+            type="com.example.hoitnote.views.locks.DataSyncFragment" />
+        <variable
+            name="dataSyncViewModel"
+            type="com.example.hoitnote.viewmodels.DataSyncViewModel" />
     </data>
 
     <LinearLayout
+        android:gravity="center"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <Button
+            android:onClick="@{(v)->dataSyncFragment.getPairedList(v)}"
+            android:text="侦测设备"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
+        <Button
+            android:text="接受数据"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{(v)->dataSyncFragment.ReceiveDataPackage(v)}"/>
+        <ListView
+            android:id="@+id/pairedDeviceListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
     </LinearLayout>
 </layout>

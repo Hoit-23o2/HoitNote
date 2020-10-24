@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/HoitPopupViewStyle"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="筛选框使用方式"
+            android:gravity="center"
+            android:layout_marginVertical="20dp"
+            style="@style/HoitTitleText"/>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="400dp">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="5"
+                android:padding="10dp"
+                style="@style/HoitGroupText"
+                android:text="1.时间范围筛选：对话框上方可选取时间范围，可以根据实际情况选择想要分析的账单所属的时间段
+\n\n2.分类筛选：可以在筛选对话框主体中选择想要分析的分类，主按钮可以激活该分类，代表用户希望分析该“分类等级”，
+不同的“分类等级”会根据用户选择时的先后顺序排序\n\n3.深度分析：扇形统计图会根据选择的“分类等级”进行绘制，点击扇形统计图中的扇形，
+将会重新统计属于该扇区的数据，并根据下一级的“分类等级”展开\n\n4.分类剔除：下拉按钮可以拉开该“分类等级”下的所有详细分类，
+若不想在统计图中展示出某些详细分类的数据，只需取消对其标签的选中即可"/>
+
+        </ScrollView>
+
+        <Button
+            android:id="@+id/bt_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/hoit_button"
+            android:layout_margin="5dp"
+            android:text="确认"/>
+
+    </LinearLayout>
+
+
+
+</androidx.cardview.widget.CardView>

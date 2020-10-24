@@ -32,33 +32,40 @@
                 android:id="@+id/fingerprintLock"
                 android:onClick="@{(v)->lockFragment.switchTheme(v)}"
                 style="@style/HoitIcon"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/finger_print_icon" />
 
             <com.example.hoitnote.customviews.FontAwesome
                 android:id="@+id/patternLock"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:onClick="@{(v)->lockFragment.switchTheme(v)}"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 style="@style/HoitIcon"
                 android:text="@string/pattern_lock_icon"/>
 
             <com.example.hoitnote.customviews.FontAwesome
                 android:id="@+id/traditionalLock"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:onClick="@{(v)->lockFragment.switchTheme(v)}"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/traditional_password_icon"
                 style="@style/HoitIcon"/>
 
             <com.example.hoitnote.customviews.FontAwesome
-                android:foreground="?actionBarItemBackground"
                 android:id="@+id/syncSettings"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:onClick="@{(v)->lockFragment.switchTheme(v)}"
                 style="@style/HoitIcon"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="@string/sync_icon"/>
         </LinearLayout>
 

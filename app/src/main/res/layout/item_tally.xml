@@ -7,7 +7,7 @@
 
         <import type="com.example.hoitnote.utils.helpers.EnumToSrtingHelper" />
         <variable
-            name="tally"
+            name="tallyViewModel"
             type="com.example.hoitnote.viewmodels.TallyViewModel" />
     </data>
 
@@ -15,6 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
+            android:id="@+id/mainContainer"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -28,11 +29,12 @@
                 app:cardElevation="0dp"
                 android:layout_margin="20dp"
                 app:cardCornerRadius="25dp">
-                <ImageView
-                    android:cropToPadding="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:iconUrl="@{tally.iconUrl}" />
+                <com.example.hoitnote.customviews.FontAwesome
+                    style="@style/HoitIconUnclickable"
+                    app:iconBackgroundColor="@{tallyViewModel.iconBackgroundColor}"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text='@{tallyViewModel.iconUrl, default=""}'/>
             </androidx.cardview.widget.CardView>
 
 
@@ -56,13 +58,13 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:layout_weight="2"
-                        android:text='@{tally.tally.classification2, default="早  餐"}' />
+                        android:text='@{tallyViewModel.tally.classification2, default="早  餐"}' />
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_weight="0.5"
+                        android:layout_weight="0.6"
                         app:cardCornerRadius="10dp"
                         app:cardElevation="0dp">
                         <LinearLayout
@@ -70,10 +72,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
                             <TextView
+                                app:typeBackgroundColor="@{tallyViewModel.typeBackgroundColor}"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_gravity="center"
-                                android:text="@{EnumToSrtingHelper.actionType2String(tally.tally.actionType), default=支出}"
+                                android:text="@{EnumToSrtingHelper.actionType2String(tallyViewModel.tally.actionType), default=支出}"
                                 android:textAlignment="center"
                                 android:textColor="?attr/textColorPrimary" />
                         </LinearLayout>
@@ -89,7 +92,7 @@
                         android:textAlignment="viewEnd"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
-                        android:text='@{String.valueOf(tally.tally.money),default="-200￥"}' />
+                        android:text='@{String.valueOf(tallyViewModel.tally.money),default="-200￥"}' />
                 </LinearLayout>
 
                 <LinearLayout
@@ -107,7 +110,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         style="@style/HoitSubTitleText"
-                        android:text='@{tally.tally.classification1, default="餐 饮"}'/>
+                        android:text='@{tallyViewModel.tally.classification1, default="餐 饮"}'/>
 
                     <TextView
                         android:layout_margin="10dp"
@@ -115,7 +118,7 @@
                         android:layout_width="0dp"
                         android:textAlignment="viewEnd"
                         style="@style/HoitSubTitleText"
-                        android:text='@{String.valueOf(tally.tally.time), default="11:32"}'
+                        android:text='@{String.valueOf(tallyViewModel.tally.time), default="11:32"}'
                         android:layout_height="wrap_content"
                         android:gravity="end" />
                 </LinearLayout>

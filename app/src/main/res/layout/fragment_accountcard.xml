@@ -6,6 +6,9 @@
     <data>
 
         <import type="android.view.View" />
+
+        <import type="com.example.hoitnote.R" />
+
         <variable
             name="accountCardFragment"
             type="com.example.hoitnote.customviews.AccountCardFragment" />
@@ -13,11 +16,15 @@
             name="accountCardViewModel"
             type="com.example.hoitnote.viewmodels.AccountCardViewModel" />
     </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center">
+        android:gravity="center"
+        tools:targetApi="lollipop">
         <androidx.cardview.widget.CardView
+            android:id="@+id/accountCard"
+            android:transitionName="@string/transition_name_card"
             android:foreground="?attr/selectableItemBackground"
             android:onClick="@{(v)->accountCardFragment.actionWhenCardClicked(v)}"
             app:cardCornerRadius="20dp"
@@ -25,35 +32,49 @@
             android:layout_margin="20dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="?attr/colorAccent"
                 android:visibility="@{accountCardViewModel.card ? View.VISIBLE : View.GONE}">
 
-                <ImageView
+                <LinearLayout
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:gravity="center_vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="?attr/colorAccent"/>
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/accountName"
+                        style="@style/HoitTitleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@{accountCardViewModel.account.accountName, default=中国平安银行}"
+                        android:textSize="28sp" />
+
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/bank_union_pay_icon"
+                        android:padding="@{accountCardViewModel.bankIcon == R.drawable.bank_union_pay_icon ? 20:0}"
+                        app:bankIcon="@{accountCardViewModel.bankIcon}"/>
+                </LinearLayout>
+
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
-                    android:text="@{accountCardViewModel.account.accountName, default=中国平安银行}"
-                    android:textColor="?attr/textColorPrimary"
-                    android:textSize="28sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:textSize="20sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:text="@{accountCardViewModel.account.accountCode, default=6230572111187771545}"
+                    android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:layout_margin="20dp" />
+                    app:layout_constraintStart_toStartOf="parent" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

@@ -42,7 +42,7 @@ public class AcceptThread extends Thread {
     public void run() {
         BluetoothSocket socket = null;
         // Keep listening until exception occurs or a socket is returned.
-        while (!BlueToothHelper.sendFinished){
+        while (!BlueToothHelper.isSendFinished()){
             try{
                 socket = mmServerSocket.accept();//接收连接
                 if(socket!=null){
@@ -50,7 +50,7 @@ public class AcceptThread extends Thread {
                     receiveMessageThread = new ReceiveMessageThread(socket,this.mHandler);
                     receiveMessageThread.start();
                 }
-                mmServerSocket.close();
+                //mmServerSocket.close();
 
             }catch (IOException e){
                 Log.e(TAG, "Socket's accept() method failed", e);
@@ -68,5 +68,9 @@ public class AcceptThread extends Thread {
             e.printStackTrace();
             Log.e(TAG, "Could not close the connect socket", e);
         }
+    }
+
+    public ReceiveMessageThread getReceiveMessageThread() {
+        return receiveMessageThread;
     }
 }

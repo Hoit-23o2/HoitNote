@@ -76,10 +76,6 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         hasCreated = false;
         Toast.makeText(mContext,"数据库创建完毕", Toast.LENGTH_LONG).show();
     }
-    
-    public void setSqLiteDatabase(SQLiteDatabase sqLiteDatabase){
-        this.sqLiteDatabase = sqLiteDatabase;
-    }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
@@ -101,6 +97,9 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         stringBuilder.append("select * from ");
         stringBuilder.append(Constants.tallyTableName);
         if (filter != null) {
+            /*
+            * find by id
+            * */
             if (filter.getId() != DataBaseFilter.IDInvalid) {
                 stringBuilder.append(" where ");
                 stringBuilder.append("(id=");
@@ -108,6 +107,9 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 stringBuilder.append(") ");
                 ifAdd = true;
             }
+            /*
+            * find by classification
+            * */
             if (filter.getClassifications() != null && filter.getClassifications().size() != 0) {
                 int i, lenc = filter.getClassifications().size();
                 if (ifAdd) {
@@ -117,10 +119,24 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 }
                 stringBuilder.append("(");
                 for (i = 0; i < lenc; i++) {
-                    stringBuilder.append(Constants.tallyTableColumn_c1);
-                    stringBuilder.append("='");
-                    stringBuilder.append(filter.getClassifications().get(i));
-                    stringBuilder.append("'");
+                    String nowC1AndC2 = filter.getClassifications().get(i);
+                    int spliterIndex = nowC1AndC2.indexOf(Constants.tallyTableC1C2Spliter);
+                    if(spliterIndex == -1){
+                        stringBuilder.append(Constants.tallyTableColumn_c1);
+                        stringBuilder.append("='");
+                        stringBuilder.append(nowC1AndC2);
+                        stringBuilder.append("'");
+                    }else{
+                        stringBuilder.append(Constants.tallyTableColumn_c1);
+                        stringBuilder.append("='");
+                        stringBuilder.append(nowC1AndC2.substring(0,spliterIndex));
+                        stringBuilder.append("'");
+                        stringBuilder.append(" and ");
+                        stringBuilder.append(Constants.tallyTableColumn_c2);
+                        stringBuilder.append("='");
+                        stringBuilder.append(nowC1AndC2.substring(spliterIndex+1));
+                        stringBuilder.append("'");
+                    }
                     if (i != lenc - 1) {
                         stringBuilder.append(" or ");
                     }
@@ -128,6 +144,9 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 stringBuilder.append(") ");
                 ifAdd = true;
             }
+            /*
+            * find by date
+            * */
             if (filter.getStartDate() != null || filter.getEndDate() != null) {
                 if (ifAdd) {
                     stringBuilder.append("and ");
@@ -159,6 +178,9 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 stringBuilder.append(") ");
                 ifAdd = true;
             }
+            /*
+            * find by account
+            * */
             if(filter.getAccount() != null){
                 if (ifAdd) {
                     stringBuilder.append("and ");
@@ -173,7 +195,11 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 stringBuilder.append(filter.getAccount().getAccountCode());
                 stringBuilder.append("'");
                 stringBuilder.append(") ");
+                ifAdd = true;
             }
+            /*
+            * find by actionType
+            * */
             if(filter.getActionType() != null){
                 if (ifAdd) {
                     stringBuilder.append("and ");
@@ -185,6 +211,55 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 stringBuilder.append("=");
                 stringBuilder.append(filter.getActionType().ordinal());
                 stringBuilder.append(") ");
+                ifAdd = true;
+            }
+            /*
+            * find by thirdParty project
+            * */
+            if(filter.getProjectName() != null){
+                if (ifAdd) {
+                    stringBuilder.append("and ");
+                }else{
+                    stringBuilder.append(" where ");
+                }
+                stringBuilder.append("(");
+                stringBuilder.append(Constants.tallyTableColumn_project);
+                stringBuilder.append("='");
+                stringBuilder.append(filter.getProjectName());
+                stringBuilder.append("') ");
+                ifAdd = true;
+            }
+            /*
+             * find by thirdParty member
+             * */
+            if(filter.getMemberName() != null){
+                if (ifAdd) {
+                    stringBuilder.append("and ");
+                }else{
+                    stringBuilder.append(" where ");
+                }
+                stringBuilder.append("(");
+                stringBuilder.append(Constants.tallyTableColumn_member);
+                stringBuilder.append("='");
+                stringBuilder.append(filter.getMemberName());
+                stringBuilder.append("') ");
+                ifAdd = true;
+            }
+            /*
+             * find by thirdParty vendor
+             * */
+            if(filter.getVendorName() != null){
+                if (ifAdd) {
+                    stringBuilder.append("and ");
+                }else{
+                    stringBuilder.append(" where ");
+                }
+                stringBuilder.append("(");
+                stringBuilder.append(Constants.tallyTableColumn_vendor);
+                stringBuilder.append("='");
+                stringBuilder.append(filter.getVendorName());
+                stringBuilder.append("') ");
+                ifAdd = true;
             }
         }
         actionStr = stringBuilder.toString();
@@ -699,5 +774,9 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         }
         cursor.close();
         return ret;
+    }
+
+    public void setSqLiteDatabase(SQLiteDatabase sqLiteDatabase) {
+        this.sqLiteDatabase = sqLiteDatabase;
     }
 }

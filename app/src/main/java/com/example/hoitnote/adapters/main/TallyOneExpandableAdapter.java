@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 
-public class TallyRecentAdapter extends BaseExpandableListAdapter {
+public class TallyOneExpandableAdapter extends BaseExpandableListAdapter {
     ItemTallyBinding binding;
     ItemTallyGroupBinding groupBinding;
     HashMap<String, ArrayList<TallyViewModel>> talliesWithGroup;
@@ -113,7 +113,7 @@ public class TallyRecentAdapter extends BaseExpandableListAdapter {
         assert binding != null;
         ArrayList<TallyViewModel> group = talliesWithGroup.get(this.groupsTitle.get(groupId));
         if(group != null){
-            binding.setTally(group.get(childId));
+            binding.setTallyViewModel(group.get(childId));
         }
         return binding.getRoot();
     }
@@ -123,8 +123,8 @@ public class TallyRecentAdapter extends BaseExpandableListAdapter {
         return true;
     }
 
-    public TallyRecentAdapter(Context context,
-                              HashMap<String, ArrayList<TallyViewModel>> talliesWithGroup){
+    public TallyOneExpandableAdapter(Context context,
+                                     HashMap<String, ArrayList<TallyViewModel>> talliesWithGroup){
         this.context = context;
         this.talliesWithGroup = talliesWithGroup;
         this.groupsTitle = new ArrayList<>(talliesWithGroup.keySet());
@@ -135,44 +135,6 @@ public class TallyRecentAdapter extends BaseExpandableListAdapter {
             expandableListView.expandGroup(groupId);
         }
     }
-
-    /*public TallyRecentAdapter(@NonNull Context context, ArrayList<TallyViewModel> tallies) {
-        super(context, R.layout.item_tally, tallies);
-        this.tallies = tallies;
-        this.context = context;
-    }
-
-    @Override
-    public int getCount() {
-        return tallies.size();
-    }
-
-    @Override
-    public TallyViewModel getItem(int i) {
-        return tallies.get(i);
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return 0;
-    }
-
-    @NonNull
-    @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        if(convertView == null){
-            convertView = LayoutInflater.from(context).inflate(R.layout.item_tally,null);
-            binding = DataBindingUtil.bind(convertView);
-            convertView.setTag(binding);
-        }
-        else{
-            binding = (ItemTallyBinding) convertView.getTag();
-        }
-
-        assert binding != null;
-        binding.setTally(tallies.get(position));
-        return binding.getRoot();
-    }*/
 
 
 }

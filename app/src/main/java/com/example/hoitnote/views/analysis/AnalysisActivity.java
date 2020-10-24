@@ -7,11 +7,18 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.ContentValues;
+import android.graphics.RectF;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.app.hubert.guide.NewbieGuide;
+import com.app.hubert.guide.model.GuidePage;
+import com.app.hubert.guide.model.RelativeGuide;
 import com.example.hoitnote.BaseActivity;
 import com.example.hoitnote.R;
 import com.example.hoitnote.databinding.ActivityAnalysisBinding;
@@ -24,7 +31,6 @@ import com.example.hoitnote.utils.helpers.NavigationHelper;
 import com.example.hoitnote.utils.managers.ChartAnalysisManager;
 import com.example.hoitnote.viewmodels.AccountCardViewModel;
 import com.example.hoitnote.viewmodels.AnalysisViewModel;
-import com.example.hoitnote.views.settings.SettingsActivity;
 
 import java.util.ArrayList;
 
@@ -56,7 +62,6 @@ public class AnalysisActivity extends BaseActivity {
                 analysisViewModel,context, fragments);
 
         fragmentTransaction.add(binding.mainContainer.getId(), analysisFragment).commit();
-
 
         initActivity();
     }
@@ -91,44 +96,40 @@ public class AnalysisActivity extends BaseActivity {
         return fragments;
     }
 
-    private Menu menu;
+    MenuItem analysisSelectorItem;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        this.menu = menu;
-        getMenuInflater().inflate(R.menu.analysis_selector, menu);
+        getMenuInflater().inflate(R.menu.analysis_selector_menu, menu);
+        analysisSelectorItem = menu.findItem(R.id.analysis_selector);
+        analysisSelectorItem.setActionView(R.layout.menu_analysis);
+        analysisSelectorItem.getActionView().findViewById(R.id.selectorBtn).
+                setOnClickListener(
+                        new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View view) {
+                chartAnalysisManager.showDialog();
+            }
+        });
+        hideSelectorItem(false);
         return super.onCreateOptionsMenu(menu);
     }
 
-    public void hideMenu(){
-        if(menu != null){
-            for(int i = 0;i < menu.size(); i++){
-                menu.getItem(i).setVisible(false);
-                menu.getItem(i).setEnabled(false);
-            }
-        }
-    }
-
-    public void showMenu(){
-        if(menu != null){
-            for(int i = 0;i < menu.size(); i++){
-                menu.getItem(i).setVisible(true);
-                menu.getItem(i).setEnabled(true);
-            }
-        }
+    public void hideSelectorItem(boolean isAnim){
+        if(isAnim)
+            analysisSelectorItem.getActionView().animate().alpha(0).start();
+        else
+            analysisSelectorItem.getActionView().setAlpha(0);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id){
-            case R.id.analysis_selector:
-                chartAnalysisManager.showDialog();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
+    public void displaySelectorItem(){
+        analysisSelectorItem.getActionView().animate().alpha(1).start();
+
+        App.newbieGuideBuilder = NewbieGuide.with(AnalysisActivity.this)
+                .addGuidePage(GuidePage.newInstance()
+                        .addHighLight(ChartAnalysisManager.getViewRectF(analysisSelectorItem.getActionView())
+                                ,new RelativeGuide(R.layout.guide_cam_chart_filter,
+                                Gravity.LEFT,20)));
     }
-
-
-
 }

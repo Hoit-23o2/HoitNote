@@ -2,30 +2,40 @@ package com.example.hoitnote.views.analysis;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.app.hubert.guide.NewbieGuide;
+import com.app.hubert.guide.model.GuidePage;
+import com.app.hubert.guide.model.RelativeGuide;
 import com.example.hoitnote.R;
 import com.example.hoitnote.adapters.analysis.AnalysisFragmentAdapter;
 import com.example.hoitnote.customviews.AccountCardFragment;
 import com.example.hoitnote.databinding.FragmentInformationBinding;
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.ClickType;
+import com.example.hoitnote.utils.helpers.DeviceHelper;
 import com.example.hoitnote.viewmodels.AccountCardViewModel;
 
-public class InformationFragment extends Fragment {
+public class InformationFragment extends Fragment{
     FragmentInformationBinding binding;
     AccountCardViewModel accountCardViewModel;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
+
+    public FragmentInformationBinding getBinding() {
+        return binding;
+    }
 
     public InformationFragment(AccountCardViewModel accountCardViewModel, FragmentManager
                                fragmentManager, FragmentTransaction fragmentTransaction){
@@ -52,6 +62,13 @@ public class InformationFragment extends Fragment {
 
         binding.setAccountCardViewModel(accountCardViewModel);
         binding.informationContainer.setAlpha(0);
+
+        /*初始化1：1Container*/
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)
+                binding.cardRelatedContainer.getLayoutParams();
+        layoutParams.verticalBias = 0;
+        binding.cardRelatedContainer.setLayoutParams(layoutParams);
+
         /*长按这个Card*/
         AccountCardFragment accountCardFragment = accountCardViewModel.getAccount().
                 parseToAccountCardFragment(accountCardViewModel.context, accountCardViewModel.getClickType());
@@ -59,7 +76,22 @@ public class InformationFragment extends Fragment {
         return binding.getRoot();
     }
 
+    /*设置进入动画*/
     private void animFrame(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                int deviceHeight = DeviceHelper.getDeviceHeight(accountCardViewModel.context);
+                int deviceWidth = DeviceHelper.getDeviceWidth(accountCardViewModel.context);
+                int actionBarHeight = DeviceHelper.getActionBarHeight(accountCardViewModel.context);
+                int statueBarHeight = DeviceHelper.getStatueBarHeight(accountCardViewModel.context);
+                int navigationKeyHeight = DeviceHelper.getNavigationKeyHeight(accountCardViewModel.context);
+                int screenHeight = deviceHeight - actionBarHeight - statueBarHeight - navigationKeyHeight;
+                int transitionY = (screenHeight - deviceWidth) / 2;
+                binding.cardRelatedContainer.animate().translationY(transitionY).start();
+            }
+        }, Constants.delayDuration / 4);
+
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -76,5 +108,19 @@ public class InformationFragment extends Fragment {
                 binding.informationContainer.animate().alpha(1).start();
             }
         }, Constants.delayDuration);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                NewbieGuide.with((Fragment)InformationFragment.this)
+                        .setLabel("guide_information")
+                        .addGuidePage(GuidePage.newInstance()
+                                .addHighLight(binding.informationContainer, new RelativeGuide(R.layout.guide_cam_information_fragment_1,
+                                        Gravity.BOTTOM, 20)))
+                        .alwaysShow(true)
+                        .show();
+            }
+        },Constants.delayDuration);
+
     }
 }

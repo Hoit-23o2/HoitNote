@@ -25,7 +25,7 @@ public class AccountCardAdapter extends FragmentStateAdapter {
         AccountCardFragment addFragment = new AccountCardFragment(
                 new AccountCardViewModel(
                         null,
-                        null,
+                        0,
                         null,
                         null,
                         null,

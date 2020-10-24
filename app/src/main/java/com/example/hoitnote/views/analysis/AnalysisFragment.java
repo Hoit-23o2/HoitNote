@@ -2,7 +2,6 @@ package com.example.hoitnote.views.analysis;
 
 import android.content.Context;
 import android.database.DatabaseUtils;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +9,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -22,7 +20,6 @@ import com.example.hoitnote.adapters.analysis.AnalysisFragmentAdapter;
 import com.example.hoitnote.adapters.locks.LockFragmentAdapter;
 import com.example.hoitnote.databinding.FragmentAnalysisBinding;
 import com.example.hoitnote.utils.commuications.Config;
-import com.example.hoitnote.utils.managers.ChartAnalysisManager;
 import com.example.hoitnote.viewmodels.AnalysisViewModel;
 import com.example.hoitnote.viewmodels.BaseLockViewModel;
 
@@ -35,28 +32,25 @@ public class AnalysisFragment extends Fragment {
     public Context context;
     FragmentAnalysisBinding binding;
     ArrayList<Fragment> fragments;
-    ChartAnalysisManager chartAnalysisManager;
 
     public AnalysisFragment(ArrayList<Fragment> fragments){
         this.fragments = fragments;
     }
 
     public AnalysisFragment(@NonNull FragmentManager fragmentManager,
-                            @NonNull Lifecycle lifecycle,
-                            AnalysisViewModel analysisViewModel,
-                            Context context, ArrayList<Fragment> fragments){
+                        @NonNull Lifecycle lifecycle,
+                        AnalysisViewModel analysisViewModel,
+                        Context context,ArrayList<Fragment> fragments){
         this.fragmentManager = fragmentManager;
         this.lifecycle = lifecycle;
         this.analysisViewModel = analysisViewModel;
         this.context = context;
         this.fragments = fragments;
-        this.chartAnalysisManager = analysisViewModel.chartAnalysisManager;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable final ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(
                 inflater,
                 R.layout.fragment_analysis,
@@ -67,18 +61,17 @@ public class AnalysisFragment extends Fragment {
         binding.analysisContainer.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
-                if(position == 0){
-                    ((AnalysisActivity)context).hideMenu();
-                }
-                else {
-                    ((AnalysisActivity)context).showMenu();
+                super.onPageSelected(position);
+                if(((AnalysisActivity)context).analysisSelectorItem != null){
+                    if(position == 0){
+                        ((AnalysisActivity)context).hideSelectorItem(true);
+                    }
+                    else{
+                        ((AnalysisActivity)context).displaySelectorItem();
+                    }
                 }
             }
         });
         return binding.getRoot();
     }
-
-
-
-
 }

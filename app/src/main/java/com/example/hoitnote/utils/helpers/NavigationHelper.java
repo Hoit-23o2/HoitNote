@@ -60,6 +60,29 @@ public class NavigationHelper {
     }
 
     /*
+     * 带参数导航
+     * @param
+     * tag:标识符
+     * serializableObject:参数
+     * */
+    public static void navigationWithParameter(String tag, Serializable serializableObject,
+                                               Context packageContext, Class<?> toClass, boolean isClosedCurrentActivity,
+                                               boolean isAnim, View sharedElement,
+                                               String sharedElementName){
+        Intent intent = new Intent(packageContext, toClass);
+        intent.putExtra(tag, serializableObject); //where user is an instance of User
+        if(!isAnim)
+            packageContext.startActivity(intent);
+        else{
+            ActivityOptionsCompat options = ActivityOptionsCompat.
+                    makeSceneTransitionAnimation((Activity) packageContext, sharedElement, sharedElementName);
+            packageContext.startActivity(intent, options.toBundle());
+        }
+        if(isClosedCurrentActivity)
+            ((Activity)packageContext).finish();
+    }
+
+    /*
     * 封装接受参数方法
     * @param
     * tag:标识符
@@ -81,7 +104,9 @@ public class NavigationHelper {
     /*
     * 过渡元素导航
     * */
-    public static void navigationWithTransitionAnim(Context context, View sharedElement, String sharedElementName,Class<?> toClass){
+    public static void navigationWithTransitionAnim(Context context,
+                                                    View sharedElement,
+                                                    String sharedElementName,Class<?> toClass){
         Intent intent = new Intent(context, toClass);
         ActivityOptionsCompat options = ActivityOptionsCompat.
                 makeSceneTransitionAnimation((Activity) context, sharedElement, sharedElementName);

@@ -28,10 +28,9 @@ public class SplashActivity extends AppCompatActivity {
         /*初始化数据库*/
         App.dataBaseHelper = new DataBaseHelper(this,Constants.databaseFileName,null,Constants.databaseVersion);
         App.dataBaseHelper.setSqLiteDatabase(App.dataBaseHelper.getReadableDatabase());
-
-        App.BackupDataBaseHelper = new DataBaseHelper(this,Constants.backUpDatabaseFileName,null,Constants.databaseVersion);
-        App.BackupDataBaseHelper.setSqLiteDatabase(App.BackupDataBaseHelper.getReadableDatabase());
-
+        /*初始化备份数据库*/
+        App.backupDataBaseHelper = new DataBaseHelper(this, Constants.backupDatabaseFileName, null, Constants.databaseVersion);
+        App.backupDataBaseHelper.setSqLiteDatabase(App.backupDataBaseHelper.getReadableDatabase());
 
         App.fileHelper = new FileHelper();
 
