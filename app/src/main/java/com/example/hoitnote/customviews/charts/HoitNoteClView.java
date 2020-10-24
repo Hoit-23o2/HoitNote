@@ -570,11 +570,14 @@ public class HoitNoteClView extends androidx.appcompat.widget.AppCompatImageView
             //myCanvasUlt.canvas.drawLine(myCanvasUlt.rectIn.left,myCanvasUlt.rectIn.top,myCanvasUlt.rectIn.left,myCanvasUlt.rectIn.bottom,paintLine);
             myCanvasUlt.canvas.drawLine(myCanvasUlt.rectIn.left,myCanvasUlt.rectIn.bottom,myCanvasUlt.rectIn.right,myCanvasUlt.rectIn.bottom,paintLine);
         }else{
-            Paint paintLine = new Paint();
-            paintLine.setColor(selfLineColor);
+            Paint tmpPaint= new Paint();
+            tmpPaint.setColor(selfLineColor);
             myCanvasUlt.canvas.drawColor(selfBackgroundColor);
-            //myCanvasUlt.canvas.drawLine(myCanvasUlt.rectIn.left,myCanvasUlt.rectIn.top,myCanvasUlt.rectIn.left,myCanvasUlt.rectIn.bottom,paintLine);
-            myCanvasUlt.canvas.drawLine(myCanvasUlt.rectIn.left,myCanvasUlt.rectIn.bottom,myCanvasUlt.rectIn.right,myCanvasUlt.rectIn.bottom,paintLine);
+            tmpPaint.setColor(Color.rgb(150,150,150));
+            tmpPaint.setTextSize(50);
+            //myCanvasUlt.canvas.drawText("没有符合条件的账单记录",myCanvasAni.rectIn.left+10,myCanvasUlt.rectIn.top+70,tmpPaint);
+            //myCanvasUlt.canvas.drawLine(myCanvasUlt.rectIn.left,myCanvasUlt.rectIn.top,myCanvasUlt.rectIn.left,myCanvasUlt.rectIn.bottom,tmpPaint);
+            myCanvasUlt.canvas.drawLine(myCanvasUlt.rectIn.left,myCanvasUlt.rectIn.bottom,myCanvasUlt.rectIn.right,myCanvasUlt.rectIn.bottom,tmpPaint);
 //
 //            float everyChange = (myCanvasUlt.rectIn.bottom - myCanvasUlt.rectIn.top) / 5.0f;
 //            float nowLoca = myCanvasUlt.rectIn.top;

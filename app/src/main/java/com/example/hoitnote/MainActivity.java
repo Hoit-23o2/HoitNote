@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.DragEvent;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,20 +21,27 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.app.hubert.guide.NewbieGuide;
+import com.app.hubert.guide.model.GuidePage;
+import com.app.hubert.guide.model.RelativeGuide;
 import com.example.hoitnote.adapters.main.AccountCardAdapter;
 import com.example.hoitnote.adapters.main.TallyOneExpandableAdapter;
 import com.example.hoitnote.customviews.AccountCardFragment;
 import com.example.hoitnote.customviews.DraggableHand;
 import com.example.hoitnote.databinding.ActivityMainBinding;
 import com.example.hoitnote.databinding.PopupwindowAddaccountBinding;
+import com.example.hoitnote.databinding.PopupwindowDialogNormalBinding;
 import com.example.hoitnote.models.Account;
+import com.example.hoitnote.models.Tally;
 import com.example.hoitnote.utils.App;
+import com.example.hoitnote.utils.commuications.DataBaseFilter;
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.AccountJudgeType;
 import com.example.hoitnote.utils.enums.ClickType;
 import com.example.hoitnote.utils.enums.GroupType;
 import com.example.hoitnote.utils.helpers.BookingDataHelper;
 import com.example.hoitnote.utils.helpers.DeviceHelper;
+import com.example.hoitnote.utils.helpers.DialogHelper;
 import com.example.hoitnote.utils.helpers.NavigationHelper;
 import com.example.hoitnote.utils.helpers.ThemeHelper;
 import com.example.hoitnote.utils.helpers.ToastHelper;
@@ -64,15 +72,68 @@ public class MainActivity extends BaseActivity {
         binding = DataBindingUtil.setContentView(this,R.layout.activity_main);
         mainViewModel = new MainViewModel(context);
         BookingDataHelper.getAccounts();
-        /*从viewModel处拿取账户数据，并转换为Fragments*/
-        accountCardFragments = mainViewModel.getAccountCardFragments();
-        Lifecycle lifecycle = getLifecycle();
-        accountCardAdapter = new AccountCardAdapter(getSupportFragmentManager(),lifecycle,
-                accountCardFragments);
         initActivity();
     }
 
     private void initActivity() {
+        /*从viewModel处拿取账户数据，并转换为Fragments*/
+        accountCardFragments = mainViewModel.getAccountCardFragments();
+        for (AccountCardFragment accountCardFragment:
+                accountCardFragments) {
+            accountCardFragment.setLongClickListener(new AccountCardFragment.LongClickListener() {
+                @Override
+                public void onLongClick(final AccountCardFragment accountCardFragment, View v) {
+                    PopupwindowDialogNormalBinding dialogNormalBinding =
+                            DataBindingUtil.inflate(
+                            LayoutInflater.from(context),
+                            R.layout.popupwindow_dialog_normal,
+                            null,
+                            false
+                    );
+                    final AlertDialog alertDialog =
+                            DialogHelper.buildDialog(context, dialogNormalBinding);
+                    dialogNormalBinding.confirmButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            accountCardAdapter.removeAccountCard(binding.accountCardBanner,
+                                    accountCardFragments.indexOf(accountCardFragment));
+                            AccountCardViewModel accountCardViewModel =
+                                    accountCardFragment.getBinding().getAccountCardViewModel();
+                            if(accountCardViewModel != null){
+                                Account account = accountCardViewModel.getAccount();
+                                ArrayList<Tally> tallies = App.dataBaseHelper.getTallies(new DataBaseFilter(
+                                        null,
+                                        null,
+                                        DataBaseFilter.IDInvalid,
+                                        null,
+                                        account,
+                                        null
+                                ));
+                                for (Tally tally:
+                                        tallies) {
+                                    App.backupDataBaseHelper.addTally(tally);
+                                    App.dataBaseHelper.delTally(tally);
+                                }
+                                App.dataBaseHelper.delAccount(account);
+                            }
+                            alertDialog.dismiss();
+                        }
+                    });
+                    dialogNormalBinding.cancelButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            alertDialog.dismiss();
+                        }
+                    });
+                    alertDialog.show();
+
+                }
+            });
+        }
+        Lifecycle lifecycle = getLifecycle();
+        accountCardAdapter = new AccountCardAdapter(getSupportFragmentManager(),lifecycle,
+                accountCardFragments);
+        /*准备ViewModel*/
         binding.setMainViewModel(mainViewModel);
         binding.accountCardBanner.setAdapter(accountCardAdapter);
         binding.accountCardBanner.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -90,7 +151,7 @@ public class MainActivity extends BaseActivity {
 
             }
         });
-
+        /*拖动视图*/
         binding.drawer.setDraggableHandListener(new DraggableHand.DraggableHandListener() {
             @Override
             public void onTouchDown(float x, float y) {
@@ -155,6 +216,7 @@ public class MainActivity extends BaseActivity {
         updateCurrentAccountCardListView();
     }
 
+    /*更新RencentTally*/
     public void updateCurrentAccountCardListView(){
         if(currentAccountCardFragment != null){
             if(currentAccountCardFragment.getBinding() != null){
@@ -174,8 +236,6 @@ public class MainActivity extends BaseActivity {
     private boolean isBtnClick = false;
     /*点击添加加号后添加一个账户*/
     public void addAccount(View view) {
-        final AlertDialog alertDialog;
-        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         final PopupwindowAddaccountBinding popupViewBinding;
         popupViewBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(context),
@@ -183,10 +243,7 @@ public class MainActivity extends BaseActivity {
                 null,
                 false
         );
-
-        alertDialog = builder.setView(popupViewBinding.getRoot()).create();
-        if(alertDialog.getWindow() != null)
-            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        final AlertDialog alertDialog = DialogHelper.buildDialog(context, popupViewBinding);
         alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
@@ -246,5 +303,29 @@ public class MainActivity extends BaseActivity {
         NavigationHelper.navigationWithParameter(Constants.mainParamTag,
                 currentAccountCardFragment.getBinding().getAccountCardViewModel().getAccount(),
                 context,BookingActivity.class, false);
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(hasFocus){
+            new Handler().postDelayed(new Runnable() {
+                @SuppressLint("RtlHardcoded")
+                @Override
+                public void run() {
+                    NewbieGuide.with(MainActivity.this)
+                            .setLabel("guide_main")
+                            .addGuidePage(GuidePage.newInstance()
+                                    .addHighLight(binding.accountCardBanner, new RelativeGuide(R.layout.guide_main_card,
+                                            Gravity.BOTTOM, 20)))
+                            .addGuidePage(GuidePage.newInstance()
+                                    .addHighLight(binding.floatingButton, new RelativeGuide(R.layout.guide_main_floating_button,
+                                            Gravity.LEFT, 20)))
+                            .alwaysShow(true)
+                            .show();
+                }
+            },500);
+
+        }
     }
 }

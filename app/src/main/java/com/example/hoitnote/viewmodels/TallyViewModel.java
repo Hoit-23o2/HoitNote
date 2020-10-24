@@ -30,6 +30,7 @@ public class TallyViewModel extends BaseViewModel {
         this.tally = tally;
         notifyPropertyChanged(BR.tally);
     }
+
     /*
     * 类型：收入支出的颜色
     * */
@@ -81,6 +82,7 @@ public class TallyViewModel extends BaseViewModel {
         super(context);
     }
 
+    @Deprecated
     public TallyViewModel(Context context, Tally tally, String iconUrl,
                           int iconBackgroundColor, int typeBackgroundColor) {
         super(context);
@@ -90,5 +92,12 @@ public class TallyViewModel extends BaseViewModel {
         this.typeBackgroundColor = typeBackgroundColor;
     }
 
+    public TallyViewModel(Context context, Tally tally, String iconUrl,
+                          int iconBackgroundColor) {
+        super(context);
+        this.tally = tally;
+        this.iconUrl = iconUrl;
+        this.iconBackgroundColor = iconBackgroundColor;
+    }
 
 }

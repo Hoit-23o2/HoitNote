@@ -116,7 +116,7 @@ public class CAMPCListAdapter extends BaseAdapter {
 
         StringBuilder sb = new StringBuilder();
         sb.append(str1);
-        sb.append("元 \\ ");
+        sb.append("元 / ");
         sb.append(str2);
         sb.append("%");
         viewHolder.amountsAndScale.setText(sb.toString());

@@ -1,13 +1,16 @@
 package com.example.hoitnote.utils.managers;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.icu.util.Calendar;
 import android.os.Build;
+import android.os.Handler;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,14 +19,17 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 
 import com.example.hoitnote.R;
 import com.example.hoitnote.adapters.analysis.charts.CAMFirstScreenListAdapter;
@@ -31,6 +37,7 @@ import com.example.hoitnote.adapters.analysis.charts.CAMPCListAdapter;
 import com.example.hoitnote.adapters.analysis.charts.CAMPCRVAdapter;
 import com.example.hoitnote.adapters.analysis.charts.CAMTdClListAdapter;
 import com.example.hoitnote.adapters.analysis.charts.CAMSgClListAdapter;
+import com.example.hoitnote.customviews.FontAwesome;
 import com.example.hoitnote.customviews.charts.HoitNoteClView;
 import com.example.hoitnote.customviews.charts.HoitNotePCView;
 import com.example.hoitnote.models.Account;
@@ -46,6 +53,8 @@ import com.example.hoitnote.utils.enums.ActionType;
 import com.example.hoitnote.utils.enums.ThirdPartyType;
 import com.example.hoitnote.utils.helpers.DeviceHelper;
 import com.example.hoitnote.utils.helpers.ThemeHelper;
+import com.example.hoitnote.views.analysis.AnalysisActivity;
+import com.example.hoitnote.views.analysis.InformationFragment;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -59,8 +68,12 @@ public class ChartAnalysisManager {
     @SuppressLint("StaticFieldLeak")
     private static Context context;
 
+    //数据相关
+    private boolean ifHaveData;
 
     //扇形统计图相关
+    private FontAwesome pcIcon;
+    private TextView pcNoDataHint;
     private HoitNotePCView hoitNotePCView;
     private ListView myListViewPc;
     private CAMPCListAdapter CAMPCListAdapter;
@@ -80,7 +93,7 @@ public class ChartAnalysisManager {
 
     //对话框相关
     private boolean ifAnalysing = false;
-    private AlertDialog dialog;
+    private AlertDialog dialog,dialogInformation;
     private ArrayList<ChooseScreenListNode> chooseScreenListNodeArrayList;      //包括一级，二级的ScreenList
     private boolean[] firstLevelCheckedList;            //一级checkedList
     private ArrayList<boolean[]> checkedList;           //二级checkedList
@@ -88,11 +101,15 @@ public class ChartAnalysisManager {
     private TextView mTvStartTime,mTvEndTime;           //对话框中选择时间
     ArrayList<Tally> correspondingTallies;              //初始化于getCorrespondingTallies
     Account account;
+    View dialogView;
 
 
 
 
     public ChartAnalysisManager(Context context) {
+        /*初始化基础*/
+        ifHaveData = false;
+
         //初始化Pc
         hoitNotePCView = null;
         myListViewPc = null;
@@ -116,6 +133,10 @@ public class ChartAnalysisManager {
         //初始化对话框
         initializeDialog();
         ifAnalysing = false;
+    }
+
+    public boolean isIfHaveData() {
+        return ifHaveData;
     }
 
     //扇形统计图相关
@@ -145,15 +166,36 @@ public class ChartAnalysisManager {
     public void setTallyAnalysisPCListPC(ArrayList<TallyAnalysisPC> tallyAnalysisPCArrayList,ArrayList<String> screenMarkList){
         //设置要绘制的数据array
         //设置扇形统计图数据array逻辑
+        if(tallyAnalysisPCArrayList == null){
+            ifHaveData = false;
+        }else{
+            ifHaveData = tallyAnalysisPCArrayList.size() > 0;
+        }
+        if(!ifHaveData){
+            pcIcon.setVisibility(View.GONE);
+            pcNoDataHint.setVisibility(View.VISIBLE);
+        }else{
+            pcIcon.setVisibility(View.VISIBLE);
+            pcNoDataHint.setVisibility(View.GONE);
+        }
+
         if(hoitNotePCView != null){
             hoitNotePCView.endAnimation();
-            hoitNotePCView.setTallyAnalysisPCArrayList(tallyAnalysisPCArrayList);
+            if(ifHaveData){
+                hoitNotePCView.setTallyAnalysisPCArrayList(tallyAnalysisPCArrayList);
+            }else{
+                hoitNotePCView.setTallyAnalysisPCArrayList(null);
+            }
         }
         if(myListViewPc != null){
             CAMPCListAdapter.setList(tallyAnalysisPCArrayList);
         }
         if(campcrvAdapter != null){
-            campcrvAdapter.setScreenMarkList(screenMarkList);
+            if(tallyAnalysisPCArrayList == null || tallyAnalysisPCArrayList.size() == 0){
+                campcrvAdapter.setScreenMarkList(null);
+            }else{
+                campcrvAdapter.setScreenMarkList(screenMarkList);
+            }
             recyclerViewShowScreen.smoothScrollToPosition(0);
         }
     }
@@ -257,6 +299,11 @@ public class ChartAnalysisManager {
     }
 
     public void setTallyAnalysisClListCl(ArrayList<TallyAnalysisCl> tallyAnalysisClListCl){
+        if(tallyAnalysisClListCl == null){
+            ifHaveData = false;
+        }else{
+            ifHaveData = tallyAnalysisClListCl.size() > 0;
+        }
         if(hoitNoteCLView != null){
             hoitNoteCLView.endAnimation();
             hoitNoteCLView.setTallyAnalysisClArrayList(tallyAnalysisClListCl);
@@ -339,6 +386,7 @@ public class ChartAnalysisManager {
         mTvEndTime.setText("");
         dialog.show();
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
         //设置对话框大小
 //        Window window = dialog.getWindow();
 //        WindowManager.LayoutParams lp = Objects.requireNonNull(window).getAttributes();
@@ -603,6 +651,7 @@ public class ChartAnalysisManager {
         //建立对话框
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         View view = LayoutInflater.from(context).inflate(R.layout.cam_dialog_choose_screen,null);
+        dialogView = view;
 
         /*获取屏幕相关属性*/
         int deviceHeight = DeviceHelper.getDeviceHeight(context);
@@ -687,6 +736,46 @@ public class ChartAnalysisManager {
                 ifAnalysing = false;
             }
         });
+
+        builder = new AlertDialog.Builder(context);
+        View view2;
+        view2 = LayoutInflater.from(context).inflate(R.layout.cam_dialog_information,null);
+        dialogInformation = builder.setView(view2).create();
+        Button button = view2.findViewById(R.id.bt_confirm);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogInformation.hide();
+                showDialog();
+            }
+        });
+
+        ImageView imageView = view.findViewById(R.id.iv_dialog_show_information);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.hide();
+                dialogInformation.show();
+                dialogInformation.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            }
+        });
+
+
+
+    }
+
+
+    public static RectF getViewRectF(View view){
+        int width = view.getWidth();
+        int height = view.getHeight();
+        int [] location = new int[2];
+        view.getLocationOnScreen(location);
+        RectF rectf = new RectF();
+        rectf.left = location[0];
+        rectf.top = location[1];
+        rectf.right = rectf.left + width;
+        rectf.bottom = rectf.top + height;
+        return rectf;
     }
 
 
@@ -789,6 +878,16 @@ public class ChartAnalysisManager {
             }
             //详细信息统计
             getDetailedInformation(tallyAnalysisPCArrayList);
+
+            if(tallyAnalysisPCIncome.allMoney == 0.0d){
+                tallyAnalysisPCArrayList.remove(tallyAnalysisPCIncome);
+            }
+            if(tallyAnalysisPCOutcome.allMoney == 0.0d){
+                tallyAnalysisPCArrayList.remove(tallyAnalysisPCOutcome);
+            }
+            if(tallyAnalysisPCTransfer.allMoney == 0.0d){
+                tallyAnalysisPCArrayList.remove(tallyAnalysisPCTransfer);
+            }
             return tallyAnalysisPCArrayList;
         }
     }
@@ -1110,4 +1209,11 @@ public class ChartAnalysisManager {
         }
     }
 
+    public void setPcNoDataHint(TextView pcNoDataHint) {
+        this.pcNoDataHint = pcNoDataHint;
+    }
+
+    public void setPcIcon(FontAwesome pcIcon) {
+        this.pcIcon = pcIcon;
+    }
 }

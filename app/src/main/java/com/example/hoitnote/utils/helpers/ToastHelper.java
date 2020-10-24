@@ -24,7 +24,7 @@ public class ToastHelper {
         customToast.setDuration(length);
         customToast.show();
     }
-
+    /*自定义Toast*/
     public static void showToast(Context context, String fontIcon, String tips, int length){
         LayoutInflater inflater = ((Activity)context).getLayoutInflater();
         @SuppressLint("InflateParams")

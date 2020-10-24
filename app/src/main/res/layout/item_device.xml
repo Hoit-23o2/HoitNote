@@ -33,12 +33,18 @@
                 app:cardElevation="0dp"
                 android:layout_margin="20dp"
                 app:cardCornerRadius="25dp">
-                <com.example.hoitnote.customviews.FontAwesome
-                    style="@style/HoitIcon"
-                    android:focusable="false"
+                <LinearLayout
+                    android:background="?attr/colorAccentOpacity"
                     android:layout_width="match_parent"
-                    android:text="@{ConvertHelper.bluetoothDevice2Icon(bluetoothViewModel.bluetoothDevice)}"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent">
+                    <com.example.hoitnote.customviews.FontAwesome
+                        style="@style/HoitIcon"
+                        android:focusable="false"
+                        android:layout_width="match_parent"
+                        android:text="@{ConvertHelper.bluetoothDevice2Icon(bluetoothViewModel.bluetoothDevice)}"
+                        android:layout_height="match_parent"/>
+                </LinearLayout>
+
             </androidx.cardview.widget.CardView>
 
 

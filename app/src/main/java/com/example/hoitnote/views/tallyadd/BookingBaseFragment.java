@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.core.content.res.ResourcesCompat;
@@ -333,7 +332,7 @@ public class BookingBaseFragment extends Fragment {
                 personString = personItems.get(options1);
                 personTextView.setText(personString);
             }
-        }).setLayoutRes(R.layout.hzs_person_pickerview, new CustomListener() {
+        }).setLayoutRes(R.layout.hzs_thirdparty_pickerview, new CustomListener() {
             @Override
             public void customLayout(View v) {
                 //自定义布局中的控件初始化及事件处理
@@ -445,7 +444,7 @@ public class BookingBaseFragment extends Fragment {
                 storeString = storeItems.get(options1);
                 storeTextView.setText(storeString);
             }
-        }).setLayoutRes(R.layout.hzs_person_pickerview, new CustomListener() {
+        }).setLayoutRes(R.layout.hzs_thirdparty_pickerview, new CustomListener() {
             @Override
             public void customLayout(View v) {
                 //自定义布局中的控件初始化及事件处理
@@ -495,7 +494,7 @@ public class BookingBaseFragment extends Fragment {
                 projectString = projectItems.get(options1);
                 projectTextView.setText(projectString);
             }
-        }).setLayoutRes(R.layout.hzs_person_pickerview, new CustomListener() {
+        }).setLayoutRes(R.layout.hzs_thirdparty_pickerview, new CustomListener() {
             @Override
             public void customLayout(View v) {
                 //自定义布局中的控件初始化及事件处理

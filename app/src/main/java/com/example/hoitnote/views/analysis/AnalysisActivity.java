@@ -7,12 +7,18 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.ContentValues;
+import android.graphics.RectF;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.app.hubert.guide.NewbieGuide;
+import com.app.hubert.guide.model.GuidePage;
+import com.app.hubert.guide.model.RelativeGuide;
 import com.example.hoitnote.BaseActivity;
 import com.example.hoitnote.R;
 import com.example.hoitnote.databinding.ActivityAnalysisBinding;
@@ -36,6 +42,7 @@ public class AnalysisActivity extends BaseActivity {
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
     ChartAnalysisManager chartAnalysisManager;
+    ArrayList<ContentValues> contentValuesArrayList = new ArrayList<>();
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -45,26 +52,16 @@ public class AnalysisActivity extends BaseActivity {
         account = (Account)NavigationHelper.getNavigationParameter(this, Constants.analysisParamTag);
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
-
-        /*初始化ChartManager*/
         chartAnalysisManager = new ChartAnalysisManager(context);
         chartAnalysisManager.setNowAccount(account);
-
-        /*初始化analysisViewModel*/
         analysisViewModel = new AnalysisViewModel(context, chartAnalysisManager);
-        AccountCardViewModel accountCardViewModel = account.parseToAccountCardViewModel(context, ClickType.NONE);
-        analysisViewModel.setIncomes(accountCardViewModel.getIncomes());
-        analysisViewModel.setOutcomes(accountCardViewModel.getOutcomes());
-        analysisViewModel.setRemains(accountCardViewModel.getRemains());
 
-        /*填充布局*/
         ArrayList<Fragment> fragments = initFragments();
+
         analysisFragment = new AnalysisFragment(fragmentManager,getLifecycle(),
                 analysisViewModel,context, fragments);
 
         fragmentTransaction.add(binding.mainContainer.getId(), analysisFragment).commit();
-
-
 
         initActivity();
     }
@@ -125,10 +122,14 @@ public class AnalysisActivity extends BaseActivity {
             analysisSelectorItem.getActionView().setAlpha(0);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void displaySelectorItem(){
         analysisSelectorItem.getActionView().animate().alpha(1).start();
+
+        App.newbieGuideBuilder = NewbieGuide.with(AnalysisActivity.this)
+                .addGuidePage(GuidePage.newInstance()
+                        .addHighLight(ChartAnalysisManager.getViewRectF(analysisSelectorItem.getActionView())
+                                ,new RelativeGuide(R.layout.guide_cam_chart_filter,
+                                Gravity.LEFT,20)));
     }
-
-
-
 }

@@ -1,6 +1,9 @@
 package com.example.hoitnote.utils.helpers;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -46,5 +49,17 @@ public class DeviceHelper {
             return resources.getDimensionPixelSize(resourceId);
         }
         return 0;
+    }
+
+    public static void restartApp(Context context){
+        PackageManager packageManager = context.getPackageManager();
+        Intent intent = packageManager.getLaunchIntentForPackage(context.getPackageName());
+        ComponentName componentName = null;
+        if (intent != null) {
+            componentName = intent.getComponent();
+        }
+        Intent mainIntent = Intent.makeRestartActivityTask(componentName);
+        context.startActivity(mainIntent);
+        Runtime.getRuntime().exit(0);
     }
 }

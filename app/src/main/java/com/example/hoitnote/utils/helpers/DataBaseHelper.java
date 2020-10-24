@@ -19,6 +19,7 @@ import com.example.hoitnote.utils.App;
 import com.example.hoitnote.utils.Interfaces.IDataBase;
 import com.example.hoitnote.utils.commuications.Config;
 import com.example.hoitnote.utils.commuications.DataBaseFilter;
+import com.example.hoitnote.utils.commuications.DataPackage;
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.ActionType;
 import com.example.hoitnote.utils.enums.FilterType;
@@ -80,6 +81,11 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
+    }
+
+    @Override
+    public boolean saveDataPackage(DataPackage dataPackage) {
+        return false;
     }
 
     @Override

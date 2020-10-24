@@ -73,5 +73,7 @@
     <string name="rencent_seven_hint">最&#160;&#160;&#160;近</string>
     <string name="circle_arrow_right"></string>
     <string name="delete">删除</string>
+    <string name="tips_hint">提示</string>
+    <string name="circle_chart_no_data">没有数据可以显示</string>
 
 </resources>

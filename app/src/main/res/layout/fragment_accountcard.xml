@@ -27,6 +27,7 @@
             android:transitionName="@string/transition_name_card"
             android:foreground="?attr/selectableItemBackground"
             android:onClick="@{(v)->accountCardFragment.actionWhenCardClicked(v)}"
+            android:longClickable="true"
             app:cardCornerRadius="20dp"
             app:cardElevation="5dp"
             android:layout_margin="20dp"

@@ -28,6 +28,7 @@
             android:onClick="@{(v)->dataSyncFragment.ReceiveDataPackage(v)}"/>
 
         <ListView
+            android:divider="@null"
             android:clickable="true"
             android:id="@+id/pairedDeviceListView"
             android:layout_width="match_parent"

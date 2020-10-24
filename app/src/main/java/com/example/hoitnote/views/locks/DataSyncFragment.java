@@ -1,8 +1,12 @@
 package com.example.hoitnote.views.locks;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +20,7 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import com.example.hoitnote.BaseActivity;
 import com.example.hoitnote.R;
 import com.example.hoitnote.adapters.bluetooth.BlueToothDeviceAdapter;
 import com.example.hoitnote.databinding.FragmentDatasyncBinding;
@@ -23,6 +28,8 @@ import com.example.hoitnote.utils.App;
 import com.example.hoitnote.utils.commuications.DataPackage;
 import com.example.hoitnote.utils.commuications.bluetooth.ReceiveInfo;
 import com.example.hoitnote.utils.helpers.BlueToothHelper;
+import com.example.hoitnote.utils.helpers.DeviceHelper;
+import com.example.hoitnote.utils.helpers.NavigationHelper;
 import com.example.hoitnote.utils.helpers.ToastHelper;
 import com.example.hoitnote.viewmodels.BlueToothViewModel;
 
@@ -124,7 +131,9 @@ public class DataSyncFragment extends Fragment {
             @Override
             public void onDataReceived(DataPackage dataPackage) {
                 ToastHelper.showToast(context, dataPackage.toString(), Toast.LENGTH_SHORT);
-                Log.d("蓝牙：",dataPackage.getConfigs().get(0).getPassword());
+                App.dataBaseHelper.saveDataPackage(dataPackage);
+                /*重启App*/
+                DeviceHelper.restartApp(context);
             }
         });
     }

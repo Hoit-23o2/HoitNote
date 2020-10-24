@@ -2,6 +2,7 @@ package com.example.hoitnote.views.analysis;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.app.hubert.guide.NewbieGuide;
+import com.app.hubert.guide.model.GuidePage;
+import com.app.hubert.guide.model.RelativeGuide;
 import com.example.hoitnote.R;
 import com.example.hoitnote.adapters.analysis.AnalysisFragmentAdapter;
 import com.example.hoitnote.customviews.AccountCardFragment;
@@ -23,11 +27,15 @@ import com.example.hoitnote.utils.enums.ClickType;
 import com.example.hoitnote.utils.helpers.DeviceHelper;
 import com.example.hoitnote.viewmodels.AccountCardViewModel;
 
-public class InformationFragment extends Fragment {
+public class InformationFragment extends Fragment{
     FragmentInformationBinding binding;
     AccountCardViewModel accountCardViewModel;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
+
+    public FragmentInformationBinding getBinding() {
+        return binding;
+    }
 
     public InformationFragment(AccountCardViewModel accountCardViewModel, FragmentManager
                                fragmentManager, FragmentTransaction fragmentTransaction){
@@ -100,5 +108,19 @@ public class InformationFragment extends Fragment {
                 binding.informationContainer.animate().alpha(1).start();
             }
         }, Constants.delayDuration);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                NewbieGuide.with((Fragment)InformationFragment.this)
+                        .setLabel("guide_information")
+                        .addGuidePage(GuidePage.newInstance()
+                                .addHighLight(binding.informationContainer, new RelativeGuide(R.layout.guide_cam_information_fragment_1,
+                                        Gravity.BOTTOM, 20)))
+                        .alwaysShow(true)
+                        .show();
+            }
+        },Constants.delayDuration);
+
     }
 }

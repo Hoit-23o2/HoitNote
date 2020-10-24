@@ -174,6 +174,7 @@ public class Constants {
     public static final int MSG_Is_Connected = 7;
     public static final int MSG_Get_SENDINFO = 8;
     public static final int MSG_Get_RECEIVEINFO = 9;
+    public static final int MSG_CANCEL = 10;
 
     public static String deviceNotSupport = "设备不支持蓝牙";
 
