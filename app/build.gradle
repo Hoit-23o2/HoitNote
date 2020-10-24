@@ -47,6 +47,8 @@ dependencies {
     implementation "com.daimajia.swipelayout:library:1.2.0@aar" //滑动删除控件
     implementation 'com.caverock:androidsvg-aar:1.4' //SVG
     implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar' //TabLayout
+    implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2' //可展开控件
     implementation 'com.sunfusheng:marqueeview:1.3.3' //垂直跑马灯
     implementation 'com.nambimobile.widgets:expandable-fab:1.0.0'//可展开actionButton
+
 }

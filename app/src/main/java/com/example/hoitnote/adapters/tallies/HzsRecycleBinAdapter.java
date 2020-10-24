@@ -45,7 +45,7 @@ public class HzsRecycleBinAdapter extends RecyclerView.Adapter<HzsRecycleBinAdap
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final Tally tally = singleDayData.get(position);
 
-        holder.binding.setTally(new HzsTally(tally));
+        holder.binding.setTally(new HzsTally(tally,HzsTally.DATE));
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

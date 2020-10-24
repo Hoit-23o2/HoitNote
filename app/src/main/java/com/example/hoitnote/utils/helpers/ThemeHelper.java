@@ -94,9 +94,9 @@ public class ThemeHelper {
     }
 
     /*请使用Contants中的Color*/
-    public static void changeColorOfNavigationBar(Activity activity, String color){
+    public static void changeColorOfNavigationBar(Activity activity, int color){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            activity.getWindow().setNavigationBarColor(Color.parseColor(color));
+            activity.getWindow().setNavigationBarColor(color);
         }
     }
     public static void initUI(BaseActivity activity, Theme theme){
@@ -143,10 +143,10 @@ public class ThemeHelper {
         }
 
         if(theme == Theme.SWEET){
-            changeColorOfNavigationBar(activity, Constants.sweetColorPrimary);
+            changeColorOfNavigationBar(activity, Color.parseColor(Constants.sweetColorPrimary));
         }
         else if(theme == Theme.DEFAULT){
-            changeColorOfNavigationBar(activity, Constants.defaultColorPrimary);
+            changeColorOfNavigationBar(activity, Color.parseColor(Constants.defaultColorPrimary));
         }
 
     }

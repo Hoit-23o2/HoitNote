@@ -1,12 +1,16 @@
 package com.example.hoitnote;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.view.Menu;
 
@@ -19,6 +23,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.hoitnote.adapters.main.AccountCardAdapter;
 import com.example.hoitnote.adapters.main.TallyOneExpandableAdapter;
 import com.example.hoitnote.customviews.AccountCardFragment;
+import com.example.hoitnote.customviews.DraggableHand;
 import com.example.hoitnote.databinding.ActivityMainBinding;
 import com.example.hoitnote.databinding.PopupwindowAddaccountBinding;
 import com.example.hoitnote.models.Account;
@@ -48,6 +53,10 @@ public class MainActivity extends BaseActivity {
     AccountCardAdapter accountCardAdapter;
     ArrayList<AccountCardFragment> accountCardFragments = new ArrayList<>();
     AccountCardFragment currentAccountCardFragment;
+
+    /*拉动相关*/
+    private boolean isInitOriginY = true;
+    private float originY;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,10 +90,41 @@ public class MainActivity extends BaseActivity {
 
             }
         });
+
+        binding.drawer.setDraggableHandListener(new DraggableHand.DraggableHandListener() {
+            @Override
+            public void onTouchDown(float x, float y) {
+                if(isInitOriginY){
+                    originY = y;
+                    isInitOriginY = false;
+                }
+            }
+
+            @Override
+            public void onTouchUp(float x, float y) {
+
+            }
+
+            @Override
+            public void onTouchMove(float x, float y) {
+                int upperContainerHeight = DeviceHelper.getActionBarHeight(context) + DeviceHelper.getStatueBarHeight(context);
+                if(y < upperContainerHeight || y > originY){
+                    return;
+                }
+
+                ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams)
+                        binding.recentTalliesContainer.getLayoutParams();
+                params.height = DeviceHelper.getDeviceHeight(MainActivity.this) - (int)y;
+                binding.recentTalliesContainer.setLayoutParams(params);
+            }
+        });
+
+        /*修改NavigationKey*/
         int color = ThemeHelper.getPrimaryLightColor(context);
-        String colorStr = "#" + Integer.toHexString(color).substring(2);
         ThemeHelper.changeColorOfNavigationBar(this,
-                colorStr);
+                color);
+
+
 
         /*调整最近列表的高度*/
         float cardFragmentRatio = 0.6f;

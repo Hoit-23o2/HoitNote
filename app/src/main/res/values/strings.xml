@@ -55,7 +55,6 @@
     <string name="clock_icon"></string>
     <string name="selector_level_hint">选择分类级别</string>
     <string name="selector_time_hint">选择时间范围</string>
-    <string name="circle_arrow_right"></string>
     <string name="booking_money_hint">金额</string>
     <string name="booking_project_hint">项目</string>
     <string name="booking_remark">备注</string>
@@ -71,5 +70,8 @@
     <string name="booking_transfer_out">转出</string>
     <string name="booking_transfer_exchange"></string>
     <string name="add_tally">记一笔</string>
+    <string name="rencent_seven_hint">最&#160;&#160;&#160;近</string>
+    <string name="circle_arrow_right"></string>
+    <string name="delete">删除</string>
 
 </resources>

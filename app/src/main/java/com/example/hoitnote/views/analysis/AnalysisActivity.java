@@ -36,7 +36,6 @@ public class AnalysisActivity extends BaseActivity {
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
     ChartAnalysisManager chartAnalysisManager;
-    ArrayList<ContentValues> contentValuesArrayList = new ArrayList<>();
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -46,11 +45,20 @@ public class AnalysisActivity extends BaseActivity {
         account = (Account)NavigationHelper.getNavigationParameter(this, Constants.analysisParamTag);
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
+
+        /*初始化ChartManager*/
         chartAnalysisManager = new ChartAnalysisManager(context);
+        chartAnalysisManager.setNowAccount(account);
+
+        /*初始化analysisViewModel*/
         analysisViewModel = new AnalysisViewModel(context, chartAnalysisManager);
+        AccountCardViewModel accountCardViewModel = account.parseToAccountCardViewModel(context, ClickType.NONE);
+        analysisViewModel.setIncomes(accountCardViewModel.getIncomes());
+        analysisViewModel.setOutcomes(accountCardViewModel.getOutcomes());
+        analysisViewModel.setRemains(accountCardViewModel.getRemains());
 
+        /*填充布局*/
         ArrayList<Fragment> fragments = initFragments();
-
         analysisFragment = new AnalysisFragment(fragmentManager,getLifecycle(),
                 analysisViewModel,context, fragments);
 
@@ -73,7 +81,7 @@ public class AnalysisActivity extends BaseActivity {
                         null,
                         DataBaseFilter.IDInvalid,
                         null,
-                        null,
+                        account,
                         null
                 ))
         );

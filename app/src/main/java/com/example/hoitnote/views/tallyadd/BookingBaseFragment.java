@@ -337,9 +337,9 @@ public class BookingBaseFragment extends Fragment {
             @Override
             public void customLayout(View v) {
                 //自定义布局中的控件初始化及事件处理
-                final TextView tvSubmit = v.findViewById(R.id.hzs_person_pickerview_finish);
-                final TextView tvCancel = v.findViewById(R.id.hzs_person_pickerview_cancel);
-                Button addFirstClass = v.findViewById(R.id.hzs_add_person_button);
+                final TextView tvSubmit = v.findViewById(R.id.hzs_pickerview_finish);
+                final TextView tvCancel = v.findViewById(R.id.hzs_pickerview_cancel);
+                Button addFirstClass = v.findViewById(R.id.hzs_add_button);
                 tvSubmit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -445,13 +445,13 @@ public class BookingBaseFragment extends Fragment {
                 storeString = storeItems.get(options1);
                 storeTextView.setText(storeString);
             }
-        }).setLayoutRes(R.layout.hzs_store_pickerview, new CustomListener() {
+        }).setLayoutRes(R.layout.hzs_person_pickerview, new CustomListener() {
             @Override
             public void customLayout(View v) {
                 //自定义布局中的控件初始化及事件处理
-                final TextView tvSubmit = v.findViewById(R.id.hzs_store_pickerview_finish);
-                final TextView tvCancel = v.findViewById(R.id.hzs_store_pickerview_cancel);
-                Button addFirstClass = (Button)v.findViewById(R.id.hzs_add_store_button);
+                final TextView tvSubmit = v.findViewById(R.id.hzs_pickerview_finish);
+                final TextView tvCancel = v.findViewById(R.id.hzs_pickerview_cancel);
+                Button addFirstClass = (Button)v.findViewById(R.id.hzs_add_button);
                 tvSubmit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -495,13 +495,13 @@ public class BookingBaseFragment extends Fragment {
                 projectString = projectItems.get(options1);
                 projectTextView.setText(projectString);
             }
-        }).setLayoutRes(R.layout.hzs_project_pickerview, new CustomListener() {
+        }).setLayoutRes(R.layout.hzs_person_pickerview, new CustomListener() {
             @Override
             public void customLayout(View v) {
                 //自定义布局中的控件初始化及事件处理
-                final TextView tvSubmit = v.findViewById(R.id.hzs_project_pickerview_finish);
-                final TextView tvCancel = v.findViewById(R.id.hzs_project_pickerview_cancel);
-                Button addFirstClass = v.findViewById(R.id.hzs_add_project_button);
+                final TextView tvSubmit = v.findViewById(R.id.hzs_pickerview_finish);
+                final TextView tvCancel = v.findViewById(R.id.hzs_pickerview_cancel);
+                Button addFirstClass = v.findViewById(R.id.hzs_add_button);
                 tvSubmit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

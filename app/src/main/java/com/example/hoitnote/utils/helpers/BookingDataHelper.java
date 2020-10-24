@@ -104,7 +104,7 @@ public class BookingDataHelper {
             if(account.getAccountCode() == null || account.getAccountCode() == ""){
                 accountsList.add(account.getAccountName());
             }else{
-                accountsList.add(account.getAccountName()+" "+account.getAccountCode());
+                accountsList.add(account.getAccountName()+" "+ConvertHelper.cutoffAccountCode(account.getAccountCode()));
             }
         }
         return accountsList;

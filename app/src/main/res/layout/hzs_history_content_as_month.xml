@@ -8,31 +8,26 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="50dp">
-        <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_weight="1"
+            android:orientation="horizontal"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3">
+            android:layout_height="match_parent">
             <Button
                 android:id="@+id/hzs_history_content_as_month_year"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="2020年"
-                android:textSize="24dp"
+                style="@style/HoitTitleText"
                 android:background="@android:color/transparent"/>
 
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3">
             <Button
                 android:id="@+id/hzs_history_content_as_month_month"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="10月"
-                android:textSize="24dp"
+                style="@style/HoitTitleText"
                 android:gravity="center"
                 android:background="@android:color/transparent"/>
 
@@ -44,32 +39,31 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/hzs_history_content_as_month_month"
                 app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
         <TextView
             android:id="@+id/hzs_history_content_as_month_jieyu"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="3"
             android:textColor="@android:color/black"
             android:gravity="center"
-            android:text="结余"
-            android:textSize="20dp"/>
+            android:text="@string/account_remain_money"
+            style="@style/HoitTitleText"/>
         <TextView
+            android:layout_marginHorizontal="10dp"
             android:id="@+id/hzs_history_content_as_month_balance"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="3"
             android:gravity="center"
-            android:text="1000.0"
-            android:textColor="@android:color/black"
-            android:textSize="20dp"/>
+            style="@style/HoitTitleText"
+            android:text="1000.0￥"/>
 
 
     </LinearLayout>
+
     <ExpandableListView
+        android:groupIndicator="@null"
         android:orientation="vertical"
         android:id="@+id/hzs_history_content_as_month_expandable_listview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></ExpandableListView>
+        android:layout_height="match_parent" />
 </LinearLayout>

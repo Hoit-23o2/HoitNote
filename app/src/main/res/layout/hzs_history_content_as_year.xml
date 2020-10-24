@@ -9,20 +9,21 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="50dp">
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="6">
+            android:layout_weight="1">
             <Button
                 android:id="@+id/hzs_history_content_as_year_year"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="2020年"
-                android:textSize="24dp"
-                android:gravity="center"
+                style="@style/HoitTitleText"
                 android:background="@android:color/transparent"/>
 
             <ImageView
+                android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
@@ -31,26 +32,26 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/hzs_history_content_as_year_year"
                 app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/hzs_history_content_as_year_jieyu"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:text="结余"
-            android:textSize="20dp"
+            android:text="@string/account_remain_money"
+            style="@style/HoitTitleText"
             android:gravity="center"/>
         <TextView
             android:id="@+id/hzs_history_content_as_year_balance"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
+            android:layout_marginHorizontal="10dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:text="1000.0"
-            android:textSize="20dp"
+            android:text="1000.0￥"
+            style="@style/HoitTitleText"
             android:gravity="center"/>
     </LinearLayout>
     <ExpandableListView
+        android:groupIndicator="@null"
         android:id="@+id/hzs_history_content_as_year_expandable_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

@@ -10,6 +10,9 @@ import com.example.hoitnote.utils.enums.IconType;
 import java.text.SimpleDateFormat;
 
 public class HzsTally {
+    public static final int DATE = 0;
+    public static final int TIME = 1;
+    public static final int DAYANDTIME = 2;
     public String day;
     public String weekday;
     public String classname;
@@ -17,11 +20,15 @@ public class HzsTally {
     public String account;
     public String money;
     public String iconCode;
+    public ActionType actionType;
     private IconType iconType;
     private int classType = 2;
 
-    public HzsTally(Tally tally){
-        day = String.valueOf(tally.getDate().getDate());
+    public HzsTally(Tally tally, int timeType){
+
+
+        actionType = tally.getActionType();
+        day = tally.getDate().toString();
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat formatter = new SimpleDateFormat("E");
         weekday = formatter.format(tally.getDate());
@@ -52,6 +59,16 @@ public class HzsTally {
             iconCode = App.dataBaseHelper.getIconInformation(classname,iconType);
         }else{
             iconCode = App.dataBaseHelper.getIconInformation(tally.getClassification1()+tally.getClassification2(),iconType);
+        }
+        switch (timeType){
+            case TIME:
+                break;
+            case DAYANDTIME:
+                time = tally.getDate().getDate()+"日"+time;
+                break;
+            default:
+                time = day;
+                break;
         }
     }
 }

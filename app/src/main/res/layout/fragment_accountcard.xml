@@ -71,11 +71,34 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
-                    android:text="@{accountCardViewModel.account.accountCode, default=6230572111187771545}"
+                    android:text="@{accountCardViewModel.account.accountCode, default=3774}"
                     android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_margin="20dp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+                    <com.sunfusheng.marqueeview.MarqueeView
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:id="@+id/tipsTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:mvAnimDuration="3000"
+                        app:mvDirection="bottom_to_top"
+                        app:mvInterval="3000"
+                        app:mvGravity="center"
+                        app:mvTextSize="14sp"
+                        app:mvTextColor="?attr/textColorSecondary"
+                        style="@style/HoitSubTitleText"
+                        app:mvSingleLine="true"/>
+                </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

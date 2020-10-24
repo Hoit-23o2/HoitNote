@@ -1,12 +1,10 @@
 package com.example.hoitnote.adapters.tallies;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.databinding.DataBindingUtil;
@@ -14,15 +12,15 @@ import androidx.databinding.DataBindingUtil;
 import com.daimajia.swipe.SwipeLayout;
 import com.example.hoitnote.R;
 
-import com.example.hoitnote.databinding.HzsExpandItemMonthMenuBinding;
 import com.example.hoitnote.databinding.HzsExpandItemTallyBinding;
+import com.example.hoitnote.databinding.HzsExpandItemYearMenuBinding;
 import com.example.hoitnote.models.flow.HzsMonthData;
 import com.example.hoitnote.models.flow.HzsTally;
 import com.example.hoitnote.utils.App;
 import com.example.hoitnote.views.flow.HistoryActivity;
 
 
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -86,7 +84,25 @@ public class HzsSecondExpandableListViewAdapter extends BaseExpandableListAdapte
 
     @Override
     public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
-        SecondHolder holder = null;
+        FirstHolder holder = null;
+        HzsExpandItemYearMenuBinding binding;
+        if(view == null){
+            holder = new FirstHolder();
+            binding = DataBindingUtil.inflate(LayoutInflater.from(context),R.layout.hzs_expand_item_year_menu,viewGroup,false);
+            view = binding.getRoot();
+            holder.binding = binding;
+            view.setTag(holder);
+        }else{
+            holder = (FirstHolder)view.getTag();
+        }
+        holder.binding.header.setText(months.get(i).getYear()+"年"+months.get(i).getMonth()+"月");
+        List<String> info = new ArrayList<>();
+        info.add(context.getString(R.string.account_remain_money) + months.get(i).getBalance());
+        info.add(context.getString(R.string.account_income) + months.get(i).getIncome());
+        info.add(context.getString(R.string.account_outcome) + months.get(i).getOutcome());
+        holder.binding.tipsTextView.startWithList(info, R.anim.anim_bottom_in, R.anim.anim_top_out);
+        return view;
+        /*SecondHolder holder = null;
         HzsExpandItemMonthMenuBinding binding = null;
         if(view == null){
             binding = DataBindingUtil.inflate(LayoutInflater.from(context),R.layout.hzs_expand_item_month_menu,viewGroup,false);
@@ -98,7 +114,7 @@ public class HzsSecondExpandableListViewAdapter extends BaseExpandableListAdapte
             holder = (SecondHolder)view.getTag();
         }
         holder.binding.setHzsMonthData(months.get(i));
-        return view;
+        return view;*/
     }
     @Override
     public View getChildView(final int i, final int i1, boolean b, View view, ViewGroup viewGroup) {
@@ -116,7 +132,7 @@ public class HzsSecondExpandableListViewAdapter extends BaseExpandableListAdapte
         }
         holder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
         holder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, holder.swipeLayout.findViewWithTag("bottom"));
-        holder.binding.setTally(new HzsTally(months.get(i).getData().get(i1)));
+        holder.binding.setTally(new HzsTally(months.get(i).getData().get(i1),HzsTally.DAYANDTIME));
         final ThirdHolder finalHolder = holder;
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,19 +141,22 @@ public class HzsSecondExpandableListViewAdapter extends BaseExpandableListAdapte
                 App.backupDataBaseHelper.addTally(months.get(i).getData().get(i1));
                 months.get(i).getData().remove(i1);
                 months.get(i).refreshData();
-                parentAdapter.refreshData();
+                if(parentAdapter != null){
+                    parentAdapter.refreshData();
+                }
                 if(months.get(i).getData().size() == 0){
                     months.remove(i);
                     if(parentAdapter != null){
                         if(parentAdapter.getYears().get(id1).getMonthDataList().size() == 0){
                             parentAdapter.getYears().remove(id1);
-                            parentAdapter.getHolders().remove(id1);
+                            parentAdapter.getFirstHolders().remove(id1);
                         }
                         parentAdapter.notifyDataSetChanged();
                     }
                 }
                 notifyDataSetChanged();
                 HistoryActivity.getInstance().refreshMainData();
+                HistoryActivity.getInstance().showMainData();
             }
         });
 
@@ -149,8 +168,8 @@ public class HzsSecondExpandableListViewAdapter extends BaseExpandableListAdapte
         return true;
     }
 
-    static class SecondHolder{
-        HzsExpandItemMonthMenuBinding binding;
+    static class FirstHolder{
+        HzsExpandItemYearMenuBinding binding;
     }
     static class ThirdHolder{
         HzsExpandItemTallyBinding binding;

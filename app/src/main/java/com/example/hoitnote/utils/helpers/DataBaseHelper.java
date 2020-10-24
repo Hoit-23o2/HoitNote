@@ -31,8 +31,8 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
 /*
-* 该类用于实现数据库交互方法,可能会用到SQLiteOpenHelper
-* */
+ * 该类用于实现数据库交互方法,可能会用到SQLiteOpenHelper
+ * */
 public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
 
     private String name;
@@ -97,6 +97,9 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         stringBuilder.append("select * from ");
         stringBuilder.append(Constants.tallyTableName);
         if (filter != null) {
+            /*
+             * find by id
+             * */
             if (filter.getId() != DataBaseFilter.IDInvalid) {
                 stringBuilder.append(" where ");
                 stringBuilder.append("(id=");
@@ -104,6 +107,9 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 stringBuilder.append(") ");
                 ifAdd = true;
             }
+            /*
+             * find by classification
+             * */
             if (filter.getClassifications() != null && filter.getClassifications().size() != 0) {
                 int i, lenc = filter.getClassifications().size();
                 if (ifAdd) {
@@ -138,6 +144,9 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 stringBuilder.append(") ");
                 ifAdd = true;
             }
+            /*
+             * find by date
+             * */
             if (filter.getStartDate() != null || filter.getEndDate() != null) {
                 if (ifAdd) {
                     stringBuilder.append("and ");
@@ -169,6 +178,9 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 stringBuilder.append(") ");
                 ifAdd = true;
             }
+            /*
+             * find by account
+             * */
             if(filter.getAccount() != null){
                 if (ifAdd) {
                     stringBuilder.append("and ");
@@ -183,7 +195,11 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 stringBuilder.append(filter.getAccount().getAccountCode());
                 stringBuilder.append("'");
                 stringBuilder.append(") ");
+                ifAdd = true;
             }
+            /*
+             * find by actionType
+             * */
             if(filter.getActionType() != null){
                 if (ifAdd) {
                     stringBuilder.append("and ");
@@ -195,6 +211,55 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 stringBuilder.append("=");
                 stringBuilder.append(filter.getActionType().ordinal());
                 stringBuilder.append(") ");
+                ifAdd = true;
+            }
+            /*
+             * find by thirdParty project
+             * */
+            if(filter.getProjectName() != null){
+                if (ifAdd) {
+                    stringBuilder.append("and ");
+                }else{
+                    stringBuilder.append(" where ");
+                }
+                stringBuilder.append("(");
+                stringBuilder.append(Constants.tallyTableColumn_project);
+                stringBuilder.append("='");
+                stringBuilder.append(filter.getProjectName());
+                stringBuilder.append("') ");
+                ifAdd = true;
+            }
+            /*
+             * find by thirdParty member
+             * */
+            if(filter.getMemberName() != null){
+                if (ifAdd) {
+                    stringBuilder.append("and ");
+                }else{
+                    stringBuilder.append(" where ");
+                }
+                stringBuilder.append("(");
+                stringBuilder.append(Constants.tallyTableColumn_member);
+                stringBuilder.append("='");
+                stringBuilder.append(filter.getMemberName());
+                stringBuilder.append("') ");
+                ifAdd = true;
+            }
+            /*
+             * find by thirdParty vendor
+             * */
+            if(filter.getVendorName() != null){
+                if (ifAdd) {
+                    stringBuilder.append("and ");
+                }else{
+                    stringBuilder.append(" where ");
+                }
+                stringBuilder.append("(");
+                stringBuilder.append(Constants.tallyTableColumn_vendor);
+                stringBuilder.append("='");
+                stringBuilder.append(filter.getVendorName());
+                stringBuilder.append("') ");
+                ifAdd = true;
             }
         }
         actionStr = stringBuilder.toString();

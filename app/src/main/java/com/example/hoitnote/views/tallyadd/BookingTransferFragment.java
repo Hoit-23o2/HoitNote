@@ -3,6 +3,8 @@ package com.example.hoitnote.views.tallyadd;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -43,11 +45,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link BookingTransferFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class BookingTransferFragment extends BookingBaseFragment {
     private TextView outcomeAccountTextView;
     private TextView incomeAccountTextView;
@@ -257,6 +254,8 @@ public class BookingTransferFragment extends BookingBaseFragment {
         });
 
         dialog.show();
+        if(dialog.getWindow() != null)
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
     private void showAddIncomeAccountDialog(){
         View view = LayoutInflater.from(getContext()).inflate(R.layout.hzs_add_class_view,null,false);
@@ -282,6 +281,8 @@ public class BookingTransferFragment extends BookingBaseFragment {
         });
 
         dialog.show();
+        if(dialog.getWindow() != null)
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
 
     public void saveTransferTally(){

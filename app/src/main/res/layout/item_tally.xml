@@ -72,7 +72,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
                             <TextView
-                                app:typeBackgroundColor="@{tallyViewModel.typeBackgroundColor}"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="center"
@@ -92,7 +91,7 @@
                         android:textAlignment="viewEnd"
                         android:layout_margin="10dp"
                         android:layout_weight="1"
-                        android:text='@{String.valueOf(tallyViewModel.tally.money),default="-200￥"}' />
+                        android:text='@{String.valueOf(tallyViewModel.tally.money) + "￥",default="-200￥"}' />
                 </LinearLayout>
 
                 <LinearLayout

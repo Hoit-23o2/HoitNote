@@ -23,6 +23,9 @@ import com.example.hoitnote.utils.helpers.NavigationHelper;
 import com.example.hoitnote.viewmodels.AccountCardViewModel;
 import com.example.hoitnote.views.analysis.AnalysisActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AccountCardFragment extends Fragment {
 
     FragmentAccountcardBinding binding;
@@ -47,6 +50,14 @@ public class AccountCardFragment extends Fragment {
         );
         binding.setAccountCardViewModel(accountViewModel);
         binding.setAccountCardFragment(this);
+        List<String> info = new ArrayList<>();
+        info.add(accountViewModel.context.getString(R.string.account_remain_money)
+                + accountViewModel.getRemains());
+        info.add(accountViewModel.context.getString(R.string.account_income)
+                + accountViewModel.getIncomes());
+        info.add(accountViewModel.context.getString(R.string.account_outcome)
+                + accountViewModel.getOutcomes());
+        binding.tipsTextView.startWithList(info, R.anim.anim_bottom_in, R.anim.anim_top_out);
         return binding.getRoot();
     }
 
