@@ -116,4 +116,10 @@ public class LockActivity extends BaseActivity {
         );
         fragmentTransaction.add(binding.mainContainer.getId(), lockFragment).commit();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        App.blueToothHelper.cancel();
+    }
 }

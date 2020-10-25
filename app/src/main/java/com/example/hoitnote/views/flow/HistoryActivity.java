@@ -958,12 +958,12 @@ public class HistoryActivity extends BaseActivity{
         List<Tally> tallyData = App.dataBaseHelper.getTallies(filter);
         return tallyData;
     }
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.hzs_history_menu, menu);
         return true;
-    }
+    }*/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id=item.getItemId();
@@ -985,9 +985,7 @@ public class HistoryActivity extends BaseActivity{
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); //Enable自定义的View
-            actionBar.setCustomView(R.layout.actionbar_history);  //绑定自定义的布局：actionbar_layout.xml
-
+            actionBar.setTitle("钱包");
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 

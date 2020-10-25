@@ -114,5 +114,16 @@ public class AccountCardFragment extends Fragment {
 
     }
 
+    /*解决重影问题*/
+    @Override
+    public void onStart() {
+        super.onStart();
+        binding.tipsTextView.startFlipping();
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        binding.tipsTextView.stopFlipping();
+    }
 }

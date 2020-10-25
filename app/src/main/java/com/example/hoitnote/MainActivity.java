@@ -50,6 +50,7 @@ import com.example.hoitnote.viewmodels.MainViewModel;
 import com.example.hoitnote.viewmodels.TallyViewModel;
 import com.example.hoitnote.views.flow.HistoryActivity;
 import com.example.hoitnote.views.tallyadd.BookingActivity;
+import com.sunfusheng.marqueeview.MarqueeView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,6 +60,7 @@ public class MainActivity extends BaseActivity {
     MainViewModel mainViewModel;
     ActivityMainBinding binding;
     AccountCardAdapter accountCardAdapter;
+    TallyOneExpandableAdapter tallyOneExpandableAdapter;
     ArrayList<AccountCardFragment> accountCardFragments = new ArrayList<>();
     AccountCardFragment currentAccountCardFragment;
 
@@ -83,49 +85,8 @@ public class MainActivity extends BaseActivity {
             accountCardFragment.setLongClickListener(new AccountCardFragment.LongClickListener() {
                 @Override
                 public void onLongClick(final AccountCardFragment accountCardFragment, View v) {
-                    PopupwindowDialogNormalBinding dialogNormalBinding =
-                            DataBindingUtil.inflate(
-                            LayoutInflater.from(context),
-                            R.layout.popupwindow_dialog_normal,
-                            null,
-                            false
-                    );
-                    final AlertDialog alertDialog =
-                            DialogHelper.buildDialog(context, dialogNormalBinding);
-                    dialogNormalBinding.confirmButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            accountCardAdapter.removeAccountCard(binding.accountCardBanner,
-                                    accountCardFragments.indexOf(accountCardFragment));
-                            AccountCardViewModel accountCardViewModel =
-                                    accountCardFragment.getBinding().getAccountCardViewModel();
-                            if(accountCardViewModel != null){
-                                Account account = accountCardViewModel.getAccount();
-                                ArrayList<Tally> tallies = App.dataBaseHelper.getTallies(new DataBaseFilter(
-                                        null,
-                                        null,
-                                        DataBaseFilter.IDInvalid,
-                                        null,
-                                        account,
-                                        null
-                                ));
-                                for (Tally tally:
-                                        tallies) {
-                                    App.backupDataBaseHelper.addTally(tally);
-                                    App.dataBaseHelper.delTally(tally);
-                                }
-                                App.dataBaseHelper.delAccount(account);
-                            }
-                            alertDialog.dismiss();
-                        }
-                    });
-                    dialogNormalBinding.cancelButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            alertDialog.dismiss();
-                        }
-                    });
-                    alertDialog.show();
+
+                   onLongClickImplement(accountCardFragment, v);
 
                 }
             });
@@ -142,9 +103,13 @@ public class MainActivity extends BaseActivity {
                 super.onPageSelected(position);
                 if(position == accountCardAdapter.getItemCount() - 1){
                     binding.recentTalliesExpandableListView.setVisibility(View.GONE);
+                    binding.recentHintTextView.setVisibility(View.GONE);
+                    binding.floatingButton.setVisibility(View.GONE);
                 }
                 else{
                     binding.recentTalliesExpandableListView.setVisibility(View.VISIBLE);
+                    binding.recentHintTextView.setVisibility(View.VISIBLE);
+                    binding.floatingButton.setVisibility(View.VISIBLE);
                     currentAccountCardFragment = accountCardAdapter.getFragment(position);
                     updateCurrentAccountCardListView();
                 }
@@ -224,10 +189,10 @@ public class MainActivity extends BaseActivity {
                 /*分组*/
                 TreeMap<String, ArrayList<TallyViewModel>> tallyViewModelWithGroups = mainViewModel.
                         groupTallyViewModel(tallyViewModels, GroupType.DATE);
-                TallyOneExpandableAdapter adapter = new TallyOneExpandableAdapter(context, tallyViewModelWithGroups);
-                binding.recentTalliesExpandableListView.setAdapter(adapter);
+                tallyOneExpandableAdapter = new TallyOneExpandableAdapter(context, tallyViewModelWithGroups);
+                binding.recentTalliesExpandableListView.setAdapter(tallyOneExpandableAdapter);
                 /*展开所有分组*/
-                adapter.expandAllGroup(binding.recentTalliesExpandableListView);
+                tallyOneExpandableAdapter.expandAllGroup(binding.recentTalliesExpandableListView);
             }
         }
 
@@ -258,6 +223,12 @@ public class MainActivity extends BaseActivity {
                     if(accountJudge == AccountJudgeType.SUCCESSFUL){
                         App.dataBaseHelper.addAccount(newAccount);
                         AccountCardFragment newCardFragment = newAccount.parseToAccountCardFragment(context, ClickType.TAP);
+                        newCardFragment.setLongClickListener(new AccountCardFragment.LongClickListener() {
+                            @Override
+                            public void onLongClick(AccountCardFragment accountCardFragment, View v) {
+                                onLongClickImplement(accountCardFragment, v);
+                            }
+                        });
                         accountCardAdapter.addAccountCard(binding.accountCardBanner, newCardFragment);
                     }
                     /*账号重复*/
@@ -327,5 +298,50 @@ public class MainActivity extends BaseActivity {
             },500);
 
         }
+    }
+    private void onLongClickImplement(final AccountCardFragment accountCardFragment, View v){
+        PopupwindowDialogNormalBinding dialogNormalBinding =
+                DataBindingUtil.inflate(
+                        LayoutInflater.from(context),
+                        R.layout.popupwindow_dialog_normal,
+                        null,
+                        false
+                );
+        final AlertDialog alertDialog =
+                DialogHelper.buildDialog(context, dialogNormalBinding);
+        dialogNormalBinding.confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                accountCardAdapter.removeAccountCard(binding.accountCardBanner,
+                        accountCardFragments.indexOf(accountCardFragment));
+                AccountCardViewModel accountCardViewModel =
+                        accountCardFragment.getBinding().getAccountCardViewModel();
+                if(accountCardViewModel != null){
+                    Account account = accountCardViewModel.getAccount();
+                    ArrayList<Tally> tallies = App.dataBaseHelper.getTallies(new DataBaseFilter(
+                            null,
+                            null,
+                            DataBaseFilter.IDInvalid,
+                            null,
+                            account,
+                            null
+                    ));
+                    for (Tally tally:
+                            tallies) {
+                        App.backupDataBaseHelper.addTally(tally);
+                        App.dataBaseHelper.delTally(tally);
+                    }
+                    App.dataBaseHelper.delAccount(account);
+                }
+                alertDialog.dismiss();
+            }
+        });
+        dialogNormalBinding.cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.show();
     }
 }

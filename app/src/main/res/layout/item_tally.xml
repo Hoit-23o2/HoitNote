@@ -58,7 +58,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:layout_weight="2"
-                        android:text='@{tallyViewModel.tally.classification2, default="早  餐"}' />
+                        android:text='@{tallyViewModel.tally.classification1, default="早  餐"}' />
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="0dp"
@@ -109,7 +109,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         style="@style/HoitSubTitleText"
-                        android:text='@{tallyViewModel.tally.classification1, default="餐 饮"}'/>
+                        android:text='@{tallyViewModel.tally.classification2, default="餐 饮"}'/>
 
                     <TextView
                         android:layout_margin="10dp"

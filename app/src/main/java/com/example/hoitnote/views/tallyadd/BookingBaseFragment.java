@@ -325,7 +325,12 @@ public class BookingBaseFragment extends Fragment {
         final View chooseAccountButton = view.findViewById(R.id.hzs_booking_person_button);
         personItems = BookingDataHelper.getPersons();
         personTextView = view.findViewById(R.id.hzs_booking_person_button);
-        personString = personItems.get(0);
+        if(!personItems.isEmpty()){
+            personString = personItems.get(0);
+        }else{
+            personString = "无";
+        }
+
         pvPersonOptions = new OptionsPickerBuilder(getContext(), new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
@@ -339,6 +344,7 @@ public class BookingBaseFragment extends Fragment {
                 final TextView tvSubmit = v.findViewById(R.id.hzs_pickerview_finish);
                 final TextView tvCancel = v.findViewById(R.id.hzs_pickerview_cancel);
                 Button addFirstClass = v.findViewById(R.id.hzs_add_button);
+                addFirstClass.setText("+ 增加成员");
                 tvSubmit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -437,7 +443,11 @@ public class BookingBaseFragment extends Fragment {
         final View chooseStoreButton = view.findViewById(R.id.hzs_booking_store_button);
         storeItems = BookingDataHelper.getStores();
         storeTextView = view.findViewById(R.id.hzs_booking_store_button);
-        storeString = storeItems.get(0);
+        if(!storeItems.isEmpty()){
+            storeString = storeItems.get(0);
+        }else{
+            storeString = "无";
+        }
         pvStoreOptions = new OptionsPickerBuilder(getContext(), new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
@@ -451,6 +461,7 @@ public class BookingBaseFragment extends Fragment {
                 final TextView tvSubmit = v.findViewById(R.id.hzs_pickerview_finish);
                 final TextView tvCancel = v.findViewById(R.id.hzs_pickerview_cancel);
                 Button addFirstClass = (Button)v.findViewById(R.id.hzs_add_button);
+                addFirstClass.setText("+ 增加商家");
                 tvSubmit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -487,7 +498,11 @@ public class BookingBaseFragment extends Fragment {
         final View chooseProjectButton = view.findViewById(R.id.hzs_booking_project_button);
         projectItems = BookingDataHelper.getProjects();
         projectTextView = view.findViewById(R.id.hzs_booking_project_button);
-        projectString = projectItems.get(0);
+        if(!projectItems.isEmpty()){
+            projectString = projectItems.get(0);
+        }else{
+            projectString = "无";
+        }
         pvProjectOptions = new OptionsPickerBuilder(getContext(), new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
@@ -501,6 +516,7 @@ public class BookingBaseFragment extends Fragment {
                 final TextView tvSubmit = v.findViewById(R.id.hzs_pickerview_finish);
                 final TextView tvCancel = v.findViewById(R.id.hzs_pickerview_cancel);
                 Button addFirstClass = v.findViewById(R.id.hzs_add_button);
+                addFirstClass.setText("+ 增加项目");
                 tvSubmit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

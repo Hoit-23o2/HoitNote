@@ -176,7 +176,7 @@ public class HzsAddClassExpandableListViewAdapter extends BaseExpandableListAdap
         public TextView delete;
         public FirstHolder(HzsExpandItemAddClass1Binding binding){
             this.binding = binding;
-            delete = binding.getRoot().findViewById(R.id.hzs_expand_item_add_class_delete);
+            delete = binding.getRoot().findViewById(R.id.delete_button);
         }
     }
 
@@ -185,7 +185,7 @@ public class HzsAddClassExpandableListViewAdapter extends BaseExpandableListAdap
         public TextView delete;
         public SecondHolder(HzsExpandItemAddClass2Binding binding){
             this.binding = binding;
-            delete = binding.getRoot().findViewById(R.id.hzs_expand_item_add_class_delete);
+            delete = binding.getRoot().findViewById(R.id.delete_button);
         }
     }
     public void addClassificaition2(int index, String classification2){

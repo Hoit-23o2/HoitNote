@@ -30,21 +30,30 @@
         <activity
             android:name=".views.analysis.AnalysisActivity"
             android:parentActivityName=".MainActivity" />
+
         <activity
             android:name=".views.settings.PasswordSettingDetailActivity"
             android:parentActivityName=".views.settings.PasswordSettingActivity" />
-        <activity android:name=".views.settings.SyncSettingActivity" />
+
+        <activity android:name=".views.settings.SyncSettingActivity"
+            android:parentActivityName=".views.settings.SettingsActivity"/>
+
         <activity
             android:name=".views.settings.PasswordSettingActivity"
             android:parentActivityName=".views.settings.SettingsActivity" />
+
         <activity
             android:name=".views.settings.ThemeSettingActivity"
             android:parentActivityName=".views.settings.SettingsActivity" />
+
         <activity android:name=".views.locks.LockCountDownActivity" />
+
         <activity
             android:name=".views.locks.LockActivity"
             android:windowSoftInputMode="adjustPan" />
+
         <activity android:name=".views.SampleActivity" />
+
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -52,15 +61,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustNothing" />
+
         <activity
             android:name=".views.settings.SettingsActivity"
             android:parentActivityName=".MainActivity" /> <!-- 账单相关 -->
+
         <activity
             android:name=".views.tallyadd.BookingActivity"
             android:parentActivityName=".MainActivity" />
+
         <activity
             android:name=".views.flow.HistoryActivity"
             android:parentActivityName=".MainActivity" />

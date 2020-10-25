@@ -158,7 +158,7 @@ public class BlueToothHelper implements IBlueTooth {
 
         public interface BluetoothAcceptListener {
             void onDataReceived(DataPackage dataPackage);
-
+            void onConnectSuccess();
         }
 
         private BluetoothAcceptListener bluetoothAcceptListener = null;
@@ -221,13 +221,14 @@ public class BlueToothHelper implements IBlueTooth {
                     //生成回复信息
                     receiveInfo = new ReceiveInfo("对方接受成功");
                     blueToothHelper.setReceiveInfo(receiveInfo);
+                    Log.d("ReceiveMessage:",String.valueOf(blueToothHelper.acceptThread.getReceiveMessageThread() == null));
                     //发送回复信息
                     blueToothHelper.sendReply();
                     DataPackage dataPackage =  blueToothHelper.acceptThread.getReceiveMessageThread().getDataPackage();
                     bluetoothAcceptListener.onDataReceived(dataPackage);
                     break;
                 case Constants.MSG_RECEIVE_FAILURE:
-                    ToastHelper.showToast(mContext,"服务端接受失败",Toast.LENGTH_SHORT);
+                    /*ToastHelper.showToast(mContext,"服务端接受失败",Toast.LENGTH_SHORT);*/
                     setRecieveFinished(true);
                     setIsConnected(false);
                     break;
@@ -241,13 +242,17 @@ public class BlueToothHelper implements IBlueTooth {
 
                 /***************               generate                       *******************/
                 case Constants.MSG_CANCEL:
-                    setRecieveFinished(true);
+                    setRecieveFinished(false);
                     setIsConnected(false);
+                    break;
                 case Constants.MSG_CONNECT_SUCCESS:
                     ToastHelper.showToast(mContext,"建立连接成功",Toast.LENGTH_SHORT);
                     setIsConnected(true);
                     if(bluetoothClientListener!=null){
                         bluetoothClientListener.onConnectSuccess();
+                    }
+                    if (bluetoothAcceptListener!=null){
+                        bluetoothAcceptListener.onConnectSuccess();
                     }
                     break;
             }
@@ -430,14 +435,14 @@ public class BlueToothHelper implements IBlueTooth {
         }
     }
 
-    /**
+    /*
      * 发送数据  发送方 -> 反馈方
      * @param data
-     */
+
     public void sendDataPackage(final Object data){
         sendObject(sendInfo);//先发送 数据信息
         sendObject(data); //后发送 数据
-    }
+    }*/
 
 
     /**
@@ -506,4 +511,15 @@ public class BlueToothHelper implements IBlueTooth {
         return result;
     }
 
+    public void cancel(){
+        BlueToothHelper.setIsConnected(false);
+        BlueToothHelper.setRecieveFinished(false);
+        if(this.clientThread!=null){
+            clientThread.cancel();
+        }
+
+        if(acceptThread!=null){
+            acceptThread.cancel();
+        }
+    }
 }

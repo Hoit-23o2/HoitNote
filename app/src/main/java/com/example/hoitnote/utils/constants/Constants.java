@@ -159,6 +159,14 @@ public class Constants {
     public static String AccountColumn_an = "accountName";
     public static String AccountColumn_ac = "accountCode";
 
+    /*
+     * Symbol table related
+     * */
+    public static String SymbolTableName = "SymbolTable";
+    public static String createSymbolTable = "CREATE TABLE IF NOT EXISTS " + SymbolTableName + " (id integer primary key autoincrement, symbolName text)";
+    public static String SymbolColumn_sn = "symbolName";
+
+    public static String symbol_ifSaveDataPackage = "ifSaveDataPackage";
 
     /*
     * BlueTooth Related

@@ -61,6 +61,7 @@
                         android:layout_gravity="center"
                         app:cardCornerRadius="25dp">
                         <com.example.hoitnote.customviews.FontAwesome
+                            android:background="?attr/colorAccentOpacity"
                             android:id="@+id/hzs_expand_item_tally_icon"
                             style="@style/HoitIconUnclickable"
                             android:layout_width="match_parent"

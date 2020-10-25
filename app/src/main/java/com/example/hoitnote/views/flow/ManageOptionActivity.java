@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import com.example.hoitnote.BaseActivity;
 import com.example.hoitnote.R;
 import com.example.hoitnote.adapters.tallies.HzsAddOptionRecyclerViewAdapter;
-import com.example.hoitnote.databinding.HzsOptionItemBinding;
 import com.example.hoitnote.utils.App;
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.ActionType;

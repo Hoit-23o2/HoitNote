@@ -184,4 +184,6 @@ public class BaseActivity extends AppCompatActivity {
         ThemeHelper.notifyThemeChanged(this);
     }
 
+
+
 }

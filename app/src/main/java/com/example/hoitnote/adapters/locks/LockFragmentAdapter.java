@@ -7,8 +7,10 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.hoitnote.utils.commuications.Config;
+import com.example.hoitnote.utils.enums.LockViewType;
 import com.example.hoitnote.viewmodels.BaseLockViewModel;
-import com.example.hoitnote.views.locks.DataSyncFragment;
+import com.example.hoitnote.viewmodels.DataSyncViewModel;
+import com.example.hoitnote.views.bluetooth.DataSyncFragment;
 import com.example.hoitnote.customviews.passwordfragments.FingerprintPasswordFragment;
 import com.example.hoitnote.views.locks.LockFragment;
 import com.example.hoitnote.customviews.passwordfragments.PINPasswordFragment;
@@ -42,7 +44,9 @@ public class LockFragmentAdapter extends FragmentStateAdapter {
         this.fingerprintPasswordFragment = new FingerprintPasswordFragment(baseLockViewModels.get(0),context,fingerprintConfig);
         this.pinPasswordFragment = new PINPasswordFragment(baseLockViewModels.get(1),context,pinConfig);
         this.traditionalPasswordFragment = new TraditionalPasswordFragment(baseLockViewModels.get(2),context,traditionalConfig);
-        this.dataSyncFragment = new DataSyncFragment(context);
+
+        DataSyncViewModel dataSyncViewModel = new DataSyncViewModel(context, LockViewType.LOGIN);
+        this.dataSyncFragment = new DataSyncFragment(context, dataSyncViewModel);
 
         fragments.add(fingerprintPasswordFragment);
         fragments.add(pinPasswordFragment);

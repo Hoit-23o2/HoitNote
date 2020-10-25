@@ -31,6 +31,8 @@ public class ClientThread extends Thread{
 
     @Override
     public void run(){
+        Log.d("蓝牙初始状态",String.valueOf(BlueToothHelper.isIsConnected())+"========================");
+        Log.d("蓝牙初始状态",String.valueOf(BlueToothHelper.isRecieveFinished())+"========================");
         if (!BlueToothHelper.isIsConnected()){
             try{
                 //援引一个接口
@@ -73,11 +75,13 @@ public class ClientThread extends Thread{
     }
     public void cancel(){
         try{
-            if (this.getReceiveMessageThread().getOs()!=null){
-                this.getReceiveMessageThread().getOs().close();
-            }
-            if(this.getReceiveMessageThread().getIs()!=null){
-                this.getReceiveMessageThread().getIs().close();
+            if(this.getReceiveMessageThread()!=null){
+                if (this.getReceiveMessageThread().getOs()!=null){
+                    this.getReceiveMessageThread().getOs().close();
+                }
+                if(this.getReceiveMessageThread().getIs()!=null){
+                    this.getReceiveMessageThread().getIs().close();
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

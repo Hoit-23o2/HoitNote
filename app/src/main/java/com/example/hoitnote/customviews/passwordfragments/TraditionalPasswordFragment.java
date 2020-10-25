@@ -124,7 +124,7 @@ public class TraditionalPasswordFragment extends BasePasswordFragment {
 
         String password = baseLockViewModel.getPassword();
         //ToastHelper.showToast(context,password,Toast.LENGTH_LONG);
-        if(password.length() < 4){
+        if(password == null || password.length() < 4){
             ToastHelper.showToast(context, Constants.passwordNotEnough, Toast.LENGTH_SHORT);
         }
         else {

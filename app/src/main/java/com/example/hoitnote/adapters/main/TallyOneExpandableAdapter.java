@@ -20,6 +20,7 @@ import com.example.hoitnote.models.Tally;
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.ActionType;
 import com.example.hoitnote.viewmodels.TallyViewModel;
+import com.sunfusheng.marqueeview.MarqueeView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -111,8 +112,10 @@ public class TallyOneExpandableAdapter extends BaseExpandableListAdapter {
             info.add(context.getString(R.string.account_remain_money) + remains);
             info.add(context.getString(R.string.account_income) + incomes);
             info.add(context.getString(R.string.account_outcome) + outcomes);
-            // 在代码里设置自己的动画
+            /*在代码里设置自己的动画*/
             groupBinding.tipsTextView.startWithList(info, R.anim.anim_bottom_in, R.anim.anim_top_out);
+
+
         }
 
 
@@ -165,6 +168,7 @@ public class TallyOneExpandableAdapter extends BaseExpandableListAdapter {
     }
 
 
+    
 
 
 }

@@ -18,7 +18,7 @@ public class AcceptThread extends Thread {
     public BluetoothServerSocket getMmServerSocket() {
         return mmServerSocket;
     }
-
+    private boolean exit;
     private BluetoothServerSocket mmServerSocket = null;
     private static String TAG = "Bluetooth Device";
     private static String Name = "My debug server";
@@ -37,7 +37,7 @@ public class AcceptThread extends Thread {
     public AcceptThread(BluetoothAdapter bluetoothAdapter, UUID deviceUUID,
                         BlueToothHelper.BlueToothHandler mHandler){
         this.mHandler = mHandler;
-
+        this.exit=false;
         // Use a temporary object that is later assigned to mmServerSocket
         // because mmServerSocket is final.
         //创建服务器
@@ -85,11 +85,13 @@ public class AcceptThread extends Thread {
 
     public void cancel(){
         try{
-            if (this.getReceiveMessageThread().getOs()!=null){
-                this.getReceiveMessageThread().getOs().close();
-            }
-            if(this.getReceiveMessageThread().getIs()!=null){
-                this.getReceiveMessageThread().getIs().close();
+            if(this.getReceiveMessageThread()!=null){
+                if (this.getReceiveMessageThread().getOs()!=null){
+                    this.getReceiveMessageThread().getOs().close();
+                }
+                if(this.getReceiveMessageThread().getIs()!=null){
+                    this.getReceiveMessageThread().getIs().close();
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -59,16 +59,7 @@
                 android:gravity="end" />
         </LinearLayout>
 
-        <androidx.cardview.widget.CardView
-            app:cardCornerRadius="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:layout_marginHorizontal="5dp"
-                android:background="?attr/colorDivider"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"/>
-        </androidx.cardview.widget.CardView>
+        <include layout="@layout/divider_normal"/>
     </LinearLayout>
 
 

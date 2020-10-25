@@ -62,7 +62,7 @@ public class BaseViewModel extends BaseObservable  {
             tallyViewModels.add(tallyViewModel);
         }
         /*测试用*/
-        if(tallyViewModels.size() == 0){
+        /*if(tallyViewModels.size() == 0){
             tallyViewModels.add(
                     new TallyViewModel(context, new Tally(
                             20.0,
@@ -95,7 +95,7 @@ public class BaseViewModel extends BaseObservable  {
 
                     ), "\uf805", ThemeHelper.generateColor(context))
             );
-        }
+        }*/
         return tallyViewModels;
     }
 

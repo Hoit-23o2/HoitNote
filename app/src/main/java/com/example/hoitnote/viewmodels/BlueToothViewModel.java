@@ -20,21 +20,9 @@ public class BlueToothViewModel extends BaseViewModel {
         notifyPropertyChanged(BR.bluetoothDevice);
     }
 
-    private boolean hasPaired;
-
-    @Bindable
-    public boolean isHasPaired() {
-        return hasPaired;
-    }
-
-    public void setHasPaired(boolean hasPaired) {
-        this.hasPaired = hasPaired;
-        notifyPropertyChanged(BR.hasPaired);
-    }
-    public BlueToothViewModel(Context context, BluetoothDevice bluetoothDevice, boolean hasPaired) {
+    public BlueToothViewModel(Context context, BluetoothDevice bluetoothDevice) {
         super(context);
         this.bluetoothDevice = bluetoothDevice;
-        this.hasPaired = hasPaired;
     }
 
 

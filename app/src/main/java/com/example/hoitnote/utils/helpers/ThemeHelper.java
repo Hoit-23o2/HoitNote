@@ -40,7 +40,7 @@ public class ThemeHelper {
         final int green = (baseGreen + mRandom.nextInt(256)) / 2;
         final int blue = (baseBlue + mRandom.nextInt(256)) / 2;
 
-        return Color.rgb(red, green, blue);
+        return Color.argb(127,red, green, blue);
     }
 
     public static Theme getCurrentTheme(Context context){
