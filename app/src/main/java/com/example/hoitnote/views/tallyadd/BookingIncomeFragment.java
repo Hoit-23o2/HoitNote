@@ -51,8 +51,7 @@ public class BookingIncomeFragment extends BookingBaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_booking_outcome, container, false);
-        allItemsLinearLayout = (LinearLayout)view.findViewById(R.id.hzs_booking_all_items);
+        View view = inflater.inflate(R.layout.fragment_booking, container, false);
         clickButtonInit(view);
         return view;
     }
@@ -61,7 +60,6 @@ public class BookingIncomeFragment extends BookingBaseFragment {
     protected void clickButtonInit(View view) {
         super.clickButtonInit(view);
         classifyButtonInit(view);
-        accountButtonInit(view);
         restoreTempTally();
         showTempTally();
     }
@@ -75,16 +73,13 @@ public class BookingIncomeFragment extends BookingBaseFragment {
         }catch (Exception e){
             money = 0.0;
         }
-        String classification1 = firstClassTextView.getText().toString();
-        String classification2 = secondClassTextView.getText().toString();
+        String[] strs1 = firstClassString.split("\\s+");
+        String classification1 = strs1[1];
+        String[] strs2 = secondClassString.split("\\s+");
+        String classification2 = strs2[1];
         String remark = noteEditText.getText().toString();
 
-        Account account = new Account();
-        String [] arr = accountTextView.getText().toString().split("\\s+");
-        account.setAccountName(arr[0]);
-        if(arr.length > 1){
-            account.setAccountCode(arr[1]);
-        }
+        Account account = BookingDataHelper.getNowAccount();
         String memeber = personTextView.getText().toString();
         String project = projectTextView.getText().toString();
         String vendor = storeTextView.getText().toString();
@@ -103,7 +98,6 @@ public class BookingIncomeFragment extends BookingBaseFragment {
         editor.putString(Constants.BookingActivityMoney,moneyEditText.getText().toString());
         editor.putString(Constants.BookingActivityClassification1,firstClassString);
         editor.putString(Constants.BookingActivityClassification2,secondClassString);
-        editor.putString(Constants.BookingActivityAccount,accountString);
         editor.putString(Constants.BookingActivityRemark,noteEditText.getText().toString());
         editor.putString(Constants.BookingActivityPerson,personString);
         editor.putString(Constants.BookingActivityStore,storeString);
@@ -120,7 +114,6 @@ public class BookingIncomeFragment extends BookingBaseFragment {
                 moneyEditText.setText(pref.getString(Constants.BookingActivityMoney,""));
                 firstClassString = pref.getString(Constants.BookingActivityClassification1,"");
                 secondClassString = pref.getString(Constants.BookingActivityClassification2,"");
-                accountString = pref.getString(Constants.BookingActivityAccount,"");
                 noteEditText.setText(pref.getString(Constants.BookingActivityRemark,""));
                 personString = pref.getString(Constants.BookingActivityPerson,"");
                 storeString = pref.getString(Constants.BookingActivityStore,"");
@@ -133,7 +126,6 @@ public class BookingIncomeFragment extends BookingBaseFragment {
     protected void showTempTally(){
         firstClassTextView.setText(firstClassString);
         secondClassTextView.setText(secondClassString);
-        accountTextView.setText(accountString);
         timeTextView.setText(timeString);
         personTextView.setText(personString);
         storeTextView.setText(storeString);

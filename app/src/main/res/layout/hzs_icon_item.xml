@@ -3,21 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
     </data>
-    <androidx.cardview.widget.CardView
-        android:orientation="vertical"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        app:cardCornerRadius="5dp">
-        <com.example.hoitnote.customviews.FontAwesome
-            android:id="@+id/icon_image"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textSize="40dp"
-            android:text="@string/pattern_lock_icon"
-            android:textColor="@android:color/holo_blue_light"
-            android:scaleType="centerCrop"/>
-    </androidx.cardview.widget.CardView>
+        android:gravity="center">
+        <androidx.cardview.widget.CardView
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            app:cardCornerRadius="25dp"
+            app:cardElevation="0dp">
+            <com.example.hoitnote.customviews.FontAwesome
+                android:id="@+id/icon_image"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/pattern_lock_icon"
+                style="@style/HoitIcon"
+                android:scaleType="centerCrop"/>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+
 </layout>

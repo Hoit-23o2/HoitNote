@@ -15,7 +15,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 public class ReceiveMessageThread extends Thread {
-    private BluetoothSocket bluetoothSocket;
+
     private InputStream is;
     private OutputStream os;
     ArrayList<Tally> tallies;
@@ -27,28 +27,22 @@ public class ReceiveMessageThread extends Thread {
     private ReceiveInfo receiveInfo;
 
     private BlueToothHelper.BlueToothHandler mHandler;
-    public ReceiveMessageThread(BluetoothSocket socket, BlueToothHelper.BlueToothHandler mHandler) {
-        bluetoothSocket = socket;
+    public ReceiveMessageThread(InputStream is,OutputStream os, BlueToothHelper.BlueToothHandler mHandler) {
+
         this.mHandler = mHandler;
-        InputStream im = null;
-        OutputStream om = null;
-        //尝试获取InputStream
-        try{
-            im = bluetoothSocket.getInputStream();
-            om = bluetoothSocket.getOutputStream();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        is = im;
-        os = om;
+        this.is = is;
+        this.os = os;
     }
 
 
     @Override
     public void run(){
-        while (!BlueToothHelper.isSendFinished()){
+        while (!BlueToothHelper.isRecieveFinished()){
             int count=0;
             while (count==0){
+                if(BlueToothHelper.isRecieveFinished()){
+                    break;
+                }
                 try{
                     if (is != null) {
                         count = is.available();
@@ -57,7 +51,7 @@ public class ReceiveMessageThread extends Thread {
                     if(is !=null){
                         is.read(buf,0,buf.length);//变量分别是缓冲区，读取起始位置，缓冲长度
                         Object object = new Object();
-                        object = ConvertHelper.toObject(buf);
+                        object = BlueToothHelper.toObject(buf);
                         if(object instanceof ReceiveInfo){
                             receiveInfo = (ReceiveInfo)object;
                             this.mHandler.obtainMessage(Constants.MSG_Get_RECEIVEINFO).sendToTarget();
@@ -75,25 +69,11 @@ public class ReceiveMessageThread extends Thread {
                 } catch (Exception e) {
                     e.printStackTrace();
                     this.mHandler.obtainMessage(Constants.MSG_RECEIVE_FAILURE).sendToTarget();
-                    this.cancel();
                     break;
                 }
             }
         }
-    }
-
-    public void cancel(){
-        try{
-            bluetoothSocket.close();
-        } catch (IOException e) {
-
-        }
-
-    }
-
-    @Override
-    public void destroy() {
-        cancel();
+        Log.d("蓝牙","============== receiveThread is close ====================");
     }
 
     public ReceiveInfo getReceiveInfo() {
@@ -111,4 +91,10 @@ public class ReceiveMessageThread extends Thread {
     public OutputStream getOs() {
         return os;
     }
+
+    public InputStream getIs() {
+        return is;
+    }
+
+
 }

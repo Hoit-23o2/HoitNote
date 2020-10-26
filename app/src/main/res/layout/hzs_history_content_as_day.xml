@@ -8,75 +8,69 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:orientation="horizontal"
             android:id="@+id/hzs_history_content_as_day_button"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="6"
-            android:clickable="true">
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true">
 
             <TextView
                 android:id="@+id/hzs_history_content_as_day_year"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="3"
                 android:gravity="center"
                 android:background="@android:color/transparent"
                 android:text="2020年"
-                android:textSize="24dp"
+                style="@style/HoitTitleText"
                 android:clickable="false"
                 android:textColor="@color/colorDefaultTextPrimary"/>
 
             <TextView
                 android:id="@+id/hzs_history_content_as_day_month"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="2"
                 android:layout_gravity="center"
                 android:background="@android:color/transparent"
                 android:gravity="center"
                 android:text="10月"
-                android:textSize="24dp"
+                style="@style/HoitTitleText"
                 android:clickable="false"
                 android:textColor="@color/colorDefaultTextPrimary"/>
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="2.5">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
                 <TextView
                     android:id="@+id/hzs_history_content_as_day_day"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:background="@android:color/transparent"
                     android:gravity="center_vertical"
                     android:text="5日"
-                    android:textSize="24dp"
+                    style="@style/HoitTitleText"
                     android:clickable="false"
                     android:textColor="@color/colorDefaultTextPrimary"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/hzs_down"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/hzs_history_content_as_day_day"
-                    app:layout_constraintHorizontal_bias="1.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:src="@drawable/hzs_down" />
+            </LinearLayout>
 
 
 
 
         </LinearLayout>
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3">
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
 
 
 
@@ -85,9 +79,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="结余"
+                android:text="@string/account_remain_money"
                 android:textColor="@android:color/black"
-                android:textSize="20dp"
+                style="@style/HoitTitleText"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -97,24 +91,27 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
+            android:layout_gravity="center_vertical"
+            style="@style/HoitTitleText"
             android:id="@+id/hzs_history_content_as_day_balance"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="3"
             android:gravity="center"
-            android:text="1000.0"
-            android:textColor="@android:color/black"
-            android:textSize="20dp"/>
+            android:text="1000.0￥"
+            android:layout_marginHorizontal="10dp"
+            android:textColor="@android:color/black"/>
 
 
     </LinearLayout>
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@color/colorSweetPrimaryDark"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/hzs_history_content_as_day_recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+        android:layout_height="match_parent" />
 
 </LinearLayout>

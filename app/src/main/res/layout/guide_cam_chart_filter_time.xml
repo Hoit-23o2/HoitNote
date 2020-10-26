@@ -22,6 +22,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/HoitTitleText"
             android:textColor="?attr/colorPrimary"
             android:textSize="18sp"
             android:background="@drawable/guide_cam_text_rect"

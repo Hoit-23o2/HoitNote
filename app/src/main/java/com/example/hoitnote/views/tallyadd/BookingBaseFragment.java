@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.core.content.res.ResourcesCompat;
@@ -35,11 +34,9 @@ import java.util.List;
 import java.util.TimeZone;
 
 public class BookingBaseFragment extends Fragment {
-    protected LinearLayout allItemsLinearLayout;
     protected BookingType bookingType;
     private ActionType actionType;
     protected boolean hasTemp;
-    protected String accountString;
     protected String timeString;
     protected String personString;
     protected String storeString;
@@ -62,7 +59,6 @@ public class BookingBaseFragment extends Fragment {
     protected OptionsPickerView pvClassificationOptions;
     protected TextView firstClassTextView;
     protected TextView secondClassTextView;
-    protected TextView accountTextView;
     protected List<String> classifications1;
     protected List<List<String>> classifications2;
     protected List<String> personItems;
@@ -162,9 +158,9 @@ public class BookingBaseFragment extends Fragment {
     protected void refreshPickerView(){
         if(pvClassificationOptions != null){
             classifications1.clear();
-            classifications1.addAll(BookingDataHelper.getClassifications1(bookingType));
+            classifications1.addAll(BookingDataHelper.getClassifications1WithIcons(bookingType));
             classifications2.clear();
-            classifications2.addAll(BookingDataHelper.getClassifications2(bookingType));
+            classifications2.addAll(BookingDataHelper.getClassifications2WithIcons(bookingType));
             pvClassificationOptions.setPicker(classifications1,classifications2);
             firstClassString = classifications1.get(0);
             secondClassString = classifications2.get(0).get(0);
@@ -268,7 +264,7 @@ public class BookingBaseFragment extends Fragment {
             }
         });
     }
-    protected void accountButtonInit(View view){
+    /*protected void accountButtonInit(View view){
         final View chooseAccountButton = view.findViewById(R.id.hzs_booking_account_button);
         final List<String> accountItems = BookingDataHelper.getAccounts();
         accountTextView = view.findViewById(R.id.hzs_booking_account_button);
@@ -290,7 +286,7 @@ public class BookingBaseFragment extends Fragment {
                 pvOptions.show();
             }
         });
-    }
+    }*/
     protected void timeButtonInit(View view){
         TimeZone tz = TimeZone.getTimeZone("Asia/Shanghai");
         TimeZone.setDefault(tz);
@@ -329,20 +325,26 @@ public class BookingBaseFragment extends Fragment {
         final View chooseAccountButton = view.findViewById(R.id.hzs_booking_person_button);
         personItems = BookingDataHelper.getPersons();
         personTextView = view.findViewById(R.id.hzs_booking_person_button);
-        personString = personItems.get(0);
+        if(!personItems.isEmpty()){
+            personString = personItems.get(0);
+        }else{
+            personString = "无";
+        }
+
         pvPersonOptions = new OptionsPickerBuilder(getContext(), new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                 personString = personItems.get(options1);
                 personTextView.setText(personString);
             }
-        }).setLayoutRes(R.layout.hzs_person_pickerview, new CustomListener() {
+        }).setLayoutRes(R.layout.hzs_thirdparty_pickerview, new CustomListener() {
             @Override
             public void customLayout(View v) {
                 //自定义布局中的控件初始化及事件处理
-                final TextView tvSubmit = v.findViewById(R.id.hzs_person_pickerview_finish);
-                final TextView tvCancel = v.findViewById(R.id.hzs_person_pickerview_cancel);
-                Button addFirstClass = v.findViewById(R.id.hzs_add_person_button);
+                final TextView tvSubmit = v.findViewById(R.id.hzs_pickerview_finish);
+                final TextView tvCancel = v.findViewById(R.id.hzs_pickerview_cancel);
+                Button addFirstClass = v.findViewById(R.id.hzs_add_button);
+                addFirstClass.setText("+ 增加成员");
                 tvSubmit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -441,20 +443,25 @@ public class BookingBaseFragment extends Fragment {
         final View chooseStoreButton = view.findViewById(R.id.hzs_booking_store_button);
         storeItems = BookingDataHelper.getStores();
         storeTextView = view.findViewById(R.id.hzs_booking_store_button);
-        storeString = storeItems.get(0);
+        if(!storeItems.isEmpty()){
+            storeString = storeItems.get(0);
+        }else{
+            storeString = "无";
+        }
         pvStoreOptions = new OptionsPickerBuilder(getContext(), new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                 storeString = storeItems.get(options1);
                 storeTextView.setText(storeString);
             }
-        }).setLayoutRes(R.layout.hzs_store_pickerview, new CustomListener() {
+        }).setLayoutRes(R.layout.hzs_thirdparty_pickerview, new CustomListener() {
             @Override
             public void customLayout(View v) {
                 //自定义布局中的控件初始化及事件处理
-                final TextView tvSubmit = v.findViewById(R.id.hzs_store_pickerview_finish);
-                final TextView tvCancel = v.findViewById(R.id.hzs_store_pickerview_cancel);
-                Button addFirstClass = (Button)v.findViewById(R.id.hzs_add_store_button);
+                final TextView tvSubmit = v.findViewById(R.id.hzs_pickerview_finish);
+                final TextView tvCancel = v.findViewById(R.id.hzs_pickerview_cancel);
+                Button addFirstClass = (Button)v.findViewById(R.id.hzs_add_button);
+                addFirstClass.setText("+ 增加商家");
                 tvSubmit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -491,20 +498,25 @@ public class BookingBaseFragment extends Fragment {
         final View chooseProjectButton = view.findViewById(R.id.hzs_booking_project_button);
         projectItems = BookingDataHelper.getProjects();
         projectTextView = view.findViewById(R.id.hzs_booking_project_button);
-        projectString = projectItems.get(0);
+        if(!projectItems.isEmpty()){
+            projectString = projectItems.get(0);
+        }else{
+            projectString = "无";
+        }
         pvProjectOptions = new OptionsPickerBuilder(getContext(), new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                 projectString = projectItems.get(options1);
                 projectTextView.setText(projectString);
             }
-        }).setLayoutRes(R.layout.hzs_project_pickerview, new CustomListener() {
+        }).setLayoutRes(R.layout.hzs_thirdparty_pickerview, new CustomListener() {
             @Override
             public void customLayout(View v) {
                 //自定义布局中的控件初始化及事件处理
-                final TextView tvSubmit = v.findViewById(R.id.hzs_project_pickerview_finish);
-                final TextView tvCancel = v.findViewById(R.id.hzs_project_pickerview_cancel);
-                Button addFirstClass = v.findViewById(R.id.hzs_add_project_button);
+                final TextView tvSubmit = v.findViewById(R.id.hzs_pickerview_finish);
+                final TextView tvCancel = v.findViewById(R.id.hzs_pickerview_cancel);
+                Button addFirstClass = v.findViewById(R.id.hzs_add_button);
+                addFirstClass.setText("+ 增加项目");
                 tvSubmit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

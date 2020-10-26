@@ -55,5 +55,33 @@
     <string name="clock_icon"></string>
     <string name="selector_level_hint">选择分类级别</string>
     <string name="selector_time_hint">选择时间范围</string>
+    <string name="booking_money_hint">金额</string>
+    <string name="booking_project_hint">项目</string>
+    <string name="booking_remark">备注</string>
+    <string name="booking_vendor">商家</string>
+    <string name="booking_member">成员</string>
+    <string name="booking_class1">一级分类</string>
+    <string name="booking_class2">二级分类</string>
+    <string name="booking_time">时间</string>
+    <string name="booking_information">信息</string>
+    <string name="booking_money">资金</string>
+    <string name="booking_other">其它</string>
+    <string name="booking_transfer_in">转入</string>
+    <string name="booking_transfer_out">转出</string>
+    <string name="booking_transfer_exchange"></string>
+    <string name="add_tally">记一笔</string>
+    <string name="rencent_seven_hint">最&#160;&#160;&#160;近</string>
+    <string name="circle_arrow_right"></string>
+    <string name="delete">删除</string>
+    <string name="tips_hint">提示</string>
+    <string name="circle_chart_no_data">没有数据可以显示</string>
+    <string name="datasync_normal_statue_hint">我要接受</string>
+    <string name="datasync_send_hint">我要发送</string>
+    <string name="datasync_connecting_hint">连接设备中…</string>
+    <string name="datasync_receiving_hint">数据接受中…</string>
+    <string name="datasync_received_hint">数据接受完成</string>
+    <string name="close_icon"></string>
+    <string name="datasync_sending_hint">数据发送中…</string>
+    <string name="datasync_sended_hint">数据发送成功</string>
 
 </resources>

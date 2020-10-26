@@ -31,7 +31,7 @@ public class ThemeHelper {
 
     /*该方法可以获取随机颜色*/
     public static int generateColor(Context context){
-        final int baseColor = getAccentColor(context);
+        final int baseColor = Color.WHITE;
         final int baseRed = Color.red(baseColor);
         final int baseGreen = Color.green(baseColor);
         final int baseBlue = Color.blue(baseColor);
@@ -40,7 +40,7 @@ public class ThemeHelper {
         final int green = (baseGreen + mRandom.nextInt(256)) / 2;
         final int blue = (baseBlue + mRandom.nextInt(256)) / 2;
 
-        return Color.rgb(red, green, blue);
+        return Color.argb(127,red, green, blue);
     }
 
     public static Theme getCurrentTheme(Context context){
@@ -94,9 +94,9 @@ public class ThemeHelper {
     }
 
     /*请使用Contants中的Color*/
-    public static void changeColorOfNavigationBar(Activity activity, String color){
+    public static void changeColorOfNavigationBar(Activity activity, int color){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            activity.getWindow().setNavigationBarColor(Color.parseColor(color));
+            activity.getWindow().setNavigationBarColor(color);
         }
     }
     public static void initUI(BaseActivity activity, Theme theme){
@@ -143,10 +143,10 @@ public class ThemeHelper {
         }
 
         if(theme == Theme.SWEET){
-            changeColorOfNavigationBar(activity, Constants.sweetColorPrimary);
+            changeColorOfNavigationBar(activity, Color.parseColor(Constants.sweetColorPrimary));
         }
         else if(theme == Theme.DEFAULT){
-            changeColorOfNavigationBar(activity, Constants.defaultColorPrimary);
+            changeColorOfNavigationBar(activity, Color.parseColor(Constants.defaultColorPrimary));
         }
 
     }

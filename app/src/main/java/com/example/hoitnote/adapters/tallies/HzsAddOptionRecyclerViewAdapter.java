@@ -56,8 +56,8 @@ public class HzsAddOptionRecyclerViewAdapter extends RecyclerView.Adapter<HzsAdd
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         holder.binding.classIcon.setText(App.dataBaseHelper.getIconInformation(optionList.get(position),iconType));
-        holder.binding.className.setText(optionList.get(position));
-        holder.binding.hzsExpandItemAddClassDelete.setOnClickListener(new View.OnClickListener() {
+        holder.binding.setClassification(optionList.get(position));
+        holder.binding.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 App.dataBaseHelper.delThirdParty(thirdPartyType,optionList.get(position));

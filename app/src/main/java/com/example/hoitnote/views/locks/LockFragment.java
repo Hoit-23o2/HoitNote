@@ -1,8 +1,13 @@
 package com.example.hoitnote.views.locks;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +20,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 
+import com.app.hubert.guide.NewbieGuide;
+import com.app.hubert.guide.model.GuidePage;
+import com.app.hubert.guide.model.RelativeGuide;
 import com.example.hoitnote.R;
 import com.example.hoitnote.adapters.locks.LockFragmentAdapter;
 import com.example.hoitnote.databinding.FragmentLockBinding;
@@ -118,5 +126,40 @@ public class LockFragment extends Fragment {
             }
 
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        final RectF rectF = new RectF();
+        rectF.left = 0;
+        rectF.right = 0;
+        rectF.top = 0;
+        rectF.bottom = 0;
+        new Handler().postDelayed(new Runnable() {
+            @SuppressLint("RtlHardcoded")
+            @Override
+            public void run() {
+                NewbieGuide.with(LockFragment.this)
+                        .setLabel("guide_lock")
+                        .addGuidePage(GuidePage.newInstance()
+                                .addHighLight(rectF).setLayoutRes(R.layout.guide_lock_all))
+                        .addGuidePage(GuidePage.newInstance()
+                                .addHighLight(rectF).setLayoutRes(R.layout.guide_lock_information))
+                        .addGuidePage(GuidePage.newInstance()
+                                .addHighLight(binding.fingerprintLock, new RelativeGuide(R.layout.guide_lock_fingerprint,
+                                        Gravity.TOP, 20)))
+                        .addGuidePage(GuidePage.newInstance()
+                                .addHighLight(binding.patternLock, new RelativeGuide(R.layout.guide_lock_pattern,
+                                        Gravity.TOP, 20)))
+                        .addGuidePage(GuidePage.newInstance()
+                                .addHighLight(binding.traditionalLock, new RelativeGuide(R.layout.guide_lock_text,
+                                        Gravity.TOP, 20)))
+                        .addGuidePage(GuidePage.newInstance()
+                                .addHighLight(binding.syncSettings, new RelativeGuide(R.layout.guide_lock_syn,
+                                        Gravity.TOP, 20)))
+                        .show();
+            }
+        },800);
     }
 }

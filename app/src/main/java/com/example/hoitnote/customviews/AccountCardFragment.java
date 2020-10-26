@@ -23,10 +23,24 @@ import com.example.hoitnote.utils.helpers.NavigationHelper;
 import com.example.hoitnote.viewmodels.AccountCardViewModel;
 import com.example.hoitnote.views.analysis.AnalysisActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AccountCardFragment extends Fragment {
 
     FragmentAccountcardBinding binding;
     AccountCardViewModel accountViewModel;
+    private boolean respondToLongClick = false;
+
+    public void setLongClickListener(LongClickListener longClickListener) {
+        this.longClickListener = longClickListener;
+    }
+
+    public interface LongClickListener{
+        void onLongClick(AccountCardFragment accountCardFragment, View v);
+    }
+
+    private LongClickListener longClickListener;
 
     public AccountCardFragment(){
 
@@ -47,6 +61,25 @@ public class AccountCardFragment extends Fragment {
         );
         binding.setAccountCardViewModel(accountViewModel);
         binding.setAccountCardFragment(this);
+        binding.accountCard.setOnLongClickListener(new View.OnLongClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public boolean onLongClick(View view) {
+                respondToLongClick = true;
+                actionWhenCardClicked(view);
+                return true;
+            }
+        });
+        if(accountViewModel.isCard()){
+            List<String> info = new ArrayList<>();
+            info.add(accountViewModel.context.getString(R.string.account_remain_money)
+                    + accountViewModel.getRemains());
+            info.add(accountViewModel.context.getString(R.string.account_income)
+                    + accountViewModel.getIncomes());
+            info.add(accountViewModel.context.getString(R.string.account_outcome)
+                    + accountViewModel.getOutcomes());
+            binding.tipsTextView.startWithList(info, R.anim.anim_bottom_in, R.anim.anim_top_out);
+        }
         return binding.getRoot();
     }
 
@@ -57,8 +90,15 @@ public class AccountCardFragment extends Fragment {
     /*当点击Fragment后应该执行的动作*/
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void actionWhenCardClicked(View v){
+        if(!accountViewModel.isCard())
+            return;
         switch (accountViewModel.getClickType()){
             case TAP:
+                if(respondToLongClick){
+                    this.longClickListener.onLongClick(this, v);
+                    respondToLongClick = false;
+                    return;
+                }
                 NavigationHelper.navigationWithParameter(
                         Constants.analysisParamTag,
                         accountViewModel.getAccount(),
@@ -70,12 +110,20 @@ public class AccountCardFragment extends Fragment {
                 break;
             case NONE:
                 break;
-            case LONG_TAP:
-                break;
-            case DOUBLE_TAP:
-                break;
         }
 
     }
 
+    /*解决重影问题*/
+    @Override
+    public void onStart() {
+        super.onStart();
+        binding.tipsTextView.startFlipping();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        binding.tipsTextView.stopFlipping();
+    }
 }

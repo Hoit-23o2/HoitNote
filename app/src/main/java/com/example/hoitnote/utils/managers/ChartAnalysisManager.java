@@ -30,15 +30,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.app.hubert.guide.NewbieGuide;
-import com.app.hubert.guide.model.GuidePage;
-import com.app.hubert.guide.model.RelativeGuide;
+
 import com.example.hoitnote.R;
 import com.example.hoitnote.adapters.analysis.charts.CAMFirstScreenListAdapter;
 import com.example.hoitnote.adapters.analysis.charts.CAMPCListAdapter;
 import com.example.hoitnote.adapters.analysis.charts.CAMPCRVAdapter;
 import com.example.hoitnote.adapters.analysis.charts.CAMTdClListAdapter;
 import com.example.hoitnote.adapters.analysis.charts.CAMSgClListAdapter;
+import com.example.hoitnote.customviews.FontAwesome;
 import com.example.hoitnote.customviews.charts.HoitNoteClView;
 import com.example.hoitnote.customviews.charts.HoitNotePCView;
 import com.example.hoitnote.models.Account;
@@ -73,6 +72,8 @@ public class ChartAnalysisManager {
     private boolean ifHaveData;
 
     //扇形统计图相关
+    private FontAwesome pcIcon;
+    private TextView pcNoDataHint;
     private HoitNotePCView hoitNotePCView;
     private ListView myListViewPc;
     private CAMPCListAdapter CAMPCListAdapter;
@@ -170,10 +171,21 @@ public class ChartAnalysisManager {
         }else{
             ifHaveData = tallyAnalysisPCArrayList.size() > 0;
         }
+        if(!ifHaveData){
+            pcIcon.setVisibility(View.GONE);
+            pcNoDataHint.setVisibility(View.VISIBLE);
+        }else{
+            pcIcon.setVisibility(View.VISIBLE);
+            pcNoDataHint.setVisibility(View.GONE);
+        }
 
         if(hoitNotePCView != null){
             hoitNotePCView.endAnimation();
-            hoitNotePCView.setTallyAnalysisPCArrayList(tallyAnalysisPCArrayList);
+            if(ifHaveData){
+                hoitNotePCView.setTallyAnalysisPCArrayList(tallyAnalysisPCArrayList);
+            }else{
+                hoitNotePCView.setTallyAnalysisPCArrayList(null);
+            }
         }
         if(myListViewPc != null){
             CAMPCListAdapter.setList(tallyAnalysisPCArrayList);
@@ -816,9 +828,21 @@ public class ChartAnalysisManager {
     private static ArrayList<Integer> createColor(int colorNum, int luminanceP){
         ArrayList<Integer> colorList = new ArrayList<>();
         for(int i = 0;i < colorNum;i++){
-
             //加入颜色
-            colorList.add(ThemeHelper.generateColor(context));
+            int color = (ThemeHelper.generateColor(context)| 0xFF000000);
+            int len2 = colorList.size();
+            int j;
+            for(j = 0; j < len2;j++){
+                int tmpColor = colorList.get(j);
+                if(tmpColor == color){
+                    break;
+                }
+            }
+            if(j == len2){
+                colorList.add(color);
+            }else{
+                i -= 1;
+            }
         }
         return colorList;
     }
@@ -1197,4 +1221,11 @@ public class ChartAnalysisManager {
         }
     }
 
+    public void setPcNoDataHint(TextView pcNoDataHint) {
+        this.pcNoDataHint = pcNoDataHint;
+    }
+
+    public void setPcIcon(FontAwesome pcIcon) {
+        this.pcIcon = pcIcon;
+    }
 }

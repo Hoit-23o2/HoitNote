@@ -72,7 +72,7 @@ public class HoitNotePCView extends androidx.appcompat.widget.AppCompatImageView
     private static final float ANIMATION_6_SHADOW_Y_OFFSET = 30;
     private static final float ANIMATION_6_SHADOW_INSIDE_RADIUS_P = 0.8f;    //与统计图的外半径相乘后为阴影的内半径
     private static final float ANIMATION_6_SHADOW_OUTSIDE_RADIUS_P = 1.07f;    //与统计图的外半径相乘后为阴影的外半径
-    private static final float ANIMATION_6_SHADOW_TRANSPARENT_NUM = 13;
+    private static final float ANIMATION_6_SHADOW_TRANSPARENT_NUM = 25;
     private static final float ANIMATION_6_SHADOW_INITIAL_TRANS = 150;
 
     MyAnimationS myAnimationS;
@@ -384,10 +384,6 @@ public class HoitNotePCView extends androidx.appcompat.widget.AppCompatImageView
             }
             //绘制中空园
             paint.setColor(selfBackgroundColor);
-            myCanvasUlt.canvas.drawArc(myCanvasUlt.rectFIn,0,360, true,paint);
-            myCanvasUltNoShadow.canvas.drawArc(myCanvasUltNoShadow.rectFIn,0,360, true,paint);
-            //绘制回退图片
-            paint.setColor(selfBackgroundColor);
             myCanvasUlt.canvas.drawCircle(myCanvasUlt.centerx,myCanvasUlt.centery,chartInsideRadius,paint);
             myCanvasUltNoShadow.canvas.drawCircle(myCanvasUltNoShadow.centerx,myCanvasUltNoShadow.centery,chartInsideRadius,paint);
             //myCanvasUlt.canvas.drawBitmap(myBitmapSGoBack.bitmap,myBitmapSGoBack.rect,myCanvasUlt.rectFIn,null);
@@ -422,7 +418,7 @@ public class HoitNotePCView extends androidx.appcompat.widget.AppCompatImageView
             myCanvasUlt.canvas.drawArc(myCanvasUlt.rectFIn,0,360, true,tmpPaint);
             tmpPaint.setColor(Color.rgb(150,150,150));
             tmpPaint.setTextSize(50);
-            myCanvasUlt.canvas.drawText("没有符合条件的账单记录",myCanvasUlt.rectFOut.left+10,myCanvasUlt.rectFOut.top+70,tmpPaint);
+            //myCanvasUlt.canvas.drawText("没有符合条件的账单记录",myCanvasUlt.rectFOut.left+10,myCanvasUlt.rectFOut.top+70,tmpPaint);
             myCanvasUltNoShadow.canvas.drawBitmap(myCanvasUlt.bitmap,myCanvasUlt.selfRect,myCanvasUltNoShadow.selfRect,null);
         }
         ifDrawnUlt = true;
@@ -575,7 +571,7 @@ public class HoitNotePCView extends androidx.appcompat.widget.AppCompatImageView
             if(nowDrawList == null){
                 myAnimationS.paint2.setColor(Color.rgb(150,150,150));
                 myAnimationS.paint2.setTextSize(50);
-                myCanvasAni.canvas.drawText("没有符合条件的账单记录",myCanvasAni.rectFOut.left+10,myCanvasAni.rectFOut.top+70,myAnimationS.paint2);
+                //myCanvasAni.canvas.drawText("没有符合条件的账单记录",myCanvasAni.rectFOut.left+10,myCanvasAni.rectFOut.top+70,myAnimationS.paint2);
             }
             canvas.drawBitmap(myCanvasAni.bitmap, myCanvasAni.selfRect, chartRect, null);
             postInvalidateDelayed(EVERY_DRAW_TIME_INTERVAL);

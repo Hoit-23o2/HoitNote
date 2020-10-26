@@ -8,30 +8,31 @@
     tools:context=".views.flow.AddOptionActivity"
     android:background="@color/colorSweetPrimary">
     <LinearLayout
+        android:paddingHorizontal="10dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/colorSweetPrimaryLight">
 
         <TextView
+            android:id="@+id/text_name"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="商家名称"
-            android:textColor="@color/colorDefaultTextPrimary"
-            android:textSize="24sp"/>
+            style="@style/HoitTitleText"/>
 
         <EditText
             android:id="@+id/option_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="right"
+            android:gravity="end|center_vertical"
+            style="@style/HoitSubTitleText"
             android:hint="输入名称"
-            android:textColor="@color/colorDefaultTextPrimary"
-            android:textSize="24sp"
             android:background="@null"/>
     </LinearLayout>
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
+        android:paddingHorizontal="10dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -39,38 +40,35 @@
         android:id="@+id/choose_icon">
 
         <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
+            android:id="@+id/text_icon"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:text="默认商家图标"
-            android:textColor="@color/colorDefaultTextPrimary"
-            android:textSize="24sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            style="@style/HoitTitleText" />
 
         <com.example.hoitnote.customviews.FontAwesome
             android:id="@+id/icon_image"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:text="@string/finger_print_icon"
-            android:textSize="40dp"
+            style="@style/HoitIconUnclickable"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/right_icon"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0"
             app:tint="@android:color/holo_blue_light" />
 
-        <ImageView
+        <com.example.hoitnote.customviews.FontAwesome
             android:id="@+id/right_icon"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/hzs_right"
-            app:tint="@color/colorDefaultTextPrimary"
+            style="@style/HoitIconUnclickable"
+            android:text="@string/circle_arrow_right"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 </LinearLayout>

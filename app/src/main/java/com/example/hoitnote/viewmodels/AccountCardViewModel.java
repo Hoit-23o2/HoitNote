@@ -23,7 +23,7 @@ public class AccountCardViewModel extends BaseViewModel{
     private int bankIcon;
     private String incomes;
     private String outcomes;
-    private String transfer;
+    private String remains;
     private boolean isCard;
     private ClickType clickType;
 
@@ -38,14 +38,14 @@ public class AccountCardViewModel extends BaseViewModel{
     * */
     public AccountCardViewModel(Account account, int bankIcon,
                                 String incomes, String outcomes,
-                                String transfer, boolean isCard,
+                                String remains, boolean isCard,
                                 Context context, ClickType clickType) {
         super(context);
         this.account = account;
         this.bankIcon = bankIcon;
         this.incomes = incomes;
         this.outcomes = outcomes;
-        this.transfer = transfer;
+        this.remains = remains;
         this.isCard = isCard;
         this.clickType = clickType;
     }
@@ -92,13 +92,13 @@ public class AccountCardViewModel extends BaseViewModel{
     }
 
     @Bindable
-    public String getTransfer() {
-        return transfer;
+    public String getRemains() {
+        return remains;
     }
 
-    public void setTransfer(String transfer) {
-        this.transfer = transfer;
-        notifyPropertyChanged(BR.transfer);
+    public void setRemains(String remains) {
+        this.remains = remains;
+        notifyPropertyChanged(BR.remains);
     }
 
     @Bindable

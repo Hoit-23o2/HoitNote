@@ -3,6 +3,7 @@ package com.example.hoitnote.utils.commuications.bluetooth;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.util.Log;
 
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.helpers.BlueToothHelper;
@@ -13,8 +14,10 @@ import java.io.OutputStream;
 import java.util.UUID;
 
 public class ClientThread extends Thread{
-    public  static OutputStream os;
-    private InputStream is;
+    private static final String TAG = "蓝牙";
+    private OutputStream os=null;
+    private InputStream is=null;
+    private BluetoothSocket socket;
     String message;
     public BluetoothDevice device = null;
     public BlueToothHelper.BlueToothHandler mHandler;
@@ -28,56 +31,72 @@ public class ClientThread extends Thread{
 
     @Override
     public void run(){
-        try{
-            //援引一个接口
+        Log.d("蓝牙初始状态",String.valueOf(BlueToothHelper.isIsConnected())+"========================");
+        Log.d("蓝牙初始状态",String.valueOf(BlueToothHelper.isRecieveFinished())+"========================");
+        if (!BlueToothHelper.isIsConnected()){
+            try{
+                //援引一个接口
             /*
             final BluetoothSocket socket = (BluetoothSocket)device.getClass().
                     getDeclaredMethod("createRfcommSocket",new Class[]{int.class}).invoke(device,1);*/
-            final BluetoothSocket socket = device.createRfcommSocketToServiceRecord(UUID.
-                    fromString("1a79f483-b8ae-4e8d-97f0-a1496439136b"));
-            adapter.cancelDiscovery();//取消扫描
-            while (true)
-            {
-                socket.connect();//连接
-                Thread.sleep(1000);
-                if (socket.isConnected())
+                socket = device.createRfcommSocketToServiceRecord(UUID.
+                        fromString("1a79f483-b8ae-4e8d-97f0-a1496439136b"));
+                adapter.cancelDiscovery();//取消扫描
+                while (true)
                 {
-                    // call a function here
-                    // my function blocks for the application lifetime
-                    receiveMessageThread = new ReceiveMessageThread(socket,mHandler);
-                    receiveMessageThread.start();
-                    break;
+                    socket.connect();//连接
+                    Thread.sleep(1000);
+                    if (socket.isConnected())
+                    {
+                        is = socket.getInputStream();//输入到本机设备的数据流
+                        os = socket.getOutputStream();//输出到远端设备的数据流
+                        receiveMessageThread = new ReceiveMessageThread(is,os,mHandler);
+                        receiveMessageThread.start();
+                        break;
+                    }
+                    else
+                    {
+                        socket.close();
+                    }
                 }
-                else
-                {
-                    socket.close();
+                this.mHandler.obtainMessage(Constants.MSG_CONNECT_SUCCESS).sendToTarget();
+            } catch (IOException e) {
+                e.printStackTrace();
+                this.mHandler.obtainMessage(Constants.MSG_CONNECT_FAILURE).sendToTarget();
+            } catch (NullPointerException E) {
+                E.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }else {
+            mHandler.obtainMessage(Constants.MSG_Is_Connected).sendToTarget();
+        }
+        Log.d("蓝牙","============== ClientThread is close ====================");
+    }
+    public void cancel(){
+        try{
+            if(this.getReceiveMessageThread()!=null){
+                if (this.getReceiveMessageThread().getOs()!=null){
+                    this.getReceiveMessageThread().getOs().close();
+                }
+                if(this.getReceiveMessageThread().getIs()!=null){
+                    this.getReceiveMessageThread().getIs().close();
                 }
             }
-
-            ///Toast.makeText(context,"连接成功",Toast.LENGTH_SHORT).show();
-            //连接成功，向BluetoothActivity中的BlueToothHandler传消息
-            this.mHandler.obtainMessage(Constants.MSG_CONNECT_SUCCESS).sendToTarget();
-            is = socket.getInputStream();//输入到本机设备的数据流
-            os = socket.getOutputStream();//输出到远端设备的数据流
-
         } catch (IOException e) {
             e.printStackTrace();
-            this.mHandler.obtainMessage(Constants.MSG_CONNECT_FAILURE).sendToTarget();
-        } catch (NullPointerException E) {
-            E.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            Log.e(TAG, "Could not close the I/O", e);
         }
-    }
-    //写入
-    public void write(String msg){
 
-        try{
-            os.write(msg.getBytes("utf-8"));
+        try {
+            if(socket!=null){
+                socket.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
-            mHandler.obtainMessage(Constants.MSG_SEND_FAILURE).sendToTarget();
+            Log.e(TAG, "Could not close the connect socket", e);
         }
+        mHandler.obtainMessage(Constants.MSG_CANCEL).sendToTarget();
     }
 
     public OutputStream getOs() {

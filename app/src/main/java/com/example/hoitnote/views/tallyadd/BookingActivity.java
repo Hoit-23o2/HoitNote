@@ -25,10 +25,13 @@ import com.example.hoitnote.models.Tally;
 import com.example.hoitnote.utils.App;
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.BookingType;
+import com.example.hoitnote.utils.helpers.BookingDataHelper;
 import com.example.hoitnote.utils.helpers.DataBaseHelper;
 import com.example.hoitnote.utils.helpers.NavigationHelper;
 import com.example.hoitnote.utils.helpers.ToastHelper;
 import com.example.hoitnote.views.flow.HistoryActivity;
+import com.flyco.tablayout.SegmentTabLayout;
+import com.flyco.tablayout.SlidingTabLayout;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -36,7 +39,7 @@ import java.util.ArrayList;
 public class BookingActivity extends BaseActivity {
     private static final String TAG = "BookingActivity";
     private ViewPager viewPager;
-    private TabLayout tabLayout;
+    private SlidingTabLayout tabLayout;
     private ArrayList<String> tab_title_list = new ArrayList<>();
     private ArrayList<Fragment> fragment_list = new ArrayList<>();
     private Fragment outcomeFragment, incomeFragment, transferFragment;
@@ -47,7 +50,8 @@ public class BookingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booking);
         Account account = (Account)NavigationHelper.getNavigationParameter(this,Constants.mainParamTag);
-        ToastHelper.showToast(context,account.getAccountName(),Toast.LENGTH_SHORT);
+        ToastHelper.showToast(this,account.getAccountName(),Toast.LENGTH_SHORT);
+        BookingDataHelper.setNowAccount(account);
         ActionBarInit();
         ViewPagerInit();
     }
@@ -73,7 +77,8 @@ public class BookingActivity extends BaseActivity {
 
         pageChangeListener = new DetailOnPageChangeListener();
         viewPager.setOnPageChangeListener(pageChangeListener);
-        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setViewPager(viewPager);
+        tabLayout.setLayoutMode(SlidingTabLayout.LAYOUT_MODE_OPTICAL_BOUNDS);
     }
     private void ActionBarInit(){
         ActionBar actionBar = getSupportActionBar();

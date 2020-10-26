@@ -1,12 +1,13 @@
 package com.example.hoitnote.views.flow;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
+import com.bigkoo.pickerview.listener.CustomListener;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
@@ -34,14 +36,20 @@ import com.example.hoitnote.adapters.tallies.HzsContentDayRecyclerViewAdapter;
 import com.example.hoitnote.adapters.tallies.HzsFirstExpandableListViewAdapter;
 import com.example.hoitnote.adapters.tallies.HzsSecondExpandableListViewAdapter;
 import com.example.hoitnote.adapters.tallies.HzsThirdExpandableListViewAdapter;
+import com.example.hoitnote.customviews.FontAwesome;
+import com.example.hoitnote.models.Account;
 import com.example.hoitnote.models.Tally;
 import com.example.hoitnote.models.flow.HzsDayData;
 import com.example.hoitnote.models.flow.HzsMonthData;
+import com.example.hoitnote.models.flow.HzsTally;
 import com.example.hoitnote.models.flow.HzsYearData;
 import com.example.hoitnote.utils.App;
 import com.example.hoitnote.utils.commuications.DataBaseFilter;
 
+import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.ActionType;
+import com.example.hoitnote.utils.enums.BookingType;
+import com.example.hoitnote.utils.helpers.BookingDataHelper;
 
 
 import java.sql.Date;
@@ -58,17 +66,45 @@ public class HistoryActivity extends BaseActivity{
     private int year = calendar.get(Calendar.YEAR);
     private int month = calendar.get(Calendar.MONTH)+1;
     private int day = calendar.get(Calendar.DATE);
-    private String season = "秋";
-    private String classification1 = "";
-    private String classification2 = "";
-
+    private String season = Constants.SeasonAutumn;
+    private String classification1 = null;
+    private String classification2 = null;
+    private BookingType bookingType = BookingType.OUTCOME;
+    private ActionType filterActionType = null;
+    private String account = null;
+    private String project = null;
+    private String vendor = null;
+    private String member = null;
+    private Account realAccount = null;
     private static HistoryActivity instance;
     private int mode = 0;
+    private Typeface tf;
+    private OptionsPickerView pvBottomClassOptions;
+    private OptionsPickerView pvBottomMemberOptions;
+    private OptionsPickerView pvBottomVendorOptions;
+    private OptionsPickerView pvBottomTimeFrameOptions;
+    private OptionsPickerView pvBottomProjectOptions;
+    private OptionsPickerView pvBottomAccountOptions;
+    private View totalContentView;
+    private View yearContentView;
+    private View seasonContentView;
+    private View monthContentView;
+    private View dayContentView;
+
+    private List<HzsYearData> totalData;
+    private List<HzsMonthData> yearData;
+    private List<HzsMonthData> seasonData;
+    private List<HzsDayData> monthData;
+    private List<Tally> dayData;
     public static final int TOTAL = 0;
     public static final int YEAR = 1;
     public static final int SEASON = 2;
     public static final int MONTH = 3;
     public static final int DAY = 4;
+
+    private Double bal = 0.0;
+    private Double in = 0.0;
+    private Double out = 0.0;
     public int getYear() {
         return year;
     }
@@ -84,33 +120,57 @@ public class HistoryActivity extends BaseActivity{
     public int getDay() {
         return day;
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+        tf = ResourcesCompat.getFont(this, R.font.fontawesome5solid);
         instance = this;
-        contentLayout = (LinearLayout)findViewById(R.id.hzs_history_content);
+        contentLayout = findViewById(R.id.hzs_history_content);
         actionBarInit();
-
-
+        DataBaseFilter filter = new DataBaseFilter(null,null,-1,null,null,null);
+        totalData = getTotalData(filter);
         showDataAsTotal();
 
-        initBottomTimeframeButton();
+        initBottomTimeFrameButton();
         initBottomClassButton();
+        initBottomAccountButton();
+        initBottomProjectButton();
+        //initBottomMoreInfoButton();
+        initBottomMemberButton();
+        initBottomVendorButton();
+
     }
 
     public static HistoryActivity getInstance() {
         return instance;
     }
 
+    private ArrayList<String> getFilterClassifications(){
+        if(classification1 == null){
+            return null;
+        }else if(classification2 == null){
+            ArrayList<String> res = new ArrayList<>();
+            res.add(classification1);
+            return res;
+        }else{
+            ArrayList<String> res = new ArrayList<>();
+            res.add(classification1 + Constants.tallyTableC1C2Spliter + classification2);
+            return res;
+        }
+    }
+
+    private Account getFilterAccount(){
+        return realAccount;
+    }
     public void refreshMainData(){
-        Double bal = 0.0;
-        Double in = 0.0;
-        Double out = 0.0;
+        bal = 0.0;
+        in = 0.0;
+        out = 0.0;
         switch (mode){
             case TOTAL:
-                List<HzsYearData> totalData = getTotalData();
+                DataBaseFilter filter1 = new DataBaseFilter(null,null,-1,getFilterClassifications(),getFilterAccount(),filterActionType,project,member,vendor);
+                totalData = getTotalData(filter1);
                 for(HzsYearData data:totalData){
                     bal += data.getBal();
                     in += data.getIn();
@@ -118,7 +178,10 @@ public class HistoryActivity extends BaseActivity{
                 }
                 break;
             case YEAR:
-                List<HzsMonthData> yearData = getYearData(year-1900);
+                Date startDate2 = new Date(year-1900,0,1);
+                Date endDate2 = new Date(year-1900,11,31);
+                DataBaseFilter filter2 = new DataBaseFilter(startDate2,endDate2,-1,getFilterClassifications(),getFilterAccount(),filterActionType,project,member,vendor);
+                yearData = getYearData(filter2);
                 for(HzsMonthData data:yearData){
                     bal += data.getBal();
                     in += data.getIn();
@@ -126,7 +189,28 @@ public class HistoryActivity extends BaseActivity{
                 }
                 break;
             case SEASON:
-                List<HzsMonthData> seasonData = getSeasonData(year-1900,season);
+                Date startDate3;
+                Date endDate3;
+                switch (season){
+                    case Constants.SeasonSpring:
+                        startDate3 = new Date(year-1900,1,1);
+                        endDate3 = new Date(year-1900,3,31);
+                        break;
+                    case Constants.SeasonSummer:
+                        startDate3 = new Date(year-1900,4,1);
+                        endDate3 = new Date(year-1900,6,31);
+                        break;
+                    case Constants.SeasonAutumn:
+                        startDate3 = new Date(year-1900,7,1);
+                        endDate3 = new Date(year-1900,9,30);
+                        break;
+                    default:
+                        startDate3 = new Date(year-1900,10,1);
+                        endDate3 = new Date(year+1-1900,0,31);
+                        break;
+                }
+                DataBaseFilter filter3 = new DataBaseFilter(startDate3,endDate3,-1,getFilterClassifications(),getFilterAccount(),filterActionType,project,member,vendor);
+                seasonData = getSeasonData(filter3);
                 for(HzsMonthData data:seasonData){
                     bal += data.getBal();
                     in += data.getIn();
@@ -134,7 +218,10 @@ public class HistoryActivity extends BaseActivity{
                 }
                 break;
             case MONTH:
-                List<HzsDayData> monthData = getMonthData(year-1900,month-1);
+                Date startDate4 = new Date(year-1900,month-1,1);
+                Date endDate4 = new Date(year-1900,month-1,getDaysOfMonth(year,month));
+                DataBaseFilter filter4 = new DataBaseFilter(startDate4,endDate4,-1,getFilterClassifications(),getFilterAccount(),filterActionType,project,member,vendor);
+                monthData = getMonthData(filter4);
                 for(HzsDayData data:monthData){
                     bal += data.getBal();
                     in += data.getIn();
@@ -142,7 +229,10 @@ public class HistoryActivity extends BaseActivity{
                 }
                 break;
             case DAY:
-                List<Tally> dayData = getDayData(year-1900,month-1,day);
+                Date startDate5 = new Date(year-1900,month-1,day);
+                Date endDate5 = new Date(year-1900,month-1,day);
+                DataBaseFilter filter5 = new DataBaseFilter(startDate5,endDate5,-1,getFilterClassifications(),getFilterAccount(),filterActionType,project,member,vendor);
+                dayData = getDayData(filter5);
                 for(Tally data:dayData){
                     if(data.getActionType() == ActionType.OUTCOME){
                         bal -= data.getMoney();
@@ -154,114 +244,147 @@ public class HistoryActivity extends BaseActivity{
                 }
                 break;
         }
-        showMainData(bal.toString(),out.toString(),in.toString());
     }
-    private void showMainData(String balance,String outcome,String income){
+    public void showMainData(){
+        String balance = bal.toString();
+        String income = in.toString();
+        String outcome = out.toString();
         TextView balanceTextView = findViewById(R.id.hzs_history_balance);
         TextView outcomeTextView = findViewById(R.id.hzs_history_outcome);
         TextView incomeTextView = findViewById(R.id.hzs_history_income);
+        switch (mode){
+            case TOTAL:
+                break;
+            case YEAR:
+                ((TextView)yearContentView.findViewById(R.id.hzs_history_content_as_year_balance)).setText(balance);
+                break;
+            case SEASON:
+                ((TextView)seasonContentView.findViewById(R.id.hzs_history_content_as_season_balance)).setText(balance);
+                break;
+            case MONTH:
+                ((TextView)monthContentView.findViewById(R.id.hzs_history_content_as_month_balance)).setText(balance);
+                break;
+            case DAY:
+                ((TextView)dayContentView.findViewById(R.id.hzs_history_content_as_day_balance)).setText(balance);
+                break;
+        }
         balanceTextView.setText(balance);
         outcomeTextView.setText(outcome);
         incomeTextView.setText(income);
     }
+    private void showDataAsMode(){
+        refreshMainData();
+        switch (mode){
+            case TOTAL:
+                showDataAsTotal();
+                break;
+            case YEAR:
+                showDataAsYear();
+                break;
+            case SEASON:
+                showDataAsSeason();
+                break;
+            case MONTH:
+                showDataAsMonth();
+                break;
+            case DAY:
+                showDataAsDay();
+                break;
+        }
+    }
     private void showDataAsTotal(){
         contentLayout.removeAllViews();
-        List<HzsYearData> yearData = getTotalData();
-        View totalContentView = LayoutInflater.from(this).inflate(R.layout.hzs_history_content_as_total,contentLayout,false);
-        HzsFirstExpandableListViewAdapter adapter = new HzsFirstExpandableListViewAdapter(yearData,this);
+        totalContentView = LayoutInflater.from(this).inflate(R.layout.hzs_history_content_as_total,contentLayout,false);
+        HzsFirstExpandableListViewAdapter adapter = new HzsFirstExpandableListViewAdapter(totalData,this);
         ExpandableListView expandableListView = (ExpandableListView)totalContentView.findViewById(R.id.hzs_history_content_as_total_expandable_listview);
         expandableListView.setAdapter(adapter);
         contentLayout.addView(totalContentView);
-        Double bal = 0.0;
-        Double in = 0.0;
-        Double out = 0.0;
-        for(HzsYearData data:yearData){
+        bal = 0.0;
+        in = 0.0;
+        out = 0.0;
+        for(HzsYearData data:totalData){
             bal += data.getBal();
             in += data.getIn();
             out += data.getOut();
         }
-        showMainData(bal.toString(),out.toString(),in.toString());
+        showMainData();
     }
     private void showDataAsYear(){
         contentLayout.removeAllViews();
-        List<HzsMonthData> monthData = getYearData(year-1900);
-        View yearContentView = LayoutInflater.from(this).inflate(R.layout.hzs_history_content_as_year,contentLayout,false);
+        yearContentView = LayoutInflater.from(this).inflate(R.layout.hzs_history_content_as_year,contentLayout,false);
         ((Button)yearContentView.findViewById(R.id.hzs_history_content_as_year_year)).setText(String.valueOf(year)+"年");
-        HzsSecondExpandableListViewAdapter adapter = new HzsSecondExpandableListViewAdapter(monthData,this);
+        HzsSecondExpandableListViewAdapter adapter = new HzsSecondExpandableListViewAdapter(yearData,this);
         ExpandableListView yearListView = (ExpandableListView)yearContentView.findViewById(R.id.hzs_history_content_as_year_expandable_listview);
         yearListView.setAdapter(adapter);
         initYearContentButton(yearContentView);
         contentLayout.addView(yearContentView);
-        Double bal = 0.0;
-        Double in = 0.0;
-        Double out = 0.0;
-        for(HzsMonthData data:monthData){
+        bal = 0.0;
+        in = 0.0;
+        out = 0.0;
+        for(HzsMonthData data:yearData){
             bal += data.getBal();
             in += data.getIn();
             out += data.getOut();
         }
-        showMainData(bal.toString(),out.toString(),in.toString());
+        showMainData();
     }
     private void showDataAsSeason(){
         contentLayout.removeAllViews();
-        List<HzsMonthData> monthData = getSeasonData(year-1900,season);
-        View seasonContentView = LayoutInflater.from(this).inflate(R.layout.hzs_history_content_as_season,contentLayout,false);
+        seasonContentView = LayoutInflater.from(this).inflate(R.layout.hzs_history_content_as_season,contentLayout,false);
         ((Button)seasonContentView.findViewById(R.id.hzs_history_content_as_season_year)).setText(String.valueOf(year)+"年");
-        ((Button)seasonContentView.findViewById(R.id.hzs_history_content_as_season_season)).setText(season);
+        ((FontAwesome)seasonContentView.findViewById(R.id.hzs_history_content_as_season_season)).setText(season);
 
-        HzsSecondExpandableListViewAdapter adapter = new HzsSecondExpandableListViewAdapter(monthData,this);
+        HzsSecondExpandableListViewAdapter adapter = new HzsSecondExpandableListViewAdapter(seasonData,this);
         ExpandableListView seasonListView = (ExpandableListView)seasonContentView.findViewById(R.id.hzs_history_content_as_season_expandable_listview);
         seasonListView.setAdapter(adapter);
         initSeasonContentButton(seasonContentView);
         contentLayout.addView(seasonContentView);
-        Double bal = 0.0;
-        Double in = 0.0;
-        Double out = 0.0;
-        for(HzsMonthData data:monthData){
+        bal = 0.0;
+        in = 0.0;
+        out = 0.0;
+        for(HzsMonthData data:seasonData){
             bal += data.getBal();
             in += data.getIn();
             out += data.getOut();
         }
-        showMainData(bal.toString(),out.toString(),in.toString());
+        showMainData();
     }
     private void showDataAsMonth(){
         contentLayout.removeAllViews();
-        List<HzsDayData> dayData = getMonthData(year-1900,month-1);
-        View monthContentView = LayoutInflater.from(this).inflate(R.layout.hzs_history_content_as_month,contentLayout,false);
+        monthContentView = LayoutInflater.from(this).inflate(R.layout.hzs_history_content_as_month,contentLayout,false);
         ((Button)monthContentView.findViewById(R.id.hzs_history_content_as_month_year)).setText(String.valueOf(year)+"年");
         ((Button)monthContentView.findViewById(R.id.hzs_history_content_as_month_month)).setText(String.valueOf(month)+"月");
-        HzsThirdExpandableListViewAdapter adapter = new HzsThirdExpandableListViewAdapter(dayData,this);
+        HzsThirdExpandableListViewAdapter adapter = new HzsThirdExpandableListViewAdapter(monthData,this);
         ExpandableListView seasonListView = (ExpandableListView)monthContentView.findViewById(R.id.hzs_history_content_as_month_expandable_listview);
         seasonListView.setAdapter(adapter);
         initMonthContentButton(monthContentView);
         contentLayout.addView(monthContentView);
-        Double bal = 0.0;
-        Double in = 0.0;
-        Double out = 0.0;
-        for(HzsDayData data:dayData){
+        bal = 0.0;
+        in = 0.0;
+        out = 0.0;
+        for(HzsDayData data:monthData){
             bal += data.getBal();
             in += data.getIn();
             out += data.getOut();
         }
-        showMainData(bal.toString(),out.toString(),in.toString());
+        showMainData();
     }
     private void showDataAsDay(){
         contentLayout.removeAllViews();
-        List<Tally> dayData = getDayData(year-1900,month-1,day);
-        View dayContentView = LayoutInflater.from(this).inflate(R.layout.hzs_history_content_as_day,contentLayout,false);
+        dayContentView = LayoutInflater.from(this).inflate(R.layout.hzs_history_content_as_day,contentLayout,false);
         ((TextView)dayContentView.findViewById(R.id.hzs_history_content_as_day_year)).setText(String.valueOf(year)+"年");
         ((TextView)dayContentView.findViewById(R.id.hzs_history_content_as_day_month)).setText(String.valueOf(month)+"日");
         ((TextView)dayContentView.findViewById(R.id.hzs_history_content_as_day_day)).setText(String.valueOf(day)+"日");
-        HzsContentDayRecyclerViewAdapter adapter = new HzsContentDayRecyclerViewAdapter(dayData);
+        HzsContentDayRecyclerViewAdapter adapter = new HzsContentDayRecyclerViewAdapter(dayData, HzsTally.TIME,null);
         RecyclerView recyclerView = (RecyclerView)dayContentView.findViewById(R.id.hzs_history_content_as_day_recyclerview);
         recyclerView.setAdapter(adapter);
         LinearLayoutManager linearLayout = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayout);
         initDayContentButton(dayContentView);
         contentLayout.addView(dayContentView);
-        Double bal = 0.0;
-        Double in = 0.0;
-        Double out = 0.0;
+        bal = 0.0;
+        in = 0.0;
+        out = 0.0;
         for(Tally data:dayData){
             if(data.getActionType() == ActionType.OUTCOME){
                 bal -= data.getMoney();
@@ -271,7 +394,7 @@ public class HistoryActivity extends BaseActivity{
                 in += data.getMoney();
             }
         }
-        showMainData(bal.toString(),out.toString(),in.toString());
+        showMainData();
     }
     private void initDayContentButton(View view){
         View chooseButton = (View) view.findViewById(R.id.hzs_history_content_as_day_button);
@@ -351,6 +474,7 @@ public class HistoryActivity extends BaseActivity{
         });
 
     }
+
     private void initYearContentButton(final View contentView){
         final Button chooseYearButton = (Button)contentView.findViewById(R.id.hzs_history_content_as_year_year);
         final List<String> yearsItems = new ArrayList<>();
@@ -380,16 +504,16 @@ public class HistoryActivity extends BaseActivity{
     }
     private void initSeasonContentButton(final View view){
         Button chooseYearButton = (Button)view.findViewById(R.id.hzs_history_content_as_season_year);
-        Button chooseSeasonButton = (Button)view.findViewById(R.id.hzs_history_content_as_season_season);
+        FontAwesome chooseSeasonButton = view.findViewById(R.id.hzs_history_content_as_season_season);
         final List<String> yearsItems = new ArrayList<>();
         final List<String> seasonItems = new ArrayList<>();
         for (int i=2020;i>1969;i--){
             yearsItems.add(String.valueOf(i));
         }
-        seasonItems.add("春");
-        seasonItems.add("夏");
-        seasonItems.add("秋");
-        seasonItems.add("冬");
+        seasonItems.add(Constants.SeasonSpring);
+        seasonItems.add(Constants.SeasonSummer);
+        seasonItems.add(Constants.SeasonAutumn);
+        seasonItems.add(Constants.SeasonWinter);
         final OptionsPickerView pvOptions = new OptionsPickerBuilder(HistoryActivity.this, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
@@ -404,6 +528,7 @@ public class HistoryActivity extends BaseActivity{
                 showDataAsSeason();
             }
         }).setSubmitText("确定")//确定按钮文字
+                .setTypeface(tf)
                 .setCancelText("取消")//取消按钮文字
                 .build();
         pvOptions.setNPicker(yearsItems,seasonItems,null);
@@ -422,105 +547,298 @@ public class HistoryActivity extends BaseActivity{
 
     }
     private void initBottomClassButton(){
-        final Button bottomClassButton = (Button)findViewById(R.id.hzs_history_class_btn);
-        final List<String> options1Items = new ArrayList<>();
-        final List<List<String>> options2Items = new ArrayList<>();
-        initClassOptionItems(options1Items,options2Items);
-        final OptionsPickerView pvOptions = new OptionsPickerBuilder(HistoryActivity.this, new OnOptionsSelectListener() {
+        final View bottomClassButton = findViewById(R.id.hzs_history_class_btn);
+        pvBottomClassOptions = new OptionsPickerBuilder(HistoryActivity.this, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
-                classification1 = options1Items.get(options1);
-                classification2 = options2Items.get(options1).get(options2);
-                bottomClassButton.setText(classification2);
+                classification1 = BookingDataHelper.getClassifications1(bookingType).get(options1);
+                classification2 = BookingDataHelper.getClassifications2(bookingType).get(options1).get(options2);
+                if(classification1.equals(Constants.HzsNullString)){
+                    classification1 = null;
+                }
+                if(classification2.equals(Constants.HzsNullString)){
+                    classification2 = null;
+                }
+                showDataAsMode();
             }
-        }).setSubmitText("确定")//确定按钮文字
-                .setCancelText("取消")//取消按钮文字
-                .setTitleText("选择分类")
-                .build();
-        pvOptions.setPicker(options1Items, options2Items);
+        }).setLayoutRes(R.layout.hzs_history_class_pickerview, new CustomListener() {
+            @Override
+            public void customLayout(View v) {
+                //自定义布局中的控件初始化及事件处理
+                final TextView tvSubmit = v.findViewById(R.id.finish_button);
+                final TextView tvCancel = v.findViewById(R.id.cancel_button);
+                final TextView tvOutcome = v.findViewById(R.id.outcome_button);
+                final TextView tvIncome = v.findViewById(R.id.income_button);
+                tvSubmit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    pvBottomClassOptions.returnData();
+                    pvBottomClassOptions.dismiss();
+                    }
+                });
+                tvCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    pvBottomClassOptions.dismiss();
+                    }
+                });
+
+                tvOutcome.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    bookingType = BookingType.OUTCOME;
+                    filterActionType = ActionType.OUTCOME;
+                    pvBottomClassOptions.setPicker(BookingDataHelper.getClassifications1WithIcons(bookingType),
+                            BookingDataHelper.getClassifications2WithIcons(bookingType));
+                    }
+                });
+                tvIncome.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    bookingType = BookingType.INCOME;
+                    filterActionType = ActionType.INCOME;
+                    pvBottomClassOptions.setPicker(BookingDataHelper.getClassifications1WithIcons(bookingType),
+                            BookingDataHelper.getClassifications2WithIcons(bookingType));
+                    }
+                });
+
+            }
+        })
+                .setTypeface(tf).build();
+        pvBottomClassOptions.setPicker(BookingDataHelper.getClassifications1WithIcons(bookingType),
+                BookingDataHelper.getClassifications2WithIcons(bookingType));
         bottomClassButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(HistoryActivity.this,"Click Class Btn",Toast.LENGTH_SHORT).show();
-                pvOptions.show();
+                pvBottomClassOptions.show();
             }
         });
     }
-    private void initClassOptionItems(List<String> options1Items,List<List<String>> options2Items){
-        options1Items.add("饮食");
-        options1Items.add("娱乐");
-        List<String> options1 = new ArrayList<>();
-        options1.add("早餐");
-        options1.add("午餐");
-        options1.add("晚餐");
-        options2Items.add(options1);
-        List<String> options2 = new ArrayList<>();
-        options2.add("唱歌");
-        options2.add("游戏");
-        options2.add("电影");
-        options2Items.add(options2);
-    }
-    private void initBottomTimeframeButton(){
-        final Button bottomTimeframeButton = (Button)findViewById(R.id.hzs_history_time_btn);
-        //准备PopupWindow的布局View
-        final View popupTimeframeView = LayoutInflater.from(this).inflate(R.layout.hzs_popup_timeframe, null);
-        //初始化一个PopupWindow，width和height都是WRAP_CONTENT
-        final PopupWindow popupTimeframeWindow = new PopupWindow(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-        //设置PopupWindow的视图内容
-        popupTimeframeWindow.setContentView(popupTimeframeView);
-        //点击空白区域PopupWindow消失，这里必须先设置setBackgroundDrawable，否则点击无反应
-        popupTimeframeWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
-        popupTimeframeWindow.setOutsideTouchable(true);
-        //设置PopupWindow动画
-        popupTimeframeWindow.setAnimationStyle(R.style.hzs_popup_vertical_anim_style);
-        //设置是否允许PopupWindow的范围超过屏幕范围
-        popupTimeframeWindow.setClippingEnabled(true);
-        //设置PopupWindow消失监听
-        popupTimeframeWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+    private void initBottomAccountButton(){
+        final View bottomAccountButton = findViewById(R.id.hzs_history_account_btn);
+        final List<String> items = BookingDataHelper.getAccounts();
+        pvBottomAccountOptions = new OptionsPickerBuilder(HistoryActivity.this, new OnOptionsSelectListener() {
             @Override
-            public void onDismiss() {
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                account = items.get(options1);
+                if(account.equals(Constants.HzsNullString)){
+                    account = null;
+                }
+                realAccount = App.dataBaseHelper.getAccounts().get(options1);
+                showDataAsMode();
             }
-        });
-        popupTimeframeView.measure(View.MeasureSpec.UNSPECIFIED,View.MeasureSpec.UNSPECIFIED);
-        initPopupTimeframeView(popupTimeframeView,bottomTimeframeButton,popupTimeframeWindow);
-        bottomTimeframeButton.setOnClickListener(new View.OnClickListener() {
+        }).setLayoutRes(R.layout.hzs_time_frame_pickerview, new CustomListener() {
+            @Override
+            public void customLayout(View v) {
+                //自定义布局中的控件初始化及事件处理
+                final TextView tvSubmit = v.findViewById(R.id.finish_button);
+                final TextView tvCancel = v.findViewById(R.id.cancel_button);
+
+                tvSubmit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pvBottomAccountOptions.returnData();
+                        pvBottomAccountOptions.dismiss();
+                    }
+                });
+                tvCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pvBottomAccountOptions.dismiss();
+                    }
+                });
+            }
+        })
+                .setTypeface(tf).build();
+        pvBottomAccountOptions.setPicker(items);
+        bottomAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (popupTimeframeWindow != null) {
-                    popupTimeframeWindow.setFocusable(true);
-                }
-                if(!popupTimeframeWindow.isShowing()){
-                    final int[] locationTimeframeButton = new int[2];
-                    bottomTimeframeButton.getLocationOnScreen(locationTimeframeButton);
-
-                    popupTimeframeWindow.showAtLocation(bottomTimeframeButton, Gravity.NO_GRAVITY,locationTimeframeButton[0],locationTimeframeButton[1]-popupTimeframeView.getMeasuredHeight());
-                }
+                pvBottomAccountOptions.show();
             }
         });
     }
-    private void initPopupTimeframeView(View view, Button button, PopupWindow popupWindow){
-        PopupTimeframeClickListener clickListener = new PopupTimeframeClickListener(button,popupWindow);
-        Button btn0 = (Button)view.findViewById(R.id.hzs_history_timeframe_total_btn);
-        btn0.setTag("总");
-        Button btn1 = (Button)view.findViewById(R.id.hzs_history_timeframe_year_btn);
-        btn1.setTag("年");
-        Button btn2 = (Button)view.findViewById(R.id.hzs_history_timeframe_season_btn);
-        btn2.setTag("季");
-        Button btn3 = (Button)view.findViewById(R.id.hzs_history_timeframe_month_btn);
-        btn3.setTag("月");
-        Button btn4 = (Button)view.findViewById(R.id.hzs_history_timeframe_day_btn);
-        btn4.setTag("日");
-        btn0.setOnClickListener(clickListener);
-        btn1.setOnClickListener(clickListener);
-        btn2.setOnClickListener(clickListener);
-        btn3.setOnClickListener(clickListener);
-        btn4.setOnClickListener(clickListener);
+    private void initBottomProjectButton(){
+        final View bottomProjectButton = findViewById(R.id.hzs_history_project_btn);
+        final List<String> items = BookingDataHelper.getProjectsWithIcons();
+        pvBottomProjectOptions = new OptionsPickerBuilder(HistoryActivity.this, new OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                project = BookingDataHelper.getProjects().get(options1);
+                if(project.equals(Constants.HzsNullString)){
+                    project = null;
+                }
+                showDataAsMode();
+            }
+        }).setLayoutRes(R.layout.hzs_time_frame_pickerview, new CustomListener() {
+            @Override
+            public void customLayout(View v) {
+                //自定义布局中的控件初始化及事件处理
+                final TextView tvSubmit = v.findViewById(R.id.finish_button);
+                final TextView tvCancel = v.findViewById(R.id.cancel_button);
+
+                tvSubmit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pvBottomProjectOptions.returnData();
+                        pvBottomProjectOptions.dismiss();
+                    }
+                });
+                tvCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pvBottomProjectOptions.dismiss();
+                    }
+                });
+            }
+        })
+                .setTypeface(tf).build();
+        pvBottomProjectOptions.setPicker(items);
+        bottomProjectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pvBottomProjectOptions.show();
+            }
+        });
     }
+    private void initBottomTimeFrameButton() {
+        final View bottomTimeFrameButton = findViewById(R.id.hzs_history_time_btn);
+        final List<String> items = new ArrayList<>();
+        items.add("总");
+        items.add("年");
+        items.add("季");
+        items.add("月");
+        items.add("日");
+        pvBottomTimeFrameOptions = new OptionsPickerBuilder(HistoryActivity.this, new OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                mode = options1;
+                showDataAsMode();
+            }
+        }).setLayoutRes(R.layout.hzs_time_frame_pickerview, new CustomListener() {
+            @Override
+            public void customLayout(View v) {
+                //自定义布局中的控件初始化及事件处理
+                final TextView tvSubmit = v.findViewById(R.id.finish_button);
+                final TextView tvCancel = v.findViewById(R.id.cancel_button);
+
+                tvSubmit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pvBottomTimeFrameOptions.returnData();
+                        pvBottomTimeFrameOptions.dismiss();
+                    }
+                });
+                tvCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pvBottomTimeFrameOptions.dismiss();
+                    }
+                });
+            }
+        })
+                .setTypeface(tf).build();
+        pvBottomTimeFrameOptions.setPicker(items);
+        bottomTimeFrameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pvBottomTimeFrameOptions.show();
+            }
+        });
+    }
+
+    private void initBottomMemberButton(){
+        final View bottomMemberButton = findViewById(R.id.hzs_history_person_btn);
+        final List<String> items = BookingDataHelper.getPersonsWithIcons();
+        pvBottomMemberOptions = new OptionsPickerBuilder(HistoryActivity.this, new OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                member = BookingDataHelper.getPersons().get(options1);
+                if(member.equals(Constants.HzsNullString)){
+                    member = null;
+                }
+                showDataAsMode();
+            }
+        }).setLayoutRes(R.layout.hzs_time_frame_pickerview, new CustomListener() {
+            @Override
+            public void customLayout(View v) {
+                //自定义布局中的控件初始化及事件处理
+                final TextView tvSubmit = v.findViewById(R.id.finish_button);
+                final TextView tvCancel = v.findViewById(R.id.cancel_button);
+
+                tvSubmit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pvBottomMemberOptions.returnData();
+                        pvBottomMemberOptions.dismiss();
+                    }
+                });
+                tvCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pvBottomMemberOptions.dismiss();
+                    }
+                });
+            }
+        })
+                .setTypeface(tf).build();
+        pvBottomMemberOptions.setPicker(items);
+        bottomMemberButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pvBottomMemberOptions.show();
+            }
+        });
+    }
+    private void initBottomVendorButton(){
+        final View bottomVendorButton = findViewById(R.id.hzs_history_store_btn);
+        final List<String> items = BookingDataHelper.getStoresWithIcons();
+        pvBottomVendorOptions = new OptionsPickerBuilder(HistoryActivity.this, new OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                vendor = BookingDataHelper.getStores().get(options1);
+                if(vendor.equals(Constants.HzsNullString)){
+                    vendor = null;
+                }
+                showDataAsMode();
+            }
+        }).setLayoutRes(R.layout.hzs_time_frame_pickerview, new CustomListener() {
+            @Override
+            public void customLayout(View v) {
+                //自定义布局中的控件初始化及事件处理
+                final TextView tvSubmit = v.findViewById(R.id.finish_button);
+                final TextView tvCancel = v.findViewById(R.id.cancel_button);
+
+                tvSubmit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pvBottomVendorOptions.returnData();
+                        pvBottomVendorOptions.dismiss();
+                    }
+                });
+                tvCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pvBottomVendorOptions.dismiss();
+                    }
+                });
+            }
+        })
+                .setTypeface(tf).build();
+        pvBottomVendorOptions.setPicker(items);
+        bottomVendorButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pvBottomVendorOptions.show();
+            }
+        });
+    }
+
     /*
      * get开头的函数year必须减1900, show开头的函数则不用
      * */
-    public List<HzsYearData> getTotalData(){
-        DataBaseFilter filter = new DataBaseFilter(null,null,-1,null,null,null);
+    public List<HzsYearData> getTotalData(DataBaseFilter filter){
+        //DataBaseFilter filter = new DataBaseFilter(null,null,-1,null,null,null);
         List<Tally> tallyData = App.dataBaseHelper.getTallies(filter);
         List<HzsYearData> yearData = new ArrayList<>();
         if(tallyData.size()>0){
@@ -542,10 +860,10 @@ public class HistoryActivity extends BaseActivity{
         return yearData;
     }
 
-    public List<HzsMonthData> getYearData(int year){
-        Date startDate = new Date(year,0,1);
+    public List<HzsMonthData> getYearData(DataBaseFilter filter){
+       /* Date startDate = new Date(year,0,1);
         Date endDate = new Date(year,11,31);
-        DataBaseFilter filter = new DataBaseFilter(startDate,endDate,-1,null,null,null);
+        DataBaseFilter filter = new DataBaseFilter(startDate,endDate,-1,null,null,null);*/
         List<Tally> tallyData = App.dataBaseHelper.getTallies(filter);
         List<HzsMonthData> monthData = new ArrayList<>();
         if(tallyData.size()>0){
@@ -566,20 +884,20 @@ public class HistoryActivity extends BaseActivity{
         }
         return monthData;
     }
-    public List<HzsMonthData> getSeasonData(int year, String season){
+    public List<HzsMonthData> getSeasonData(DataBaseFilter filter){
 
-        Date startDate;
+        /*Date startDate;
         Date endDate;
         switch (season){
-            case "春":
+            case Constants.SeasonSpring:
                 startDate = new Date(year,1,1);
                 endDate = new Date(year,3,31);
                 break;
-            case "夏":
+            case Constants.SeasonSummer:
                 startDate = new Date(year,4,1);
                 endDate = new Date(year,6,31);
                 break;
-            case "秋":
+            case Constants.SeasonAutumn:
                 startDate = new Date(year,7,1);
                 endDate = new Date(year,9,30);
                 break;
@@ -588,7 +906,7 @@ public class HistoryActivity extends BaseActivity{
                 endDate = new Date(year+1,0,31);
                 break;
         }
-        DataBaseFilter filter = new DataBaseFilter(startDate,endDate,-1,null,null,null);
+        DataBaseFilter filter = new DataBaseFilter(startDate,endDate,-1,null,null,null);*/
         List<Tally> tallyData = App.dataBaseHelper.getTallies(filter);
         List<HzsMonthData> monthData = new ArrayList<>();
         if(tallyData.size()>0){
@@ -609,10 +927,10 @@ public class HistoryActivity extends BaseActivity{
         }
         return monthData;
     }
-    public List<HzsDayData> getMonthData(int year,int month){
-        Date startDate = new Date(year,month,1);
+    public List<HzsDayData> getMonthData(DataBaseFilter filter){
+        /*Date startDate = new Date(year,month,1);
         Date endDate = new Date(year,month,getDaysOfMonth(year,month));
-        DataBaseFilter filter = new DataBaseFilter(startDate,endDate,-1,null,null,null);
+        DataBaseFilter filter = new DataBaseFilter(startDate,endDate,-1,null,null,null);*/
         List<Tally> tallyData = App.dataBaseHelper.getTallies(filter);
         List<HzsDayData> dayData = new ArrayList<>();
         if(tallyData.size()>0){
@@ -633,19 +951,19 @@ public class HistoryActivity extends BaseActivity{
         }
         return dayData;
     }
-    public List<Tally> getDayData(int year, int month,int day){
-        Date startDate = new Date(year,month,day);
+    public List<Tally> getDayData(DataBaseFilter filter){
+        /*Date startDate = new Date(year,month,day);
         Date endDate = new Date(year,month,day);
-        DataBaseFilter filter = new DataBaseFilter(startDate,endDate,-1,null,null,null);
+        DataBaseFilter filter = new DataBaseFilter(startDate,endDate,-1,null,null,null);*/
         List<Tally> tallyData = App.dataBaseHelper.getTallies(filter);
         return tallyData;
     }
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.hzs_history_menu, menu);
         return true;
-    }
+    }*/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id=item.getItemId();
@@ -667,57 +985,10 @@ public class HistoryActivity extends BaseActivity{
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); //Enable自定义的View
-            actionBar.setCustomView(R.layout.actionbar_history);  //绑定自定义的布局：actionbar_layout.xml
-
+            actionBar.setTitle("钱包");
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-    }
-    public class PopupTimeframeClickListener implements View.OnClickListener{
-        private Button button;
-        private PopupWindow popupWindow;
-        public PopupTimeframeClickListener(Button button, PopupWindow popupWindow){
-            this.button = button;
-            this.popupWindow = popupWindow;
-        }
-        @Override
-        public void onClick(View view) {
-            String tag = (String)view.getTag();
-            switch (tag){
-                case "总":
-                    mode = TOTAL;
-                    showDataAsTotal();
-                    button.setText(tag);
-                    popupWindow.dismiss();
-                    break;
-                case "年":
-                    mode = YEAR;
-                    showDataAsYear();
-                    button.setText(tag);
-                    popupWindow.dismiss();
-                    break;
-                case "季":
-                    mode = SEASON;
-                    showDataAsSeason();
-                    button.setText(tag);
-                    popupWindow.dismiss();
-                    break;
-                case "月":
-                    mode = MONTH;
-                    showDataAsMonth();
-                    button.setText(tag);
-                    popupWindow.dismiss();
-                    break;
-                case "日":
-                    mode = DAY;
-                    showDataAsDay();
-                    button.setText(tag);
-                    popupWindow.dismiss();
-                    break;
-
-            }
-        }
     }
 
     public static int getDaysOfMonth(int year, int month) {

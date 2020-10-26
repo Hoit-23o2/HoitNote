@@ -52,13 +52,13 @@ public class ThemeSettingActivity extends BaseActivity {
                 // Parse MyCustomStyle, using Context.obtainStyledAttributes()
                 colorPrimary = Color.parseColor(Constants.defaultColorPrimary);
                 colorAccent = Color.parseColor(Constants.defaultColorAccent);
-                ThemeHelper.changeColorOfNavigationBar(this, Constants.defaultColorPrimary);
+                ThemeHelper.changeColorOfNavigationBar(this, Color.parseColor(Constants.defaultColorPrimary));
                 ThemeHelper.setCurrentTheme(context, Theme.DEFAULT);
                 break;
             case R.id.sweetThemeBtn:
                 colorPrimary = Color.parseColor(Constants.sweetColorPrimary);
                 colorAccent = Color.parseColor(Constants.sweetColorAccent);
-                ThemeHelper.changeColorOfNavigationBar(this, Constants.sweetColorPrimary);
+                ThemeHelper.changeColorOfNavigationBar(this, Color.parseColor(Constants.sweetColorPrimary));
                 ThemeHelper.setCurrentTheme(context, Theme.SWEET);
                 break;
             default:

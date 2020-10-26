@@ -117,7 +117,6 @@ public class InformationFragment extends Fragment{
                         .addGuidePage(GuidePage.newInstance()
                                 .addHighLight(binding.informationContainer, new RelativeGuide(R.layout.guide_cam_information_fragment_1,
                                         Gravity.BOTTOM, 20)))
-                        .alwaysShow(true)
                         .show();
             }
         },Constants.delayDuration);

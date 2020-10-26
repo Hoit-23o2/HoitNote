@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 
 import androidx.annotation.Nullable;
@@ -50,6 +51,10 @@ public class AddOptionActivity extends BaseActivity {
         }
     }
     private void chooseIconButtonInit(){
+        TextView textName = findViewById(R.id.text_name);
+        textName.setText(iconType+"名称");
+        TextView textIcon = findViewById(R.id.text_icon);
+        textIcon.setText("默认"+iconType+"图标");
         findViewById(R.id.choose_icon).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

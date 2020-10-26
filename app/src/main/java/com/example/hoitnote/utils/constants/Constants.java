@@ -159,6 +159,14 @@ public class Constants {
     public static String AccountColumn_an = "accountName";
     public static String AccountColumn_ac = "accountCode";
 
+    /*
+     * Symbol table related
+     * */
+    public static String SymbolTableName = "SymbolTable";
+    public static String createSymbolTable = "CREATE TABLE IF NOT EXISTS " + SymbolTableName + " (id integer primary key autoincrement, symbolName text)";
+    public static String SymbolColumn_sn = "symbolName";
+
+    public static String symbol_ifSaveDataPackage = "ifSaveDataPackage";
 
     /*
     * BlueTooth Related
@@ -174,6 +182,7 @@ public class Constants {
     public static final int MSG_Is_Connected = 7;
     public static final int MSG_Get_SENDINFO = 8;
     public static final int MSG_Get_RECEIVEINFO = 9;
+    public static final int MSG_CANCEL = 10;
 
     public static String deviceNotSupport = "设备不支持蓝牙";
 
@@ -225,12 +234,28 @@ public class Constants {
         IconFonts.add("\uf5a2");
         IconFonts.add("\uf51e");
     }
-    public static String IconAdd = "\uf067";
+    public static final String IconAdd = "\uf067";
+    public static final String IconUpArrow = "\uf107";
+    public static final String IconDownArrow = "\uf106";
+    public static final String IconPhone = "\uf3cd";
+    public static final String IconComputer = "\uf108";
+    public static final String IconEarphone = "\uf58f";
+    public static final String IconArrowLeft = "\uf053";
+    public static final String IconArrowRight = "\uf054";
+    public static final String IconNormal = "\uf005";
+    public static final String IconIncome = "\uf060";
+    public static final String IconOutcome = "\uf061";
+    public static final String SeasonSpring = "\uf4d8 春";
+    public static final String SeasonSummer = "\uf185 夏";
+    public static final String SeasonAutumn = "\uf1bb 秋";
+    public static final String SeasonWinter = "\uf2dc 冬";
+    public static final String HzsNullString = "无";
     public static final String TypeStringProject = "项目";
     public static final String TypeStringMember = "成员";
     public static final String TypeStringVendor = "商家";
     public static int ChooseIconResultCode = 0530;
     public static int AddOptionResultCode = 0531;
+
 
     /*
      *  IconInformation table related

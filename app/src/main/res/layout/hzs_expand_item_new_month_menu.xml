@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable name="hzsMonthData" type="com.example.hoitnote.models.flow.HzsMonthData"/>
+    </data>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_margin="5dp">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="0dp"
+                android:layout_marginTop="20dp">
+
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:background="?attr/colorAccent" />
+            </androidx.cardview.widget.CardView>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/color_bar"
+                android:visibility="invisible"
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:background="?attr/colorAccent"/>
+        </LinearLayout>
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            app:cardCornerRadius="10dp"
+            android:layout_margin="5dp">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/expandable_button"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text='@{hzsMonthData.month + "月"}'
+                        style="@style/HoitTitleText"
+                        android:textSize="18sp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"/>
+                    <com.sunfusheng.marqueeview.MarqueeView
+                        android:layout_weight="1"
+                        android:clickable="false"
+                        android:focusable="false"
+                        android:id="@+id/tipsTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        app:mvAnimDuration="1000"
+                        app:mvDirection="bottom_to_top"
+                        app:mvInterval="3000"
+                        app:mvGravity="center"
+                        app:mvTextSize="14sp"
+                        app:mvTextColor="?attr/textColorSecondary"
+                        style="@style/HoitSubTitleText"
+                        app:mvSingleLine="true"/>
+                    <com.example.hoitnote.customviews.FontAwesome
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:text="\uf138"
+                        android:gravity="center"
+                        style="@style/HoitTitleText"/>
+                </LinearLayout>
+                <net.cachapa.expandablelayout.ExpandableLayout
+                    android:id="@+id/expandable_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:el_duration="1000"
+                    app:el_expanded="false"
+                    app:el_parallax="0.5">
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </net.cachapa.expandablelayout.ExpandableLayout>
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!--<androidx.constraintlayout.widget.ConstraintLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="70dp">
+
+            <TextView
+                android:id="@+id/hzs_expand_item_main_menu_first_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@={hzsMonthData.month}"
+                android:textSize="24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/hzs_expand_item_second_line"
+                app:layout_constraintHorizontal_bias="0.468"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.105" />
+
+            <TextView
+                android:id="@+id/hzs_expand_item_main_menu_second_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@={hzsMonthData.year}"
+                android:textSize="18dp"
+                app:layout_constraintEnd_toEndOf="@+id/hzs_expand_item_main_menu_first_header"
+                app:layout_constraintStart_toStartOf="@+id/hzs_expand_item_main_menu_first_header"
+                app:layout_constraintTop_toBottomOf="@+id/hzs_expand_item_main_menu_first_header" />
+
+            <ImageView
+                android:id="@+id/hzs_expand_item_second_line"
+                android:layout_width="1dp"
+                android:layout_height="60dp"
+                android:background="@android:color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.239"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/hzs_expand_item_main_menu_balance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:text="@={hzsMonthData.balance}"
+                android:textSize="30dp"
+                app:layout_constraintBottom_toBottomOf="@+id/hzs_expand_item_main_menu_jieyu"
+                app:layout_constraintStart_toEndOf="@+id/hzs_expand_item_main_menu_jieyu"
+                app:layout_constraintTop_toTopOf="@+id/hzs_expand_item_main_menu_jieyu"
+                app:layout_constraintVertical_bias="0.6" />
+
+            <TextView
+                android:id="@+id/hzs_expand_item_main_menu_jieyu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="结余"
+                android:textSize="15dp"
+                app:layout_constraintBottom_toTopOf="@+id/hzs_expand_item_main_menu_zhichu"
+                app:layout_constraintEnd_toEndOf="@+id/hzs_expand_item_main_menu_zhichu"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/hzs_expand_item_main_menu_zhichu" />
+
+            <TextView
+                android:id="@+id/hzs_expand_item_main_menu_shouru"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="108dp"
+                android:layout_marginLeft="108dp"
+                android:text="收入"
+                android:textSize="15dp"
+                app:layout_constraintBottom_toBottomOf="@+id/hzs_expand_item_main_menu_zhichu"
+                app:layout_constraintStart_toStartOf="@+id/hzs_expand_item_main_menu_zhichu"
+                app:layout_constraintTop_toTopOf="@+id/hzs_expand_item_main_menu_zhichu"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/hzs_expand_item_main_menu_income"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:text="@={hzsMonthData.income}"
+                android:textSize="15dp"
+                app:layout_constraintBottom_toBottomOf="@+id/hzs_expand_item_main_menu_shouru"
+                app:layout_constraintStart_toEndOf="@+id/hzs_expand_item_main_menu_shouru"
+                app:layout_constraintTop_toTopOf="@+id/hzs_expand_item_main_menu_shouru" />
+
+            <TextView
+                android:id="@+id/hzs_expand_item_main_menu_zhichu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="支出"
+                android:textSize="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.187"
+                app:layout_constraintStart_toEndOf="@+id/hzs_expand_item_second_line"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.8" />
+
+            <TextView
+                android:id="@+id/hzs_expand_item_main_menu_outcome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:text="@={hzsMonthData.outcome}"
+                android:textSize="15dp"
+                app:layout_constraintBottom_toBottomOf="@+id/hzs_expand_item_main_menu_zhichu"
+                app:layout_constraintStart_toEndOf="@+id/hzs_expand_item_main_menu_zhichu"
+                app:layout_constraintTop_toTopOf="@+id/hzs_expand_item_main_menu_zhichu" />
+
+            <ImageView
+                android:id="@+id/hzs_expand_item_main_menu_image_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:src="@drawable/hzs_down"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.958"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@android:color/black" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>-->
+        <!--<net.cachapa.expandablelayout.ExpandableLayout
+            android:id="@+id/expandable_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:el_duration="1000"
+            app:el_expanded="true"
+            app:el_parallax="0.5">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </net.cachapa.expandablelayout.ExpandableLayout>-->
+    </LinearLayout>
+
+
+
+</layout>

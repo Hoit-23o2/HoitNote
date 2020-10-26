@@ -158,6 +158,7 @@ public class RecycleActivity extends BaseActivity {
                                 tallyListAdapter.remove(selected.keyAt(i));
                                 App.backupDataBaseHelper.delTally(tallyViewModel.getTally());
                                 App.dataBaseHelper.addTally(tallyViewModel.getTally());
+                                App.dataBaseHelper.addAccount(tallyViewModel.getTally().getAccount());
                             }
                         }
                         /*Close CAB*/

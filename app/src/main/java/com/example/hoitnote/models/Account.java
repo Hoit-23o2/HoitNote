@@ -47,7 +47,6 @@ public class Account implements Serializable {
 
     public AccountJudgeType checkIfAccountValid(){
         ArrayList<Account> existAccounts = App.dataBaseHelper.getAccounts();
-
         for (Account existAccount:
              existAccounts) {
             if(existAccount.accountCode.equals(this.accountCode)){
@@ -96,7 +95,7 @@ public class Account implements Serializable {
                 accountRes,
                 String.valueOf(incomes),
                 String.valueOf(outcomes),
-                "",
+                String.valueOf(incomes - outcomes),
                 true,
                 context,
                 clickType

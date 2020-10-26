@@ -16,6 +16,7 @@ import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.constants.Maps;
 import com.example.hoitnote.utils.enums.ActionType;
 import com.example.hoitnote.utils.enums.ClickType;
+import com.example.hoitnote.utils.enums.IconType;
 import com.example.hoitnote.utils.helpers.BlueToothHelper;
 import com.example.hoitnote.utils.helpers.DataBaseHelper;
 import com.example.hoitnote.utils.helpers.FileHelper;
@@ -41,17 +42,27 @@ public class BaseViewModel extends BaseObservable  {
         ArrayList<TallyViewModel> tallyViewModels = new ArrayList<>();
         for (Tally tally:
                 tallies) {
-            TallyViewModel tallyViewModel = new TallyViewModel(
-                    context,
-                    tally,
-                    "\uf805",
-                    ThemeHelper.generateColor(context),
-                    Maps.actionTypeToTypeColorMap.get(tally.getActionType())
-            );
+            TallyViewModel tallyViewModel = null;
+            if(tally.getActionType() == ActionType.OUTCOME){
+                tallyViewModel = new TallyViewModel(
+                        context,
+                        tally,
+                        App.dataBaseHelper.getIconInformation(tally.getClassification1(), IconType.OUTCOMECLASS1),
+                        ThemeHelper.generateColor(context)
+                );
+            }
+            else if(tally.getActionType() == ActionType.INCOME){
+                tallyViewModel = new TallyViewModel(
+                        context,
+                        tally,
+                        App.dataBaseHelper.getIconInformation(tally.getClassification1(), IconType.INCOMECLASS1),
+                        ThemeHelper.generateColor(context)
+                );
+            }
             tallyViewModels.add(tallyViewModel);
         }
         /*测试用*/
-        if(tallyViewModels.size() == 0){
+        /*if(tallyViewModels.size() == 0){
             tallyViewModels.add(
                     new TallyViewModel(context, new Tally(
                             20.0,
@@ -66,8 +77,7 @@ public class BaseViewModel extends BaseObservable  {
                             "大创",
                             "楼下超市"
 
-                    ), "\uf805", ThemeHelper.generateColor(context),
-                            Maps.actionTypeToTypeColorMap.get(ActionType.INCOME))
+                    ), "\uf805", ThemeHelper.generateColor(context))
             );
             tallyViewModels.add(
                     new TallyViewModel(context,new Tally(
@@ -83,10 +93,9 @@ public class BaseViewModel extends BaseObservable  {
                             "大创",
                             "楼下超市"
 
-                    ), "\uf805", ThemeHelper.generateColor(context),
-                            Maps.actionTypeToTypeColorMap.get(ActionType.OUTCOME))
+                    ), "\uf805", ThemeHelper.generateColor(context))
             );
-        }
+        }*/
         return tallyViewModels;
     }
 

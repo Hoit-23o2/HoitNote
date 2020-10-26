@@ -19,7 +19,9 @@ import com.example.hoitnote.utils.enums.BookingType;
 import com.example.hoitnote.utils.enums.IconType;
 import com.example.hoitnote.utils.helpers.BookingDataHelper;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ManageClassActivity extends BaseActivity {
     private String newClassName;
@@ -97,18 +99,16 @@ public class ManageClassActivity extends BaseActivity {
             App.dataBaseHelper.addClassification(classification1,newClassName,actionType);
             App.dataBaseHelper.addIconInformation(classification1+newClassName, class2Type,newClassIconCode);
             int id = data.getIntExtra("id",0);
-            adapter.classifications2.get(id).add(adapter.classifications2.get(id).size()-1,newClassName);
-            //adapter.classifications2.addAll(BookingDataHelper.getClassifications2(BookingType.values()[actionType.ordinal()]));
-            adapter.notifyDataSetChanged();
+            adapter.addClassificaition2(id,newClassName);
         } else if (requestCode == 2 && resultCode == Constants.AddOptionResultCode) {   //增加一级分类
             newClassIconCode = data.getStringExtra("icon_code");
             newClassName = data.getStringExtra("class_name");
             ActionType actionType = ActionType.values()[data.getIntExtra("action_type",0)];
             BookingDataHelper.addClassification1(newClassName,actionType);
             App.dataBaseHelper.addIconInformation(newClassName, class1Type,newClassIconCode);
-            App.dataBaseHelper.addIconInformation(newClassName+"无", class2Type,newClassIconCode);
+            App.dataBaseHelper.addIconInformation(newClassName+"无", class2Type,Constants.IconNormal);
             adapter.classifications1.add(newClassName);
-            adapter.classifications2.add(Arrays.asList("无","添加二级分类"));
+            adapter.classifications2.add(new ArrayList<String>(Arrays.asList("无","添加二级分类")));
             adapter.notifyDataSetChanged();
         }
     }

@@ -48,10 +48,15 @@ public class MainViewModel extends BaseViewModel {
     /*
     * 根据GroupType对TallyViewModel进行分组
     * */
-    public HashMap<String, ArrayList<TallyViewModel>> groupTallyViewModel(ArrayList<TallyViewModel> tallyViewModels,
+    public TreeMap<String, ArrayList<TallyViewModel>> groupTallyViewModel(ArrayList<TallyViewModel> tallyViewModels,
                                                                           GroupType groupType){
-        HashMap<String, ArrayList<TallyViewModel>> tallyViewModelWithGroups = new
-                HashMap<>();
+        TreeMap<String, ArrayList<TallyViewModel>> tallyViewModelWithGroups = new
+                TreeMap<>(new Comparator<String>() {
+            @Override
+            public int compare(String s, String t1) {
+                return -s.compareTo(t1);
+            }
+        });
         if(groupType == GroupType.DATE){
             for (TallyViewModel tallyViewModel:
                  tallyViewModels) {

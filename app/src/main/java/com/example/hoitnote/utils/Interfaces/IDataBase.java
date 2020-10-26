@@ -6,6 +6,7 @@ import com.example.hoitnote.models.Account;
 import com.example.hoitnote.models.Tally;
 import com.example.hoitnote.utils.commuications.Config;
 import com.example.hoitnote.utils.commuications.DataBaseFilter;
+import com.example.hoitnote.utils.commuications.DataPackage;
 import com.example.hoitnote.utils.enums.ActionType;
 import com.example.hoitnote.utils.enums.IconType;
 import com.example.hoitnote.utils.enums.Theme;
@@ -15,6 +16,18 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public interface IDataBase {
+    /*
+     * 标志表相关
+     * */
+    boolean ifHaveSymbol(String symbolName);
+    boolean saveSymbol(String symbolName);
+    boolean delSymbol(String symbolName);
+
+    /*
+     * 同步相关
+     * */
+    void clearTable(String tableName);
+    boolean saveDataPackage(DataPackage dataPackage);
 
     /*
      * 删除数据库

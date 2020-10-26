@@ -19,6 +19,7 @@ import com.example.hoitnote.utils.App;
 import com.example.hoitnote.utils.Interfaces.IDataBase;
 import com.example.hoitnote.utils.commuications.Config;
 import com.example.hoitnote.utils.commuications.DataBaseFilter;
+import com.example.hoitnote.utils.commuications.DataPackage;
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.ActionType;
 import com.example.hoitnote.utils.enums.FilterType;
@@ -31,8 +32,8 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
 /*
-* 该类用于实现数据库交互方法,可能会用到SQLiteOpenHelper
-* */
+ * 该类用于实现数据库交互方法,可能会用到SQLiteOpenHelper
+ * */
 public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
 
     private String name;
@@ -60,6 +61,14 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         initialize(context,name);
     }
 
+    public void setSqLiteDatabase(SQLiteDatabase sqLiteDatabase) {
+        this.sqLiteDatabase = sqLiteDatabase;
+        if(ifHaveSymbol(Constants.symbol_ifSaveDataPackage)){
+            hasCreated = false;
+            delSymbol(Constants.symbol_ifSaveDataPackage);
+        }
+    }
+
     public void initialize(Context context,String name){
         this.mContext = context;
         this.name = name;
@@ -73,8 +82,8 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         sqLiteDatabase.execSQL(Constants.createThirdPartyTable);
         sqLiteDatabase.execSQL(Constants.createAccountTable);
         sqLiteDatabase.execSQL(Constants.createIconInformationTable);
+        sqLiteDatabase.execSQL(Constants.createSymbolTable);
         hasCreated = false;
-        Toast.makeText(mContext,"数据库创建完毕", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -98,8 +107,8 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         stringBuilder.append(Constants.tallyTableName);
         if (filter != null) {
             /*
-            * find by id
-            * */
+             * find by id
+             * */
             if (filter.getId() != DataBaseFilter.IDInvalid) {
                 stringBuilder.append(" where ");
                 stringBuilder.append("(id=");
@@ -108,8 +117,8 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 ifAdd = true;
             }
             /*
-            * find by classification
-            * */
+             * find by classification
+             * */
             if (filter.getClassifications() != null && filter.getClassifications().size() != 0) {
                 int i, lenc = filter.getClassifications().size();
                 if (ifAdd) {
@@ -145,8 +154,8 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 ifAdd = true;
             }
             /*
-            * find by date
-            * */
+             * find by date
+             * */
             if (filter.getStartDate() != null || filter.getEndDate() != null) {
                 if (ifAdd) {
                     stringBuilder.append("and ");
@@ -179,8 +188,8 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 ifAdd = true;
             }
             /*
-            * find by account
-            * */
+             * find by account
+             * */
             if(filter.getAccount() != null){
                 if (ifAdd) {
                     stringBuilder.append("and ");
@@ -198,8 +207,8 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 ifAdd = true;
             }
             /*
-            * find by actionType
-            * */
+             * find by actionType
+             * */
             if(filter.getActionType() != null){
                 if (ifAdd) {
                     stringBuilder.append("and ");
@@ -214,8 +223,8 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                 ifAdd = true;
             }
             /*
-            * find by thirdParty project
-            * */
+             * find by thirdParty project
+             * */
             if(filter.getProjectName() != null){
                 if (ifAdd) {
                     stringBuilder.append("and ");
@@ -553,7 +562,11 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
                     }
                 }
                 if(i == len){
-                    classification2List.add(newClassification2);
+                    if(len > 0 && newClassification2.equals("无")){
+                        classification2List.add(0,newClassification2);
+                    }else{
+                        classification2List.add(newClassification2);
+                    }
                 }
             }while(cursor.moveToNext());
         }
@@ -630,7 +643,11 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
         if(cursor.moveToFirst()){
             do{
                 String newString = cursor.getString(cursor.getColumnIndex(Constants.ThirdPartyColumn_ct));
-                thirdPartyList.add(newString);
+                if(newString.equals("无") && thirdPartyList.size() > 0){
+                    thirdPartyList.add(0,newString);
+                }else{
+                    thirdPartyList.add(newString);
+                }
             }while(cursor.moveToNext());
         }
         cursor.close();
@@ -770,13 +787,84 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
             actionStr = "delete from " + Constants.IconInformationTableName + " where "
                     + Constants.IconInformationColumn_in + "='" + iconName + "' and "
                     + Constants.IconInformationColumn_it + "=" + iconType.ordinal();
-            sqLiteDatabase.execSQL(actionStr,null);
+            sqLiteDatabase.execSQL(actionStr);
         }
         cursor.close();
         return ret;
     }
 
-    public void setSqLiteDatabase(SQLiteDatabase sqLiteDatabase) {
-        this.sqLiteDatabase = sqLiteDatabase;
+    @Override
+    public boolean saveSymbol(String symbolName){
+        boolean ret = false;
+        String actionStr;
+        if(!ifHaveSymbol(symbolName)){
+            actionStr = "insert into " + Constants.SymbolTableName + " ("
+                    + Constants.SymbolColumn_sn + ") "
+                    + "values(?)";
+            sqLiteDatabase.execSQL(actionStr,new Object[]{symbolName});
+            ret = true;
+        }
+        return ret;
+    }
+
+    @Override
+    public boolean delSymbol(String symbolName){
+        boolean ret = false;
+        String actionStr;
+        if(ifHaveSymbol(symbolName)){
+            actionStr = "delete from " +  Constants.SymbolTableName + " where "
+                    + Constants.SymbolColumn_sn + "='" + symbolName + "'";
+            sqLiteDatabase.execSQL(actionStr);
+            ret = true;
+        }
+        return ret;
+    }
+
+
+    @Override
+    public boolean ifHaveSymbol(String symbolName) {
+        boolean ret = false;
+        String actionStr = "select * from " + Constants.SymbolTableName + " where "
+                + Constants.SymbolColumn_sn + "='" +  symbolName  +"'";
+        Cursor cursor = sqLiteDatabase.rawQuery(actionStr,null);
+        if(cursor.moveToFirst()){
+            ret = true;
+        }
+        cursor.close();
+        return ret;
+    }
+
+    public void clearTable(String tableName){
+        sqLiteDatabase.execSQL("delete from " + tableName);
+    }
+
+    @Override
+    public boolean saveDataPackage(DataPackage dataPackage) {
+        if(dataPackage == null) return false;
+        clearTable(Constants.tallyTableName);
+        clearTable(Constants.classificationTableName);
+        clearTable(Constants.configTableName);
+        clearTable(Constants.ThirdPartyTableName);
+        clearTable(Constants.AccountTableName);
+        clearTable(Constants.IconInformationTableName);
+        clearTable(Constants.SymbolTableName);
+
+        saveSymbol(Constants.symbol_ifSaveDataPackage);
+
+        ArrayList<Config> configArrayList = dataPackage.getConfigs();
+        for(Config config : configArrayList){
+            saveConfig(config,null);
+        }
+
+        ArrayList<Tally> tallyArrayList = dataPackage.getAllTallies();
+        for(Tally tally : tallyArrayList){
+            addTally(tally);
+            addAccount(tally.getAccount());
+            addClassification(tally.getClassification1(),tally.getClassification2(),tally.getActionType());
+            addThirdParty(ThirdPartyType.PROJECT,tally.getProject());
+            addThirdParty(ThirdPartyType.MEMBER,tally.getMember());
+            addThirdParty(ThirdPartyType.VENDOR,tally.getVendor());
+        }
+        return true;
     }
 }

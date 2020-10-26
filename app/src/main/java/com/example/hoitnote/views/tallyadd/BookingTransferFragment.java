@@ -3,6 +3,8 @@ package com.example.hoitnote.views.tallyadd;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -43,11 +45,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link BookingTransferFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class BookingTransferFragment extends BookingBaseFragment {
     private TextView outcomeAccountTextView;
     private TextView incomeAccountTextView;
@@ -55,7 +52,8 @@ public class BookingTransferFragment extends BookingBaseFragment {
     private String incomeAccountString;
     private OptionsPickerView pvOutcomeAccountOptions;
     private OptionsPickerView pvIncomeAccountOptions;
-
+    private Account nowAccount;
+    private int lockedAccount = 0; //0代表Outcome,1代表Income是用户的账户
     public BookingTransferFragment(BookingType bookingType) {
         super(bookingType);
     }
@@ -72,7 +70,6 @@ public class BookingTransferFragment extends BookingBaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_booking_transfer, container, false);
-        allItemsLinearLayout = (LinearLayout)view.findViewById(R.id.hzs_booking_all_items);
         clickButtonInit(view);
 
         return view;
@@ -83,12 +80,42 @@ public class BookingTransferFragment extends BookingBaseFragment {
         super.clickButtonInit(view);
         outcomeAccountButtonInit(view);
         incomeAccountButtonInit(view);
-
+        changeAccountButtonInit(view);
         restoreTempTally();
         showTempTally();
     }
-    private void outcomeAccountButtonInit(View view){
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        initNowAccount();
+    }
+
+    private void initNowAccount(){
+        nowAccount = BookingDataHelper.getNowAccount();
+        if(nowAccount.getAccountCode() == null || nowAccount.getAccountCode() == ""){
+            outcomeAccountString = nowAccount.getAccountName();
+        }else{
+            outcomeAccountString = nowAccount.getAccountName()+" "+nowAccount.getAccountCode();
+        }
+        outcomeAccountTextView.setText(outcomeAccountString);
+        lockedAccount = 0;
+    }
+    private void changeAccountButtonInit(View view){
+        View changeAccountButton = view.findViewById(R.id.change_account_button);
+        changeAccountButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String temp = outcomeAccountString;
+                outcomeAccountString = incomeAccountString;
+                incomeAccountString = temp;
+                incomeAccountTextView.setText(incomeAccountString);
+                outcomeAccountTextView.setText(outcomeAccountString);
+                lockedAccount = lockedAccount ^ 1;
+            }
+        });
+    }
+    private void outcomeAccountButtonInit(View view){
         final View chooseClassButton = view.findViewById(R.id.hzs_booking_outcome_account);
         final List<String> accountItems = BookingDataHelper.getAccounts();
         outcomeAccountTextView = view.findViewById(R.id.hzs_booking_outcome_account);
@@ -139,7 +166,9 @@ public class BookingTransferFragment extends BookingBaseFragment {
         chooseClassButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pvOutcomeAccountOptions.show();
+                if(lockedAccount != 0){
+                    pvOutcomeAccountOptions.show();
+                }
             }
         });
     }
@@ -195,7 +224,9 @@ public class BookingTransferFragment extends BookingBaseFragment {
         chooseClassButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pvIncomeAccountOptions.show();
+                if(lockedAccount != 1){
+                    pvIncomeAccountOptions.show();
+                }
             }
         });
     }
@@ -223,6 +254,8 @@ public class BookingTransferFragment extends BookingBaseFragment {
         });
 
         dialog.show();
+        if(dialog.getWindow() != null)
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
     private void showAddIncomeAccountDialog(){
         View view = LayoutInflater.from(getContext()).inflate(R.layout.hzs_add_class_view,null,false);
@@ -248,6 +281,8 @@ public class BookingTransferFragment extends BookingBaseFragment {
         });
 
         dialog.show();
+        if(dialog.getWindow() != null)
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
 
     public void saveTransferTally(){
