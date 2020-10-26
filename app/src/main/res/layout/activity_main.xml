@@ -100,21 +100,26 @@
                         android:text="@string/rencent_seven_hint" />
                 </LinearLayout>
 
-
-                <ExpandableListView
-                    android:id="@+id/recentTalliesExpandableListView"
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:divider="@null"
-                    android:groupIndicator="@null" />
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/emptyHintTextView"
+                        android:textAlignment="center"
+                        style="@style/HoitSubTitleText"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/empty_hint"
+                        android:gravity="center" />
 
-                <TextView
-                    android:textAlignment="center"
-                    style="@style/HoitSubTitleText"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="@string/empty_hint"
-                    android:gravity="center" />
+                    <ExpandableListView
+                        android:id="@+id/recentTalliesExpandableListView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:divider="@null"
+                        android:groupIndicator="@null" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -98,6 +98,8 @@ public class ConvertHelper {
      * 该类型对应的字符串
      * */
     public static String cutoffAccountCode(String accountCode){
+        if(accountCode == null)
+            return "";
         if(accountCode.length() < 4)
             return accountCode;
         accountCode = accountCode.substring(accountCode.length() - 4);

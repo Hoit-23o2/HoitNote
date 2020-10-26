@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="com.example.hoitnote.utils.helpers.ConvertHelper"/>
 
         <import type="android.view.View" />
 
@@ -72,7 +73,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
-                    android:text="@{accountCardViewModel.account.accountCode, default=3774}"
+                    android:text="@{ConvertHelper.cutoffAccountCode(accountCardViewModel.account.accountCode), default=3774}"
                     android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />

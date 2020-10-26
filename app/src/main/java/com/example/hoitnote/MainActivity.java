@@ -74,7 +74,6 @@ public class MainActivity extends BaseActivity {
         binding = DataBindingUtil.setContentView(this,R.layout.activity_main);
         mainViewModel = new MainViewModel(context);
         BookingDataHelper.getAccounts();
-        initActivity();
     }
 
     private void initActivity() {
@@ -102,14 +101,16 @@ public class MainActivity extends BaseActivity {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 if(position == accountCardAdapter.getItemCount() - 1){
-                    binding.recentTalliesExpandableListView.setVisibility(View.GONE);
-                    binding.recentHintTextView.setVisibility(View.GONE);
-                    binding.floatingButton.setVisibility(View.GONE);
+                    binding.recentTalliesExpandableListView.setVisibility(View.INVISIBLE);
+                    binding.recentHintTextView.setVisibility(View.INVISIBLE);
+                    binding.floatingButton.setVisibility(View.INVISIBLE);
+                    binding.emptyHintTextView.setVisibility(View.VISIBLE);
                 }
                 else{
                     binding.recentTalliesExpandableListView.setVisibility(View.VISIBLE);
                     binding.recentHintTextView.setVisibility(View.VISIBLE);
                     binding.floatingButton.setVisibility(View.VISIBLE);
+                    binding.emptyHintTextView.setVisibility(View.INVISIBLE);
                     currentAccountCardFragment = accountCardAdapter.getFragment(position);
                     updateCurrentAccountCardListView();
                 }
@@ -178,14 +179,26 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onResume() {
         super.onResume();
+        /*保证每次更新Card*/
+        initActivity();
         updateCurrentAccountCardListView();
     }
 
-    /*更新RencentTally*/
+    /*更新RecentTally*/
     public void updateCurrentAccountCardListView(){
         if(currentAccountCardFragment != null){
             if(currentAccountCardFragment.getBinding() != null){
                 ArrayList<TallyViewModel> tallyViewModels = mainViewModel.getRecentTallyViewModelsByCardFragment(currentAccountCardFragment);
+                if(tallyViewModels.size() == 0){
+                    binding.recentTalliesExpandableListView.setVisibility(View.INVISIBLE);
+                    binding.recentHintTextView.setVisibility(View.INVISIBLE);
+                    binding.emptyHintTextView.setVisibility(View.VISIBLE);
+                }
+                else{
+                    binding.recentTalliesExpandableListView.setVisibility(View.VISIBLE);
+                    binding.recentHintTextView.setVisibility(View.VISIBLE);
+                    binding.emptyHintTextView.setVisibility(View.INVISIBLE);
+                }
                 /*分组*/
                 TreeMap<String, ArrayList<TallyViewModel>> tallyViewModelWithGroups = mainViewModel.
                         groupTallyViewModel(tallyViewModels, GroupType.DATE);
@@ -299,6 +312,7 @@ public class MainActivity extends BaseActivity {
 
         }
     }
+
     private void onLongClickImplement(final AccountCardFragment accountCardFragment, View v){
         PopupwindowDialogNormalBinding dialogNormalBinding =
                 DataBindingUtil.inflate(
