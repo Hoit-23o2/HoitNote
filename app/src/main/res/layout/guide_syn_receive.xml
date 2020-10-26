@@ -12,8 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center"
-        android:layout_marginLeft="10dp">
+        android:gravity="center">
 <!--        <ImageView-->
 <!--            android:layout_width="50dp"-->
 <!--            android:layout_height="50dp"-->
@@ -27,7 +26,8 @@
             android:gravity="center"
             android:textSize="18sp"
             android:textColor="?attr/colorPrimary"
-            android:text="查看流水或新建记账信息"
+            android:text="点击此按钮，HoitNote进入等待数据阶段\n此时可以让其他手机上的HoitNote把数据传递过来\n数据同步成功后会自动重启APP"
+            android:layout_marginBottom="20dp"
             />
     </LinearLayout>
 

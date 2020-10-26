@@ -22,9 +22,12 @@ public class ClientThread extends Thread{
     public BluetoothDevice device = null;
     public BlueToothHelper.BlueToothHandler mHandler;
     public BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-
+    private BlueToothHelper blueToothHelper;
     private ReceiveMessageThread receiveMessageThread;
-    public ClientThread(BluetoothDevice device, BlueToothHelper.BlueToothHandler mHandler) {
+    public ClientThread(BluetoothDevice device,
+                        BlueToothHelper.BlueToothHandler mHandler,
+                        BlueToothHelper blueToothHelper) {
+        this.blueToothHelper = blueToothHelper;
         this.device = device;
         this.mHandler = mHandler;
     }
@@ -50,7 +53,7 @@ public class ClientThread extends Thread{
                     {
                         is = socket.getInputStream();//输入到本机设备的数据流
                         os = socket.getOutputStream();//输出到远端设备的数据流
-                        receiveMessageThread = new ReceiveMessageThread(is,os,mHandler);
+                        receiveMessageThread = new ReceiveMessageThread(is,os,mHandler,blueToothHelper);
                         receiveMessageThread.start();
                         break;
                     }

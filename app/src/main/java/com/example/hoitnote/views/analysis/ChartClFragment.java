@@ -136,7 +136,6 @@ public class ChartClFragment extends Fragment {
                     .addGuidePage(GuidePage.newInstance()
                             .addHighLight(binding.filterTabs, new RelativeGuide(R.layout.guide_cam_chart_cl_time_selector,
                                     Gravity.TOP, 20)))
-                    .alwaysShow(true)
                     .show();
         }
     }

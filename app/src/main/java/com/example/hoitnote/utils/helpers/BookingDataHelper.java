@@ -172,7 +172,6 @@ public class BookingDataHelper {
             initPersons();
             initStores();
             initProjects();
-            initAccounts();
         }else{
             ArrayList<Account> accountArrayList = new ArrayList<>();
             accountArrayList = App.dataBaseHelper.getAccounts();

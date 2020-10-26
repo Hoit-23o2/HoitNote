@@ -25,10 +25,12 @@ public class ReceiveMessageThread extends Thread {
     }
     private SendInfo sendInfo;
     private ReceiveInfo receiveInfo;
-
+    private BlueToothHelper blueToothHelper;
     private BlueToothHelper.BlueToothHandler mHandler;
-    public ReceiveMessageThread(InputStream is,OutputStream os, BlueToothHelper.BlueToothHandler mHandler) {
-
+    public ReceiveMessageThread(InputStream is,OutputStream os,
+                                BlueToothHelper.BlueToothHandler mHandler,
+                                BlueToothHelper blueToothHelper) {
+        this.blueToothHelper = blueToothHelper;
         this.mHandler = mHandler;
         this.is = is;
         this.os = os;
@@ -47,24 +49,57 @@ public class ReceiveMessageThread extends Thread {
                     if (is != null) {
                         count = is.available();
                     }
-                    byte[] buf = new byte[1024];
-                    if(is !=null){
-                        is.read(buf,0,buf.length);//变量分别是缓冲区，读取起始位置，缓冲长度
-                        Object object = new Object();
-                        object = BlueToothHelper.toObject(buf);
-                        if(object instanceof ReceiveInfo){
-                            receiveInfo = (ReceiveInfo)object;
-                            this.mHandler.obtainMessage(Constants.MSG_Get_RECEIVEINFO).sendToTarget();
-                        }else if(object instanceof SendInfo){
-                            sendInfo = (SendInfo)object;
-                            this.mHandler.obtainMessage(Constants.MSG_Get_SENDINFO).sendToTarget();
-                        }else if(object instanceof DataPackage){
-                            dataPackage = (DataPackage)object;
-                            this.mHandler.obtainMessage(Constants.MSG_RECEIVE_SUCCESS).sendToTarget();
+
+                    if(is != null){
+                        int a = 0;
+                        int a1 = 0;
+                        /*接受sendInfo*/
+                        if(blueToothHelper.getSendInfo()==null){
+                            a = is.available();
                         }
                         else {
-                            Log.d("null object","+++++++++++++++++++++++++++++++++++++");
+                            a = blueToothHelper.getSendInfo().getByteSize();
                         }
+                        Log.d("size of A:",a+"---------------------------------");
+                        byte [] buf = new byte[a];
+                        while (a1!=a){
+                            a1 += is.read(buf,a1,a-a1);
+                        }
+                        /*
+                        int a2 = -1;
+                        while (a != a2){
+                            a2 = a;
+                            Thread.sleep(20000);
+
+                            Log.d("size of AAAAAAA:",a+"---------------------------------");
+                        }*/
+
+                        //Thread.sleep(5000);
+                        //is.read(buf,0,buf.length);//变量分别是缓冲区，读取起始位置，缓冲长度
+
+
+                        if(a != 0){
+                            Object object = new Object();
+                            object = BlueToothHelper.toObject(buf);
+                            if(object instanceof ReceiveInfo){
+                                receiveInfo = (ReceiveInfo)object;
+                                this.mHandler.obtainMessage(Constants.MSG_Get_RECEIVEINFO).sendToTarget();
+                            }else if(object instanceof SendInfo){
+                                sendInfo = (SendInfo)object;
+                                this.mHandler.obtainMessage(Constants.MSG_Get_SENDINFO).sendToTarget();
+                            }else if(object instanceof DataPackage){
+                                dataPackage = (DataPackage)object;
+                                this.mHandler.obtainMessage(Constants.MSG_RECEIVE_SUCCESS).sendToTarget();
+                            }
+                            else {
+                                Log.d("null object","+++++++++++++++++++++++++++++++++++++");
+                            }
+                        }
+                        else{
+                            Log.d("end ","+++++++++++++++++++++++++++++++++++++");
+                            break;
+                        }
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

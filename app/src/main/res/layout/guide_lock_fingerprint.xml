@@ -12,8 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center"
-        android:layout_marginLeft="10dp">
+        android:gravity="center">
 <!--        <ImageView-->
 <!--            android:layout_width="50dp"-->
 <!--            android:layout_height="50dp"-->
@@ -27,7 +26,8 @@
             android:gravity="center"
             android:textSize="18sp"
             android:textColor="?attr/colorPrimary"
-            android:text="查看流水或新建记账信息"
+            android:text="指纹解锁\n关联到本机的指纹库\n要使用的话需要在本机注册指纹\n并开启指纹功能"
+            android:layout_marginBottom="20dp"
             />
     </LinearLayout>
 

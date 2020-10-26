@@ -22,12 +22,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/HoitTitleText"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="18sp"
             android:background="@drawable/guide_cam_text_rect"
             android:padding="10dp"
             android:gravity="center"
-            android:textSize="18sp"
-            android:textColor="?attr/colorPrimary"
-            android:text="查看流水或新建记账信息"
+            android:text="点击加号创建银行卡账户"
             />
     </LinearLayout>
 

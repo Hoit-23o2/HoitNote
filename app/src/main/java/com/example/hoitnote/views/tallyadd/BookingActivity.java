@@ -50,7 +50,6 @@ public class BookingActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_booking);
         Account account = (Account)NavigationHelper.getNavigationParameter(this,Constants.mainParamTag);
-        ToastHelper.showToast(this,account.getAccountName(),Toast.LENGTH_SHORT);
         BookingDataHelper.setNowAccount(account);
         ActionBarInit();
         ViewPagerInit();
@@ -120,21 +119,16 @@ public class BookingActivity extends BaseActivity {
 
     public void saveTally(){
         if(pageChangeListener.getCurrentPage() == 0){
-
             Tally tally = ((BookingOutcomeFragment)outcomeFragment).getOutcomeTally();
             App.dataBaseHelper.addTally(tally);
-            Toast.makeText(BookingActivity.this,"Click"+tally.getMoney(),Toast.LENGTH_SHORT).show();
         }else if(pageChangeListener.getCurrentPage() == 1){
             Tally tally = ((BookingIncomeFragment)incomeFragment).getIncomeTally();
             App.dataBaseHelper.addTally(tally);
-            Toast.makeText(BookingActivity.this,"Click"+tally.getMoney(),Toast.LENGTH_SHORT).show();
         }
         else{
             ((BookingTransferFragment)transferFragment).saveTransferTally();
         }
-        Intent intent = new Intent(this, HistoryActivity.class);
-        startActivity(intent);
-        finish();
+        NavigationHelper.closeCurrentActivity(context);
     }
 
     @Override

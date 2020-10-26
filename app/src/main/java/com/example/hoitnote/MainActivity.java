@@ -73,7 +73,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this,R.layout.activity_main);
         mainViewModel = new MainViewModel(context);
-        BookingDataHelper.getAccounts();
+
     }
 
     private void initActivity() {
@@ -228,8 +228,11 @@ public class MainActivity extends BaseActivity {
                 if(isBtnClick){
                     String accountName = popupViewBinding.accountNameField.getText().toString();
                     String accountCode = popupViewBinding.accountCodeField.getText().toString();
-                    ToastHelper.showToast(context, accountName, Toast.LENGTH_SHORT);
-                    ToastHelper.showToast(context, accountCode, Toast.LENGTH_SHORT);
+                    if(accountName.length() == 0){
+                        ToastHelper.showToast(context, "账户名不能为空", Toast.LENGTH_SHORT);
+                        return;
+                    }
+                    ToastHelper.showToast(context, "添加成功", Toast.LENGTH_SHORT);
                     Account newAccount = new Account(accountName,accountCode);
                     AccountJudgeType accountJudge = newAccount.checkIfAccountValid();
                     /*添加账户成功*/
@@ -255,6 +258,7 @@ public class MainActivity extends BaseActivity {
                                 , Toast.LENGTH_SHORT);
                     }
                     isBtnClick = false;
+                    showGuide();
                 }
 
             }
@@ -287,30 +291,6 @@ public class MainActivity extends BaseActivity {
         NavigationHelper.navigationWithParameter(Constants.mainParamTag,
                 currentAccountCardFragment.getBinding().getAccountCardViewModel().getAccount(),
                 context,BookingActivity.class, false);
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if(hasFocus){
-            new Handler().postDelayed(new Runnable() {
-                @SuppressLint("RtlHardcoded")
-                @Override
-                public void run() {
-                    NewbieGuide.with(MainActivity.this)
-                            .setLabel("guide_main")
-                            .addGuidePage(GuidePage.newInstance()
-                                    .addHighLight(binding.accountCardBanner, new RelativeGuide(R.layout.guide_main_card,
-                                            Gravity.BOTTOM, 20)))
-                            .addGuidePage(GuidePage.newInstance()
-                                    .addHighLight(binding.floatingButton, new RelativeGuide(R.layout.guide_main_floating_button,
-                                            Gravity.LEFT, 20)))
-                            .alwaysShow(true)
-                            .show();
-                }
-            },500);
-
-        }
     }
 
     private void onLongClickImplement(final AccountCardFragment accountCardFragment, View v){
@@ -357,5 +337,41 @@ public class MainActivity extends BaseActivity {
             }
         });
         alertDialog.show();
+    }
+
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(hasFocus){
+            showGuide();
+        }
+    }
+
+    private void showGuide(){
+        new Handler().postDelayed(new Runnable() {
+            @SuppressLint("RtlHardcoded")
+            @Override
+            public void run() {
+                if(App.dataBaseHelper.getAccounts().size() == 0){
+                    NewbieGuide.with(MainActivity.this)
+                            .setLabel("guide_nullAccount")
+                            .addGuidePage(GuidePage.newInstance()
+                                    .addHighLight(binding.accountCardBanner, new RelativeGuide(R.layout.guide_main_nullcard,
+                                            Gravity.BOTTOM, 20)))
+                            .show();
+                }else{
+                    NewbieGuide.with(MainActivity.this)
+                            .setLabel("guide_Account")
+                            .addGuidePage(GuidePage.newInstance()
+                                    .addHighLight(binding.accountCardBanner, new RelativeGuide(R.layout.guide_main_card,
+                                            Gravity.BOTTOM, 20)))
+                            .addGuidePage(GuidePage.newInstance()
+                                    .addHighLight(binding.floatingButton, new RelativeGuide(R.layout.guide_main_floating_button,
+                                            Gravity.LEFT, 20)))
+                            .show();
+                }
+            }
+        },500);
     }
 }

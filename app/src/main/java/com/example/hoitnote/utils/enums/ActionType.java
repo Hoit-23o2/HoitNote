@@ -1,6 +1,8 @@
 package com.example.hoitnote.utils.enums;
 
-public enum ActionType {
+import java.io.Serializable;
+
+public enum ActionType implements Serializable {
     INCOME,
     OUTCOME,
     @Deprecated

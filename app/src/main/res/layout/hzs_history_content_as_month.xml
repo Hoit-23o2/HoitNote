@@ -61,6 +61,7 @@
     </LinearLayout>
 
     <ExpandableListView
+        android:divider="@null"
         android:groupIndicator="@null"
         android:orientation="vertical"
         android:id="@+id/hzs_history_content_as_month_expandable_listview"

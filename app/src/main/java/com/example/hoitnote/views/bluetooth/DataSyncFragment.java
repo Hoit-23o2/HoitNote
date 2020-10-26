@@ -1,5 +1,6 @@
 package com.example.hoitnote.views.bluetooth;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.ComponentName;
@@ -10,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,9 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import com.app.hubert.guide.NewbieGuide;
+import com.app.hubert.guide.model.GuidePage;
+import com.app.hubert.guide.model.RelativeGuide;
 import com.example.hoitnote.BaseActivity;
 import com.example.hoitnote.R;
 import com.example.hoitnote.adapters.bluetooth.BlueToothDeviceAdapter;
@@ -30,6 +35,7 @@ import com.example.hoitnote.utils.commuications.DataPackage;
 import com.example.hoitnote.utils.commuications.bluetooth.ReceiveInfo;
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.BluetoothStatue;
+import com.example.hoitnote.utils.enums.LockViewType;
 import com.example.hoitnote.utils.helpers.BlueToothHelper;
 import com.example.hoitnote.utils.helpers.DeviceHelper;
 import com.example.hoitnote.utils.helpers.NavigationHelper;
@@ -86,7 +92,7 @@ public class DataSyncFragment extends Fragment {
         return  binding.getRoot();
     }
 
-    /*点击搜索设备按钮，获取已匹配设备事件*/
+    /*点击我要发送按钮，获取已匹配设备事件*/
     public void getPairedList(View v){
         ArrayList<BluetoothDevice> pairedList = App.blueToothHelper.getPairedDeviceList();
         pairedList.addAll(getScanningList(v));
@@ -98,6 +104,19 @@ public class DataSyncFragment extends Fragment {
         BlueToothDeviceAdapter blueToothDeviceAdapter = new BlueToothDeviceAdapter(context, blueToothViewModels);
         binding.pairedDeviceListView.setAdapter(blueToothDeviceAdapter);
         binding.pairedDeviceListViewContainer.setVisibility(View.VISIBLE);
+
+        new Handler().postDelayed(new Runnable() {
+            @SuppressLint("RtlHardcoded")
+            @Override
+            public void run() {
+                NewbieGuide.with((Fragment) DataSyncFragment.this)
+                        .setLabel("guide_syn_list")
+                        .addGuidePage(GuidePage.newInstance()
+                                .addHighLight(binding.pairedDeviceListView, new RelativeGuide(R.layout.guide_syn_list,
+                                        Gravity.TOP, 20)))
+                        .show();
+            }
+        },500);
     }
 
     /*扫描设备事件*/
@@ -177,6 +196,35 @@ public class DataSyncFragment extends Fragment {
                 }, Constants.delayDuration);
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        new Handler().postDelayed(new Runnable() {
+            @SuppressLint("RtlHardcoded")
+            @Override
+            public void run() {
+                if(dataSyncViewModel.getLockViewType() == LockViewType.LOGIN){
+                    NewbieGuide.with((Fragment) DataSyncFragment.this)
+                            .setLabel("guide_syn_login")
+                            .addGuidePage(GuidePage.newInstance()
+                                    .addHighLight(binding.normalStatue, new RelativeGuide(R.layout.guide_syn_receive,
+                                            Gravity.BOTTOM, 20)))
+                            .show();
+                } else if(dataSyncViewModel.getLockViewType() == LockViewType.SETTING){
+                    NewbieGuide.with((Fragment) DataSyncFragment.this)
+                            .setLabel("guide_syn_setting")
+                            .addGuidePage(GuidePage.newInstance()
+                                    .addHighLight(binding.normalStatue, new RelativeGuide(R.layout.guide_syn_receive,
+                                            Gravity.BOTTOM, 20)))
+                            .addGuidePage(GuidePage.newInstance()
+                                    .addHighLight(binding.settingsViewContainer, new RelativeGuide(R.layout.guide_syn_send,
+                                            Gravity.BOTTOM, 20)))
+                            .show();
+                }
+            }
+        },500);
     }
 
 

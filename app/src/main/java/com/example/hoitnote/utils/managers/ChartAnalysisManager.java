@@ -828,9 +828,21 @@ public class ChartAnalysisManager {
     private static ArrayList<Integer> createColor(int colorNum, int luminanceP){
         ArrayList<Integer> colorList = new ArrayList<>();
         for(int i = 0;i < colorNum;i++){
-
             //加入颜色
-            colorList.add(ThemeHelper.generateColor(context));
+            int color = (ThemeHelper.generateColor(context)| 0xFF000000);
+            int len2 = colorList.size();
+            int j;
+            for(j = 0; j < len2;j++){
+                int tmpColor = colorList.get(j);
+                if(tmpColor == color){
+                    break;
+                }
+            }
+            if(j == len2){
+                colorList.add(color);
+            }else{
+                i -= 1;
+            }
         }
         return colorList;
     }

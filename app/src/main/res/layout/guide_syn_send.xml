@@ -12,8 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center"
-        android:layout_marginLeft="10dp">
+        android:gravity="center">
 <!--        <ImageView-->
 <!--            android:layout_width="50dp"-->
 <!--            android:layout_height="50dp"-->
@@ -27,7 +26,8 @@
             android:gravity="center"
             android:textSize="18sp"
             android:textColor="?attr/colorPrimary"
-            android:text="查看流水或新建记账信息"
+            android:text="点击此按钮可以搜索周围的设备\n并可以将数据传输给选中的目标设备"
+            android:layout_marginBottom="20dp"
             />
     </LinearLayout>
 

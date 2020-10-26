@@ -83,7 +83,6 @@ public class ChartPCFragment extends Fragment {
                     .addGuidePage(GuidePage.newInstance()
                             .addHighLight(binding.filterTabs, new RelativeGuide(R.layout.guide_cam_chart_pc_now_screen,
                                     Gravity.BOTTOM, 20)))
-                    .alwaysShow(true)
                     .show();
         }
     }

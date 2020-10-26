@@ -712,13 +712,15 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
     public boolean delAccount(Account account) {
         boolean ret = false;
         String actionStr = "select * from " + Constants.AccountTableName + " where "
+                + Constants.AccountColumn_an + "=?" + " and "
                 + Constants.AccountColumn_ac + "=?";
-        Cursor cursor = sqLiteDatabase.rawQuery(actionStr,new String[]{account.getAccountCode()});
+        Cursor cursor = sqLiteDatabase.rawQuery(actionStr,new String[]{account.getAccountName(),account.getAccountCode()});
         if(cursor.moveToFirst()){
             ret = true;
             actionStr = "delete from " + Constants.AccountTableName + " where "
+                    + Constants.AccountColumn_an + "=?" + " and "
                     + Constants.AccountColumn_ac + "=?";
-            sqLiteDatabase.execSQL(actionStr,new String[]{account.getAccountCode()});
+            sqLiteDatabase.execSQL(actionStr,new String[]{account.getAccountName(),account.getAccountCode()});
         }
         cursor.close();
         return ret;
@@ -728,8 +730,9 @@ public class DataBaseHelper extends SQLiteOpenHelper implements IDataBase {
     public boolean addAccount(Account account) {
         boolean ret = false;
         String actionStr = "select * from " + Constants.AccountTableName + " where "
+                + Constants.AccountColumn_an + "=?" + " and "
                 + Constants.AccountColumn_ac + "=?";
-        Cursor cursor = sqLiteDatabase.rawQuery(actionStr,new String[]{account.getAccountCode()});
+        Cursor cursor = sqLiteDatabase.rawQuery(actionStr,new String[]{account.getAccountName(),account.getAccountCode()});
         if(!cursor.moveToFirst()){
             ret = true;
             actionStr = "insert into " + Constants.AccountTableName + " ("

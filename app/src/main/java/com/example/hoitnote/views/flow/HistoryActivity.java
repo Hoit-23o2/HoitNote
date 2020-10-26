@@ -415,10 +415,11 @@ public class HistoryActivity extends BaseActivity{
                 yearTextView.setText(String.valueOf(date.getYear()+1900)+"年");
                 monthTextView.setText(String.valueOf(date.getMonth()+1)+"月");
                 dayTextView.setText(String.valueOf(date.getDate())+"日");
+                mode = DAY;
                 year = date.getYear()+1900;
                 month = date.getMonth()+1;
                 day = date.getDate();
-                showDataAsDay();
+                showDataAsMode();
             }
         }).setCancelText("取消")
                 .setDate(selectedDate)// 如果不设置的话，默认是系统时间
@@ -452,9 +453,10 @@ public class HistoryActivity extends BaseActivity{
                 TextView monthTextView = (TextView)view.findViewById(R.id.hzs_history_content_as_month_month);
                 yearTextView.setText(chosenYear + "年");
                 monthTextView.setText(chosenMonth+"月");
+                mode = MONTH;
                 year = Integer.parseInt(chosenYear);
                 month = Integer.parseInt(chosenMonth);
-                showDataAsMonth();
+                showDataAsMode();
             }
         }).setSubmitText("确定")//确定按钮文字
                 .setCancelText("取消")//取消按钮文字
@@ -487,8 +489,9 @@ public class HistoryActivity extends BaseActivity{
                 String chosenYear = yearsItems.get(options1);
                 TextView yearTextView = (TextView)contentView.findViewById(R.id.hzs_history_content_as_year_year);
                 yearTextView.setText(chosenYear + "年");
+                mode = YEAR;
                 year = Integer.parseInt(chosenYear);
-                showDataAsYear();
+                showDataAsMode();
             }
         }).setSubmitText("确定")//确定按钮文字
                 .setCancelText("取消")//取消按钮文字
@@ -523,9 +526,10 @@ public class HistoryActivity extends BaseActivity{
                 TextView seasonTextView = (TextView)view.findViewById(R.id.hzs_history_content_as_season_season);
                 yearTextView.setText(chosenYear + "年");
                 seasonTextView.setText(chosenSeason);
+                mode = SEASON;
                 year = Integer.parseInt(chosenYear);
                 season = chosenSeason;
-                showDataAsSeason();
+                showDataAsMode();
             }
         }).setSubmitText("确定")//确定按钮文字
                 .setTypeface(tf)

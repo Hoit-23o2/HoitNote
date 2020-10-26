@@ -40,7 +40,7 @@ public class HzsChooseIconRecyclerViewAdapter extends RecyclerView.Adapter<HzsCh
         final String iconText = iconTextList.get(position);
         holder.binding.iconImage.setText(iconText);
         holder.binding.iconImage.setBackgroundColor(ThemeHelper.generateColor(context));
-        holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
+        holder.binding.iconButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent();

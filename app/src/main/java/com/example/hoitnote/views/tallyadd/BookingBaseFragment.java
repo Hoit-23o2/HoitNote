@@ -49,6 +49,7 @@ public class BookingBaseFragment extends Fragment {
     protected OptionsPickerView pvPersonOptions;
     protected OptionsPickerView pvStoreOptions;
     protected OptionsPickerView pvProjectOptions;
+    protected TimePickerView pvTime;
     protected TextView timeTextView;
     protected TextView personTextView;
     protected TextView storeTextView;
@@ -301,18 +302,38 @@ public class BookingBaseFragment extends Fragment {
         final DateFormat df2 = DateFormat.getDateTimeInstance();
         timeString = df2.format(new Date());
         //时间选择器
-        final TimePickerView pvTime = new TimePickerBuilder(getContext(), new OnTimeSelectListener() {
+        pvTime = new TimePickerBuilder(getContext(), new OnTimeSelectListener() {
             @Override
             public void onTimeSelect(Date date, View v) {
                 inputDate = date;
                 timeTextView.setText(df2.format(date));
             }
-        }).setCancelText("取消")
-                .setType(new boolean[]{true, true, true, true, true, true})
+        }).setType(new boolean[]{true, true, true, true, true, true})
                 .setLabel("年","月","日","时","分","秒")//默认设置为年月日时分秒
                 .setDate(selectedDate)// 如果不设置的话，默认是系统时间
                 .setRangDate(startDate,endDate)//起始终止年月日设定
-                .setSubmitText("确认")
+                .setLayoutRes(R.layout.hzs_choose_time_pickerview, new CustomListener() {
+                    @Override
+                    public void customLayout(View v) {
+                        //自定义布局中的控件初始化及事件处理
+                        final TextView tvSubmit = v.findViewById(R.id.finish_button);
+                        final TextView tvCancel = v.findViewById(R.id.cancel_button);
+
+                        tvSubmit.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                pvTime.returnData();
+                                pvTime.dismiss();
+                            }
+                        });
+                        tvCancel.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                pvTime.dismiss();
+                            }
+                        });
+                    }
+                })
                 .build();
         chooseTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
