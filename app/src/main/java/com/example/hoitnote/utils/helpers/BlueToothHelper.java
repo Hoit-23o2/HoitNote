@@ -237,6 +237,7 @@ public class BlueToothHelper implements IBlueTooth {
                     break;
                 case Constants.MSG_Get_SENDINFO:
                     ToastHelper.showToast(mContext,"有信息即将输入",Toast.LENGTH_SHORT);
+                    blueToothHelper.setSendInfo(blueToothHelper.acceptThread.getReceiveMessageThread().getSendInfo());
                     Log.d("蓝牙","=============接受起始信息============");
                     break;
 
@@ -319,7 +320,8 @@ public class BlueToothHelper implements IBlueTooth {
             //开启蓝牙服务器端线程
             acceptThread = new AcceptThread(bluetoothAdapter,
                     UUID.fromString("1a79f483-b8ae-4e8d-97f0-a1496439136b"),
-                    mHandler);
+                    mHandler,
+                    this);
 
             acceptThread.start();
             ToastHelper.showToast(context, "服务器已开启", Toast.LENGTH_SHORT);
@@ -366,7 +368,7 @@ public class BlueToothHelper implements IBlueTooth {
     }
 
     public void connectDevice(BluetoothDevice device) {
-        clientThread = new ClientThread(device, mHandler);
+        clientThread = new ClientThread(device, mHandler,this);
         clientThread.start();
     }
 
@@ -389,9 +391,18 @@ public class BlueToothHelper implements IBlueTooth {
 
     @Override
     public void sendDataPackage(DataPackage dataPackage) {
+        byte[] bytes = BlueToothHelper.toByteArray(dataPackage);
+
         setSendInfo(new SendInfo());
         sendInfo.setBluetoothDeviceName(bluetoothAdapter.getName());
-        //sendObject(sendInfo);//先发送 数据信息
+        sendInfo.setByteSize(bytes.length);
+        sendObject(sendInfo);//先发送 数据信息
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         sendObject(dataPackage);
     }
 
@@ -462,6 +473,7 @@ public class BlueToothHelper implements IBlueTooth {
             oos = new ObjectOutputStream(b);
             oos.writeObject(obj);
             bytes = b.toByteArray();
+            Log.d("对象转比特",bytes.length + "=========");
             //s.flush();
         }
         catch(Exception e)

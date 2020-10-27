@@ -5,18 +5,11 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.Gravity;
 
-import com.app.hubert.guide.NewbieGuide;
-import com.app.hubert.guide.model.GuidePage;
-import com.app.hubert.guide.model.RelativeGuide;
 import com.example.hoitnote.BaseActivity;
-import com.example.hoitnote.MainActivity;
 import com.example.hoitnote.R;
 import com.example.hoitnote.databinding.ActivityLockBinding;
 import com.example.hoitnote.utils.commuications.Config;

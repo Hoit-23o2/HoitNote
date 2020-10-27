@@ -1,5 +1,6 @@
 package com.example.hoitnote.adapters.tallies;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.example.hoitnote.models.flow.HzsMonthData;
 import com.example.hoitnote.models.flow.HzsTally;
 import com.example.hoitnote.models.flow.HzsYearData;
 import com.example.hoitnote.utils.App;
+import com.example.hoitnote.utils.helpers.BookingDataHelper;
 import com.example.hoitnote.views.flow.HistoryActivity;
 
 import java.util.List;
@@ -30,6 +32,7 @@ public class HzsContentDayRecyclerViewAdapter extends RecyclerView.Adapter<HzsCo
     private HzsFirstExpandableListViewAdapter.FirstHolder firstHolder;
     private List<HzsFirstExpandableListViewAdapter.SecondHolder> secondHolders;
     private HzsFirstExpandableListViewAdapter.SecondHolder secondHolder;
+    private Context context;
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -38,17 +41,18 @@ public class HzsContentDayRecyclerViewAdapter extends RecyclerView.Adapter<HzsCo
         return holder;
     }
 
-    public HzsContentDayRecyclerViewAdapter(List<Tally> singleDayData, int hzsTallyType, HzsFirstExpandableListViewAdapter parentAdapter){
+    public HzsContentDayRecyclerViewAdapter(List<Tally> singleDayData, int hzsTallyType, HzsFirstExpandableListViewAdapter parentAdapter, Context context){
         this.singleDayData = singleDayData;
         this.hzsTallyType = hzsTallyType;
         this.parentAdapter = parentAdapter;
+        this.context = context;
     }
 
     public HzsContentDayRecyclerViewAdapter(List<Tally> singleDayData, int hzsTallyType, HzsFirstExpandableListViewAdapter parentAdapter,
                                             HzsYearData yearData, HzsMonthData monthData,
                                             HzsFirstExpandableListViewAdapter.FirstHolder firstHolder,
                                             List<HzsFirstExpandableListViewAdapter.SecondHolder> secondHolders,
-                                            HzsFirstExpandableListViewAdapter.SecondHolder secondHolder){
+                                            HzsFirstExpandableListViewAdapter.SecondHolder secondHolder, Context context){
         this.singleDayData = singleDayData;
         this.hzsTallyType = hzsTallyType;
         this.parentAdapter = parentAdapter;
@@ -57,6 +61,7 @@ public class HzsContentDayRecyclerViewAdapter extends RecyclerView.Adapter<HzsCo
         this.firstHolder = firstHolder;
         this.secondHolders = secondHolders;
         this.secondHolder = secondHolder;
+        this.context = context;
     }
 
     @Override
@@ -90,6 +95,7 @@ public class HzsContentDayRecyclerViewAdapter extends RecyclerView.Adapter<HzsCo
 
             }
         });
+        BookingDataHelper.setClickListener(holder.binding,context);
     }
 
     @Override

@@ -11,14 +11,19 @@ import android.widget.ExpandableListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 
 import com.example.hoitnote.R;
 import com.example.hoitnote.databinding.ItemTallyBinding;
 import com.example.hoitnote.databinding.ItemTallyGroupBinding;
+import com.example.hoitnote.databinding.PopupwindowTallyInfoBinding;
 import com.example.hoitnote.models.Tally;
+import com.example.hoitnote.models.flow.HzsTally;
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.ActionType;
+import com.example.hoitnote.utils.helpers.BookingDataHelper;
+import com.example.hoitnote.utils.helpers.DialogHelper;
 import com.example.hoitnote.viewmodels.TallyViewModel;
 import com.sunfusheng.marqueeview.MarqueeView;
 
@@ -146,6 +151,22 @@ public class TallyOneExpandableAdapter extends BaseExpandableListAdapter {
         if(group != null){
             binding.setTallyViewModel(group.get(childId));
         }
+        PopupwindowTallyInfoBinding dialogNormalBinding =
+                DataBindingUtil.inflate(
+                        LayoutInflater.from(context),
+                        R.layout.popupwindow_tally_info,
+                        null,
+                        false
+                );
+        dialogNormalBinding.setTally(new HzsTally(((TallyViewModel)group.get(childId)).getTally(), HzsTally.DATE));
+        final AlertDialog alertDialog =
+                DialogHelper.buildDialog(context, dialogNormalBinding);
+        binding.mainContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.show();
+            }
+        });
         return binding.getRoot();
     }
 

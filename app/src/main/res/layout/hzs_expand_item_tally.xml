@@ -36,6 +36,8 @@
 
         <!-- Surface View Start -->
         <LinearLayout
+            android:foreground="?selectableItemBackground"
+            android:id="@+id/tally_more_info"
             android:background="#ffffff"
             android:layout_width="match_parent"
             android:layout_height="match_parent">

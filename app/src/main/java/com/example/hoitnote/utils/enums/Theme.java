@@ -1,6 +1,8 @@
 package com.example.hoitnote.utils.enums;
 
-public enum Theme {
+import java.io.Serializable;
+
+public enum Theme implements Serializable {
     DEFAULT,
     SWEET
 }

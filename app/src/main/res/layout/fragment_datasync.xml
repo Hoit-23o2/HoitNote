@@ -43,35 +43,12 @@
                     android:padding="10dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
-
                     <TextView
                         android:id="@+id/receiverBtnText"
-                        android:visibility="@{dataSyncViewModel.currentStatue == BluetoothStatue.NORMAL ? View.VISIBLE : View.GONE}"
                         style="@style/HoitTitleText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/datasync_normal_statue_hint" />
-
-                    <TextView
-                        android:visibility="@{dataSyncViewModel.currentStatue == BluetoothStatue.CONNECTING ? View.VISIBLE : View.GONE, default=gone}"
-                        style="@style/HoitTitleText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/datasync_connecting_hint" />
-
-                    <TextView
-                        android:visibility="@{dataSyncViewModel.currentStatue == BluetoothStatue.RECEIVING ? View.VISIBLE : View.GONE, default=gone}"
-                        style="@style/HoitTitleText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/datasync_receiving_hint" />
-
-                    <TextView
-                        android:visibility="@{dataSyncViewModel.currentStatue == BluetoothStatue.RECEIVED ? View.VISIBLE : View.GONE, default=gone}"
-                        style="@style/HoitTitleText"
-                        android:text="@string/datasync_received_hint"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 

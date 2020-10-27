@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import androidx.annotation.Nullable;
@@ -23,6 +24,7 @@ import com.example.hoitnote.R;
 import com.example.hoitnote.customviews.FontAwesome;
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.ActionType;
+import com.example.hoitnote.utils.helpers.ToastHelper;
 
 
 public class AddOptionActivity extends BaseActivity {
@@ -87,37 +89,42 @@ public class AddOptionActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.hzs_booking_menu_save:
-                switch (iconType){
-                    case "二级分类":
-                        Intent i = new Intent();
-                        i.putExtra("id",getIntent().getIntExtra("id",0));
-                        i.putExtra("icon_code", iconCode);
-                        i.putExtra("icon_type", iconType);
-                        i.putExtra("class_name",classname);
-                        i.putExtra("action_type", getIntent().getIntExtra("action_type",0));
-                        i.putExtra("classification1",getIntent().getStringExtra("classification1"));
-                        setResult(Constants.AddOptionResultCode,i);
-                        finish();
-                        break;
-                    case "一级分类":
-                        Intent i1 = new Intent();
-                        i1.putExtra("icon_code", iconCode);
-                        i1.putExtra("icon_type", iconType);
-                        i1.putExtra("class_name",classname);
-                        i1.putExtra("action_type", getIntent().getIntExtra("action_type",0));
-                        setResult(Constants.AddOptionResultCode,i1);
-                        finish();
-                        break;
-                    case Constants.TypeStringProject:
-                    case Constants.TypeStringMember:
-                    case Constants.TypeStringVendor:
-                        Intent i2 = new Intent();
-                        i2.putExtra("icon_code", iconCode);
-                        i2.putExtra("class_name",classname);
-                        setResult(Constants.AddOptionResultCode,i2);
-                        finish();
-                        break;
+                if(classname == null || classname.equals("")){
+                    ToastHelper.showToast(context,"名称不能为空",Toast.LENGTH_SHORT);
+                }else{
+                    switch (iconType){
+                        case "二级分类":
+                            Intent i = new Intent();
+                            i.putExtra("id",getIntent().getIntExtra("id",0));
+                            i.putExtra("icon_code", iconCode);
+                            i.putExtra("icon_type", iconType);
+                            i.putExtra("class_name",classname);
+                            i.putExtra("action_type", getIntent().getIntExtra("action_type",0));
+                            i.putExtra("classification1",getIntent().getStringExtra("classification1"));
+                            setResult(Constants.AddOptionResultCode,i);
+                            finish();
+                            break;
+                        case "一级分类":
+                            Intent i1 = new Intent();
+                            i1.putExtra("icon_code", iconCode);
+                            i1.putExtra("icon_type", iconType);
+                            i1.putExtra("class_name",classname);
+                            i1.putExtra("action_type", getIntent().getIntExtra("action_type",0));
+                            setResult(Constants.AddOptionResultCode,i1);
+                            finish();
+                            break;
+                        case Constants.TypeStringProject:
+                        case Constants.TypeStringMember:
+                        case Constants.TypeStringVendor:
+                            Intent i2 = new Intent();
+                            i2.putExtra("icon_code", iconCode);
+                            i2.putExtra("class_name",classname);
+                            setResult(Constants.AddOptionResultCode,i2);
+                            finish();
+                            break;
+                    }
                 }
+
                 break;
 
         }

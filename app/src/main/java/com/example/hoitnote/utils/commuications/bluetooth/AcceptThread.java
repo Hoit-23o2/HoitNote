@@ -26,7 +26,7 @@ public class AcceptThread extends Thread {
     private BlueToothHelper.BlueToothHandler mHandler;
     private InputStream is = null;
     private OutputStream os = null;
-
+    private BlueToothHelper blueToothHelper;
     public BluetoothSocket getSocket() {
         return socket;
     }
@@ -35,9 +35,10 @@ public class AcceptThread extends Thread {
 
 
     public AcceptThread(BluetoothAdapter bluetoothAdapter, UUID deviceUUID,
-                        BlueToothHelper.BlueToothHandler mHandler){
+                        BlueToothHelper.BlueToothHandler mHandler,BlueToothHelper blueToothHelper){
         this.mHandler = mHandler;
         this.exit=false;
+        this.blueToothHelper = blueToothHelper;
         // Use a temporary object that is later assigned to mmServerSocket
         // because mmServerSocket is final.
         //创建服务器
@@ -65,7 +66,7 @@ public class AcceptThread extends Thread {
                         os = socket.getOutputStream();
                         is = socket.getInputStream();
                         //开启新线程接受数据
-                        receiveMessageThread = new ReceiveMessageThread(is,os,this.mHandler);
+                        receiveMessageThread = new ReceiveMessageThread(is,os,this.mHandler,this.blueToothHelper);
                         receiveMessageThread.start();
                         break;
                     }

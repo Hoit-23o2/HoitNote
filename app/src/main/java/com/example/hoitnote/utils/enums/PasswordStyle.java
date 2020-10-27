@@ -1,6 +1,8 @@
 package com.example.hoitnote.utils.enums;
 
-public enum PasswordStyle {
+import java.io.Serializable;
+
+public enum PasswordStyle implements Serializable {
     TRADITIONAL,
     FINGERPRINT,
     PIN

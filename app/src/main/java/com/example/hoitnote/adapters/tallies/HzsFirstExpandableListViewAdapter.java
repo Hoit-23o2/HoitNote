@@ -176,7 +176,7 @@ public class HzsFirstExpandableListViewAdapter extends BaseExpandableListAdapter
             secondHolders.get(i).add(holder);
         }
         HzsContentDayRecyclerViewAdapter adapter = new HzsContentDayRecyclerViewAdapter(getYears().get(i).getMonthDataList().get(i1).getData(), HzsTally.DATE, this,
-                years.get(i),years.get(i).getMonthDataList().get(i1),firstHolders.get(i),secondHolders.get(i),secondHolders.get(i).get(i1));
+                years.get(i),years.get(i).getMonthDataList().get(i1),firstHolders.get(i),secondHolders.get(i),secondHolders.get(i).get(i1),context);
         holder.binding.recyclerView.setAdapter(adapter);
         return view;
     }

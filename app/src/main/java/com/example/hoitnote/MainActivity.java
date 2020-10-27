@@ -40,7 +40,6 @@ import com.example.hoitnote.utils.enums.AccountJudgeType;
 import com.example.hoitnote.utils.enums.ClickType;
 import com.example.hoitnote.utils.enums.GroupType;
 import com.example.hoitnote.utils.helpers.BookingDataHelper;
-import com.example.hoitnote.utils.helpers.DataBaseHelper;
 import com.example.hoitnote.utils.helpers.DeviceHelper;
 import com.example.hoitnote.utils.helpers.DialogHelper;
 import com.example.hoitnote.utils.helpers.NavigationHelper;
@@ -74,7 +73,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this,R.layout.activity_main);
         mainViewModel = new MainViewModel(context);
-        BookingDataHelper.getAccounts();
+
     }
 
     private void initActivity() {
@@ -229,8 +228,11 @@ public class MainActivity extends BaseActivity {
                 if(isBtnClick){
                     String accountName = popupViewBinding.accountNameField.getText().toString();
                     String accountCode = popupViewBinding.accountCodeField.getText().toString();
-                    ToastHelper.showToast(context, accountName, Toast.LENGTH_SHORT);
-                    ToastHelper.showToast(context, accountCode, Toast.LENGTH_SHORT);
+                    if(accountName.length() == 0){
+                        ToastHelper.showToast(context, "账户名不能为空", Toast.LENGTH_SHORT);
+                        return;
+                    }
+                    ToastHelper.showToast(context, "添加成功", Toast.LENGTH_SHORT);
                     Account newAccount = new Account(accountName,accountCode);
                     AccountJudgeType accountJudge = newAccount.checkIfAccountValid();
                     /*添加账户成功*/
@@ -256,8 +258,8 @@ public class MainActivity extends BaseActivity {
                                 , Toast.LENGTH_SHORT);
                     }
                     isBtnClick = false;
-                    showGuide();
                 }
+
             }
         });
 
@@ -270,7 +272,6 @@ public class MainActivity extends BaseActivity {
         });
 
         alertDialog.show();
-
     }
 
     // create an action bar button
@@ -289,14 +290,6 @@ public class MainActivity extends BaseActivity {
         NavigationHelper.navigationWithParameter(Constants.mainParamTag,
                 currentAccountCardFragment.getBinding().getAccountCardViewModel().getAccount(),
                 context,BookingActivity.class, false);
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if(hasFocus){
-            showGuide();
-        }
     }
 
     private void onLongClickImplement(final AccountCardFragment accountCardFragment, View v){
@@ -343,6 +336,15 @@ public class MainActivity extends BaseActivity {
             }
         });
         alertDialog.show();
+    }
+
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if(hasFocus){
+            showGuide();
+        }
     }
 
     private void showGuide(){

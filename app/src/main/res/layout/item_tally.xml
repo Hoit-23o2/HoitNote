@@ -15,6 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
+            android:foreground="?selectableItemBackground"
             android:id="@+id/mainContainer"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"

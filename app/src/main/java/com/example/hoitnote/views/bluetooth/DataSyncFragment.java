@@ -27,7 +27,6 @@ import com.app.hubert.guide.NewbieGuide;
 import com.app.hubert.guide.model.GuidePage;
 import com.app.hubert.guide.model.RelativeGuide;
 import com.example.hoitnote.BaseActivity;
-import com.example.hoitnote.MainActivity;
 import com.example.hoitnote.R;
 import com.example.hoitnote.adapters.bluetooth.BlueToothDeviceAdapter;
 import com.example.hoitnote.databinding.FragmentDatasyncBinding;
@@ -73,7 +72,6 @@ public class DataSyncFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
                 dataSyncViewModel.setCurrentStatue(BluetoothStatue.CONNECTING);
-
                 binding.senderBtnText.setText(dataSyncViewModel.context.getString(R.string.datasync_connecting_hint));
                 BluetoothDevice device = App.blueToothHelper.getPairedDeviceList().get(pos);
                 DataPackage dataPackage = new DataPackage();
@@ -94,7 +92,7 @@ public class DataSyncFragment extends Fragment {
         return  binding.getRoot();
     }
 
-    /*点击搜索设备按钮，获取已匹配设备事件*/
+    /*点击我要发送按钮，获取已匹配设备事件*/
     public void getPairedList(View v){
         ArrayList<BluetoothDevice> pairedList = App.blueToothHelper.getPairedDeviceList();
         pairedList.addAll(getScanningList(v));
@@ -228,4 +226,6 @@ public class DataSyncFragment extends Fragment {
             }
         },500);
     }
+
+
 }

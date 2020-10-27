@@ -23,6 +23,10 @@ public class HzsTally {
     public ActionType actionType;
     private IconType iconType;
     private int classType = 2;
+    public String member;
+    public String vendor;
+    public String project;
+    public String remark;
 
     public HzsTally(Tally tally, int timeType){
 
@@ -70,5 +74,10 @@ public class HzsTally {
                 time = day;
                 break;
         }
+
+        member = tally.getMember();
+        vendor = tally.getVendor();
+        project = tally.getProject();
+        remark = tally.getRemark();
     }
 }

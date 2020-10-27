@@ -7,6 +7,15 @@ import com.example.hoitnote.utils.helpers.BlueToothHelper;
 import java.io.Serializable;
 
 public class SendInfo implements Serializable {
+    public int getByteSize() {
+        return byteSize;
+    }
+
+    public void setByteSize(int byteSize) {
+        this.byteSize = byteSize;
+    }
+
+    private int byteSize;
     public BluetoothDevice getDevice() {
         return device;
     }

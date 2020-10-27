@@ -2,7 +2,6 @@ package com.example.hoitnote.views.locks;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +14,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -27,6 +27,7 @@ import com.example.hoitnote.R;
 import com.example.hoitnote.adapters.locks.LockFragmentAdapter;
 import com.example.hoitnote.databinding.FragmentLockBinding;
 import com.example.hoitnote.utils.commuications.Config;
+import com.example.hoitnote.utils.managers.ChartAnalysisManager;
 import com.example.hoitnote.viewmodels.BaseLockViewModel;
 
 import java.util.ArrayList;
@@ -128,18 +129,31 @@ public class LockFragment extends Fragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onResume() {
         super.onResume();
-        final RectF rectF = new RectF();
-        rectF.left = 0;
-        rectF.right = 0;
-        rectF.top = 0;
-        rectF.bottom = 0;
         new Handler().postDelayed(new Runnable() {
             @SuppressLint("RtlHardcoded")
             @Override
             public void run() {
+                final RectF rectF = new RectF();
+                rectF.left = 0;
+                rectF.right = 0;
+                rectF.top = 0;
+                rectF.bottom = 0;
+
+                final RectF rectF1 = ChartAnalysisManager.getViewRectF(binding.fingerprintLock);
+                float width = rectF1.right - rectF1.left;
+                float height = rectF1.bottom - rectF1.top;
+                float centerX = (rectF1.right + rectF1.left) / 2.0f;
+                float centerY = (rectF1.bottom + rectF1.top) / 2.0f;
+                width *= 1.3 / 2.0f;
+                height *= 1.3 / 2.0f;
+                rectF1.left = centerX - width;
+                rectF1.right = centerX + width;
+                rectF1.top = centerY - height;
+                rectF1.bottom = centerY + height;
                 NewbieGuide.with(LockFragment.this)
                         .setLabel("guide_lock")
                         .addGuidePage(GuidePage.newInstance()
@@ -147,7 +161,7 @@ public class LockFragment extends Fragment {
                         .addGuidePage(GuidePage.newInstance()
                                 .addHighLight(rectF).setLayoutRes(R.layout.guide_lock_information))
                         .addGuidePage(GuidePage.newInstance()
-                                .addHighLight(binding.fingerprintLock, new RelativeGuide(R.layout.guide_lock_fingerprint,
+                                .addHighLight(rectF1, new RelativeGuide(R.layout.guide_lock_fingerprint,
                                         Gravity.TOP, 20)))
                         .addGuidePage(GuidePage.newInstance()
                                 .addHighLight(binding.patternLock, new RelativeGuide(R.layout.guide_lock_pattern,
