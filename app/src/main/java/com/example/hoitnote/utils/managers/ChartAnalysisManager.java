@@ -1060,7 +1060,7 @@ public class ChartAnalysisManager {
             int nowYear = calendar2.get(Calendar.YEAR);
             while(nowCountYear != nowYear){
                 calendar.add(Calendar.YEAR,1);
-                nowCountYear += calendar.get(Calendar.YEAR);
+                nowCountYear = calendar.get(Calendar.YEAR);
                 nowTallyAnalysisClTimeDivision.addNewNode(nowCountYear + "年");
             }
             nowTallyAnalysisClTimeDivision.addMoney(contentValues.getAsDouble(Constants.tallyTableColumn_money));
@@ -1070,7 +1070,7 @@ public class ChartAnalysisManager {
         int endYear = calendar2.get(Calendar.YEAR);
         while(nowCountYear != endYear){
             calendar.add(Calendar.YEAR,1);
-            nowCountYear += calendar.get(Calendar.YEAR);
+            nowCountYear = calendar.get(Calendar.YEAR);
             nowTallyAnalysisClTimeDivision.addNewNode(nowCountYear + "年");
         }
         int len2 = nowTallyAnalysisClTimeDivision.timeAndMoneyArrayList.size();
