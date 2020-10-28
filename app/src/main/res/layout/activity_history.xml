@@ -82,7 +82,7 @@
                         style="@style/HoitGroupText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/account_income" />
+                        android:text="@string/account_outcome" />
 
                     <TextView
                         android:id="@+id/hzs_history_outcome"
@@ -255,6 +255,7 @@
             app:overlay_orientation="portrait"/>
 
         <com.nambimobile.widgets.efab.ExpandableFab
+            android:id="@+id/floatingButton"
             android:layout_margin="20dp"
             app:useCompatPadding="true"
             android:layout_width="wrap_content"

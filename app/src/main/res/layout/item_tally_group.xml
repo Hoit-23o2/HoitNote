@@ -20,7 +20,6 @@
                 android:layout_weight="1"
                 style="@style/HoitGroupText"
                 android:text="2020-10-14"
-                android:textColor="?attr/textColorSecondary"
                 android:paddingRight="?android:attr/expandableListPreferredChildIndicatorRight"
                 android:layout_margin="10dp"
                 android:id="@+id/groupTitle"
@@ -59,7 +58,6 @@
                 android:gravity="end" />
         </LinearLayout>
 
-        <include layout="@layout/divider_normal"/>
     </LinearLayout>
 
 

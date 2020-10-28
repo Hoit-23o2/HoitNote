@@ -1,11 +1,13 @@
 package com.example.hoitnote.views.tallyadd;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,6 +47,7 @@ public class BookingActivity extends BaseActivity {
     private Fragment outcomeFragment, incomeFragment, transferFragment;
     private HzsPagerAdapter adapter;
     private DetailOnPageChangeListener pageChangeListener;
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +58,7 @@ public class BookingActivity extends BaseActivity {
         ViewPagerInit();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     private void ViewPagerInit(){
         viewPager = findViewById(R.id.hzs_booking_viewpager);
         tabLayout = findViewById(R.id.hzs_booking_tabLayout);

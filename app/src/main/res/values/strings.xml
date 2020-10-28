@@ -83,5 +83,6 @@
     <string name="close_icon"></string>
     <string name="datasync_sending_hint">数据发送中…</string>
     <string name="datasync_sended_hint">数据发送成功</string>
+    <string name="circle_down_arrow"></string>
 
 </resources>

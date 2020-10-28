@@ -8,17 +8,25 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 
 import com.example.hoitnote.R;
 import com.example.hoitnote.databinding.ItemTallyBinding;
 import com.example.hoitnote.databinding.ItemTallyGroupBinding;
+import com.example.hoitnote.databinding.PopupwindowTallyInfoBinding;
 import com.example.hoitnote.models.Tally;
+import com.example.hoitnote.models.flow.HzsTally;
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.ActionType;
+import com.example.hoitnote.utils.helpers.DeviceHelper;
+import com.example.hoitnote.utils.helpers.DialogHelper;
+import com.example.hoitnote.utils.helpers.ThemeHelper;
 import com.example.hoitnote.viewmodels.TallyViewModel;
 import com.sunfusheng.marqueeview.MarqueeView;
 
@@ -146,6 +154,30 @@ public class TallyOneExpandableAdapter extends BaseExpandableListAdapter {
         if(group != null){
             binding.setTallyViewModel(group.get(childId));
         }
+        PopupwindowTallyInfoBinding dialogNormalBinding =
+                DataBindingUtil.inflate(
+                        LayoutInflater.from(context),
+                        R.layout.popupwindow_tally_info,
+                        null,
+                        false
+                );
+        dialogNormalBinding.setTally(new HzsTally(group.get(childId).getTally(), 0));
+        final AlertDialog alertDialog =
+                DialogHelper.buildDialog(context, dialogNormalBinding);
+        dialogNormalBinding.hzsExpandItemTallyIcon.setBackgroundColor(ThemeHelper.generateColor(context));
+
+        int height = DeviceHelper.getDeviceHeight(context);
+        FrameLayout.LayoutParams layoutParams =
+                (FrameLayout.LayoutParams) dialogNormalBinding.mainContainer.getLayoutParams();
+        layoutParams.height = (int) (height * 0.7);
+        dialogNormalBinding.mainContainer.setLayoutParams(layoutParams);
+
+        binding.mainContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.show();
+            }
+        });
         return binding.getRoot();
     }
 

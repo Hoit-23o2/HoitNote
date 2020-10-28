@@ -17,6 +17,7 @@ import com.example.hoitnote.databinding.HzsExpandItemYearMenuBinding;
 import com.example.hoitnote.models.flow.HzsMonthData;
 import com.example.hoitnote.models.flow.HzsTally;
 import com.example.hoitnote.utils.App;
+import com.example.hoitnote.utils.helpers.BookingDataHelper;
 import com.example.hoitnote.views.flow.HistoryActivity;
 
 
@@ -160,6 +161,7 @@ public class HzsSecondExpandableListViewAdapter extends BaseExpandableListAdapte
             }
         });
 
+        BookingDataHelper.setClickListener(holder.binding,context);
         return view;
     }
 

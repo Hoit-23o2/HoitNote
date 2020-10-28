@@ -16,6 +16,7 @@ import com.example.hoitnote.databinding.HzsExpandItemNewMonthMenuBinding;
 import com.example.hoitnote.databinding.HzsExpandItemYearMenuBinding;
 import com.example.hoitnote.models.flow.HzsTally;
 import com.example.hoitnote.models.flow.HzsYearData;
+import com.example.hoitnote.utils.constants.Constants;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
@@ -30,18 +31,22 @@ public class HzsFirstExpandableListViewAdapter extends BaseExpandableListAdapter
     private LayoutInflater inflater;
     private List<FirstHolder> firstHolders = new ArrayList<>();
     private HashSet<Integer> visitedFirstHolders = new HashSet<>();
-
     private List<List<SecondHolder>> secondHolders = new ArrayList<>();
     private List<HashSet<Integer>> visitedSecondHolders = new ArrayList<>();
     public List<HzsYearData> getYears() {
         return years;
     }
-
     public List<FirstHolder> getFirstHolders() {
         return firstHolders;
     }
     public List<List<SecondHolder>> getSecondHolders() {
         return secondHolders;
+    }
+    public HashSet<Integer> getVisitedFirstHolders() {
+        return visitedFirstHolders;
+    }
+    public List<HashSet<Integer>> getVisitedSecondHolders() {
+        return visitedSecondHolders;
     }
     public HzsFirstExpandableListViewAdapter(List<HzsYearData> years, Context context){
         this.years = years;
@@ -56,7 +61,7 @@ public class HzsFirstExpandableListViewAdapter extends BaseExpandableListAdapter
 
     @Override
     public int getChildrenCount(int i) {
-        return 1;
+        return years.get(i).getMonthDataList().size();
     }
 
     @Override
@@ -85,7 +90,7 @@ public class HzsFirstExpandableListViewAdapter extends BaseExpandableListAdapter
     }
 
     @Override
-    public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
+    public View getGroupView(int i, boolean isExpand, View view, ViewGroup viewGroup) {
         FirstHolder holder = null;
         HzsExpandItemYearMenuBinding binding;
         if(view == null){
@@ -100,6 +105,12 @@ public class HzsFirstExpandableListViewAdapter extends BaseExpandableListAdapter
         if(!visitedFirstHolders.contains(i)) {
             visitedFirstHolders.add(i);
             firstHolders.add(i, holder);
+        }
+        if(isExpand){
+            holder.binding.expandableArrow.setText(Constants.IconDownArrow);
+        }
+        else{
+            holder.binding.expandableArrow.setText(Constants.IconUpArrow);
         }
         holder.binding.header.setText(getYears().get(i).getYear()+"年");
         List<String> info = new ArrayList<>();
@@ -153,6 +164,10 @@ public class HzsFirstExpandableListViewAdapter extends BaseExpandableListAdapter
                 //Log.i(TAG, "onExpansionUpdate: "+expansionFraction+" "+state);
                 if(state == 0){
                     finalHolder.binding.colorBar.setVisibility(View.INVISIBLE);
+                    finalHolder.binding.expandableArrow.setText(Constants.IconCircleArrowDown);
+                }
+                else{
+                    finalHolder.binding.expandableArrow.setText(Constants.IconCircleArrowUp);
                 }
             }
         });
@@ -176,7 +191,7 @@ public class HzsFirstExpandableListViewAdapter extends BaseExpandableListAdapter
             secondHolders.get(i).add(holder);
         }
         HzsContentDayRecyclerViewAdapter adapter = new HzsContentDayRecyclerViewAdapter(getYears().get(i).getMonthDataList().get(i1).getData(), HzsTally.DATE, this,
-                years.get(i),years.get(i).getMonthDataList().get(i1),firstHolders.get(i),secondHolders.get(i),secondHolders.get(i).get(i1));
+                years.get(i),years.get(i).getMonthDataList().get(i1),firstHolders.get(i),secondHolders.get(i),secondHolders.get(i).get(i1),context);
         holder.binding.recyclerView.setAdapter(adapter);
         return view;
     }
@@ -204,16 +219,23 @@ public class HzsFirstExpandableListViewAdapter extends BaseExpandableListAdapter
             info.add(context.getString(R.string.account_outcome) + getYears().get(i).getOut().toString());
             firstHolders.get(i).binding.tipsTextView.startWithList(info, R.anim.anim_bottom_in, R.anim.anim_top_out);
             HashSet<Integer> hashSet = new HashSet<>();
-            visitedSecondHolders.add(hashSet);
-            for(int j=0;j<secondHolders.get(i).size();j++){
-                visitedSecondHolders.get(i).add(j);
-                secondHolders.get(i).get(j).binding.setHzsMonthData(getYears().get(i).getMonthDataList().get(j));
-                List<String> info1 = new ArrayList<>();
-                info1.add(context.getString(R.string.account_remain_money) + getYears().get(i).getMonthDataList().get(j).getBalance());
-                info1.add(context.getString(R.string.account_income) + getYears().get(i).getMonthDataList().get(j).getIncome());
-                info1.add(context.getString(R.string.account_outcome) + getYears().get(i).getMonthDataList().get(j).getOutcome());
-                secondHolders.get(i).get(j).binding.tipsTextView.startWithList(info1, R.anim.anim_bottom_in, R.anim.anim_top_out);
+            if(secondHolders.size() > i){
+                visitedSecondHolders.add(hashSet);
+                for(int j=0;j<secondHolders.get(i).size();j++){
+                    visitedSecondHolders.get(i).add(j);
+                    secondHolders.get(i).get(j).binding.setHzsMonthData(getYears().get(i).getMonthDataList().get(j));
+                    List<String> info1 = new ArrayList<>();
+                    info1.add(context.getString(R.string.account_remain_money) + getYears().get(i).getMonthDataList().get(j).getBalance());
+                    info1.add(context.getString(R.string.account_income) + getYears().get(i).getMonthDataList().get(j).getIncome());
+                    info1.add(context.getString(R.string.account_outcome) + getYears().get(i).getMonthDataList().get(j).getOutcome());
+                    secondHolders.get(i).get(j).binding.tipsTextView.startWithList(info1, R.anim.anim_bottom_in, R.anim.anim_top_out);
+                }
             }
         }
+    }
+
+    @Override
+    public void onGroupExpanded(int groupPosition) {
+        Log.i(TAG, "onGroupExpanded: "+groupPosition);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.hoitnote;
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -11,6 +12,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import android.view.Menu;
@@ -73,10 +75,11 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this,R.layout.activity_main);
         mainViewModel = new MainViewModel(context);
-
+        initActivity();
     }
 
-    private void initActivity() {
+    @SuppressLint("ClickableViewAccessibility")
+    public void initActivity() {
         /*从viewModel处拿取账户数据，并转换为Fragments*/
         accountCardFragments = mainViewModel.getAccountCardFragments();
         for (AccountCardFragment accountCardFragment:
@@ -117,7 +120,10 @@ public class MainActivity extends BaseActivity {
 
             }
         });
-        /*拖动视图*/
+        /*可拖拽*/
+        binding.floatingButton.setOnTouchListener(new BaseActionButtonDraggableLisener());
+
+        /*上下拖动视图*/
         binding.drawer.setDraggableHandListener(new DraggableHand.DraggableHandListener() {
             @Override
             public void onTouchDown(float x, float y) {
@@ -180,7 +186,6 @@ public class MainActivity extends BaseActivity {
     public void onResume() {
         super.onResume();
         /*保证每次更新Card*/
-        initActivity();
         updateCurrentAccountCardListView();
     }
 
@@ -374,4 +379,8 @@ public class MainActivity extends BaseActivity {
             }
         },500);
     }
+
+
+
+
 }

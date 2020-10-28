@@ -7,6 +7,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -185,5 +187,24 @@ public class BaseActivity extends AppCompatActivity {
     }
 
 
-
+    float dX;
+    float dY;
+    public final class BaseActionButtonDraggableLisener implements View.OnTouchListener {
+        @SuppressLint("ClickableViewAccessibility")
+        public boolean onTouch(View view, MotionEvent event) {
+            switch (event.getActionMasked()) {
+                case MotionEvent.ACTION_DOWN:
+                    dX = view.getX() - event.getRawX();
+                    dY = view.getY() - event.getRawY();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    view.setY(event.getRawY() + dY);
+                    view.setX(event.getRawX() + dX);
+                    break;
+                default:
+                    return false;
+            }
+            return false;
+        }
+    }
 }

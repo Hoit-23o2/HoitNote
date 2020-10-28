@@ -22,12 +22,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.example.hoitnote.BaseActivity;
+import com.example.hoitnote.MainActivity;
 import com.example.hoitnote.R;
 import com.example.hoitnote.adapters.main.TallyListAdapter;
 import com.example.hoitnote.databinding.ActivityRecycleBinding;
 import com.example.hoitnote.models.Tally;
 import com.example.hoitnote.utils.App;
 import com.example.hoitnote.utils.constants.Constants;
+import com.example.hoitnote.utils.helpers.NavigationHelper;
 import com.example.hoitnote.utils.helpers.ThemeHelper;
 import com.example.hoitnote.viewmodels.RecycleViewModel;
 import com.example.hoitnote.viewmodels.TallyViewModel;
@@ -54,8 +56,8 @@ public class RecycleActivity extends BaseActivity {
         tallyListAdapter = new TallyListAdapter(context, tallyViewModels);
         binding.recycleListView.setAdapter(tallyListAdapter);
         initActivity();
-
     }
+
     private boolean isSelectedAll = false;
     private void initActivity() {
         showBackButton();
@@ -159,6 +161,12 @@ public class RecycleActivity extends BaseActivity {
                                 App.backupDataBaseHelper.delTally(tallyViewModel.getTally());
                                 App.dataBaseHelper.addTally(tallyViewModel.getTally());
                                 App.dataBaseHelper.addAccount(tallyViewModel.getTally().getAccount());
+                            }
+                        }
+                        for (BaseActivity baseActivity:
+                                NavigationHelper.navigationStack) {
+                            if(baseActivity instanceof MainActivity){
+                                ((MainActivity) baseActivity).initActivity();
                             }
                         }
                         /*Close CAB*/

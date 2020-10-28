@@ -299,32 +299,37 @@ public class BookingTransferFragment extends BookingBaseFragment {
         String project = projectTextView.getText().toString();
         String vendor = storeTextView.getText().toString();
         String classificationOutcome = "转账支出";
+        String classificationOutcome2 = "转至";
         String classificationIncome = "转账收入";
+        String classificationIncome2 = "来自";
         List<String> accountItems = BookingDataHelper.getAccounts();
         String outcomeAccount = outcomeAccountTextView.getText().toString();
         String incomeAccount = incomeAccountTextView.getText().toString();
 
+        Account outComeAcc = new Account();
+        String [] arr1 = outcomeAccount.split("\\s+");
+        outComeAcc.setAccountName(arr1[0]);
+        if(arr1.length > 1){
+            outComeAcc.setAccountCode(arr1[1]);
+        }
+
+        Account incomeAcc = new Account();
+        String [] arr2 = incomeAccount.split("\\s+");
+        incomeAcc.setAccountName(arr2[0]);
+        if(arr2.length > 1){
+            incomeAcc.setAccountCode(arr2[1]);
+        }
         if(accountItems.contains(outcomeAccount)){
-            Account account = new Account();
-            String [] arr = outcomeAccount.split("\\s+");
-            account.setAccountName(arr[0]);
-            if(arr.length > 1){
-                account.setAccountCode(arr[1]);
-            }
-            Tally tally = new Tally(money,date,time,remark,account, ActionType.OUTCOME,
-                    classificationOutcome,classificationOutcome,memeber,project,vendor);
+
+            Tally tally = new Tally(money,date,time,remark,outComeAcc, ActionType.OUTCOME,
+                    classificationOutcome,classificationOutcome2+incomeAcc.getAccountName(),memeber,project,vendor);
             Toast.makeText(getContext(),tally.getDate().toString(),Toast.LENGTH_SHORT).show();
             App.dataBaseHelper.addTally(tally);
         }
         if(accountItems.contains(incomeAccount)){
-            Account account = new Account();
-            String [] arr = incomeAccount.split("\\s+");
-            account.setAccountName(arr[0]);
-            if(arr.length > 1){
-                account.setAccountCode(arr[1]);
-            }
-            Tally tally = new Tally(money,date,time,remark,account, ActionType.INCOME,
-                    classificationIncome,classificationIncome,memeber,project,vendor);
+
+            Tally tally = new Tally(money,date,time,remark,incomeAcc, ActionType.INCOME,
+                    classificationIncome,classificationIncome2+outComeAcc.getAccountName(),memeber,project,vendor);
             Toast.makeText(getContext(),tally.getDate().toString(),Toast.LENGTH_SHORT).show();
             App.dataBaseHelper.addTally(tally);
         }

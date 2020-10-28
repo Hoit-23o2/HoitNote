@@ -242,6 +242,8 @@ public class Constants {
     public static final String IconEarphone = "\uf58f";
     public static final String IconArrowLeft = "\uf053";
     public static final String IconArrowRight = "\uf054";
+    public static final String IconCircleArrowDown = "\uf13a";
+    public static final String IconCircleArrowUp = "\uf139";
     public static final String IconNormal = "\uf005";
     public static final String IconIncome = "\uf060";
     public static final String IconOutcome = "\uf061";

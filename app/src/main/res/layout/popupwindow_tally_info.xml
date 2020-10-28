@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="tally"
+            type="com.example.hoitnote.models.flow.HzsTally" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        style="@style/HoitPopupViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="15dp">
+        <LinearLayout
+            android:id="@+id/mainContainer"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <androidx.cardview.widget.CardView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    app:cardElevation="0dp"
+                    android:layout_margin="20dp"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="30dp">
+                    <com.example.hoitnote.customviews.FontAwesome
+                        android:id="@+id/hzs_expand_item_tally_icon"
+                        style="@style/HoitIconUnclickable"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text='@{tally.iconCode}'/>
+                </androidx.cardview.widget.CardView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal"
+                    android:layout_margin="10dp"
+                    android:gravity="center">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        style="@style/HoitSubTitleText"
+                        android:text="@{tally.classname}"
+                        android:gravity="center"/>
+
+                    <include layout="@layout/divider_vertical"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        style="@style/HoitTitleText"
+                        android:text='@{tally.money+"￥"}'
+                        android:gravity="center"/>
+
+                    <include layout="@layout/divider_vertical"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        style="@style/HoitSubTitleText"
+                        android:text="@{tally.account}"
+                        android:gravity="center"/>
+                </LinearLayout>
+                <include layout="@layout/divider_normal"/>
+            </LinearLayout>
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_margin="10dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="成  员"
+                            style="@style/HoitTitleText"/>
+                        <TextView
+                            android:layout_margin="10dp"
+                            android:id="@+id/member_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{tally.member}"
+                            style="@style/HoitSubTitleText"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_margin="10dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="商  家"
+                            style="@style/HoitTitleText"/>
+                        <TextView
+                            android:layout_margin="10dp"
+                            android:id="@+id/vendor_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{tally.vendor}"
+                            style="@style/HoitSubTitleText"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_margin="10dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="项  目"
+                            style="@style/HoitTitleText"/>
+                        <TextView
+                            android:layout_margin="10dp"
+                            android:id="@+id/project_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{tally.project}"
+                            style="@style/HoitSubTitleText"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_margin="10dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="备  注"
+                            style="@style/HoitTitleText"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_margin="10dp"
+                        android:id="@+id/more_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:text="@{tally.remark}"
+                        style="@style/HoitSubTitleText"/>
+                </LinearLayout>
+            </ScrollView>
+
+        </LinearLayout>
+
+
+
+
+
+    </androidx.cardview.widget.CardView>
+</layout>

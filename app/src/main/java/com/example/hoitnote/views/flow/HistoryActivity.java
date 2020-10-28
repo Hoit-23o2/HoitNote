@@ -5,6 +5,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -50,6 +51,7 @@ import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.ActionType;
 import com.example.hoitnote.utils.enums.BookingType;
 import com.example.hoitnote.utils.helpers.BookingDataHelper;
+import com.nambimobile.widgets.efab.ExpandableFab;
 
 
 import java.sql.Date;
@@ -120,6 +122,7 @@ public class HistoryActivity extends BaseActivity{
     public int getDay() {
         return day;
     }
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,6 +134,10 @@ public class HistoryActivity extends BaseActivity{
         DataBaseFilter filter = new DataBaseFilter(null,null,-1,null,null,null);
         totalData = getTotalData(filter);
         showDataAsTotal();
+        /*可拖拽*/
+        findViewById(R.id.floatingButton).setOnTouchListener(
+                new BaseActionButtonDraggableLisener()
+        );
 
         initBottomTimeFrameButton();
         initBottomClassButton();
