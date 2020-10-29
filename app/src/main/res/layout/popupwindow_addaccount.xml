@@ -38,6 +38,7 @@
                     android:paddingLeft="5dp" />
 
                 <EditText
+                    android:inputType="number"
                     android:drawablePadding="5dp"
                     android:ems="10"
                     android:layout_height="50dp"

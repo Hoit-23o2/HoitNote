@@ -53,6 +53,9 @@
                     <include layout="@layout/divider_vertical"/>
 
                     <TextView
+                        android:id="@+id/detailMoney"
+                        android:singleLine="true"
+                        android:ellipsize="marquee"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

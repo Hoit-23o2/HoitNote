@@ -119,10 +119,13 @@
                             </androidx.cardview.widget.CardView>
 
                             <TextView
+                                android:singleLine="true"
+                                android:ellipsize="marquee"
                                 android:textSize="14sp"
                                 android:id="@+id/money"
                                 style="@style/TallyMoneyText"
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
+                                android:layout_weight="0.3"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:gravity="end"
@@ -174,7 +177,6 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
-
                     <TextView
                         android:id="@+id/hzs_expand_item_tally_day"
                         android:layout_width="wrap_content"
@@ -186,7 +188,6 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_bias="0.0" />
-
                     <TextView
                         android:id="@+id/hzs_expand_item_tally_weekday"
                         android:layout_width="wrap_content"
@@ -198,8 +199,6 @@
                         app:layout_constraintStart_toStartOf="@+id/hzs_expand_item_tally_day"
                         app:layout_constraintTop_toTopOf="@+id/hzs_expand_item_tally_day" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
-
                 <com.example.hoitnote.customviews.FontAwesome
                     android:id="@+id/hzs_expand_item_tally_icon"
                     android:layout_width="40dp"
@@ -214,7 +213,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                      />
-
                 <TextView
                     android:id="@+id/hzs_expand_item_tally_classname"
                     android:layout_width="wrap_content"
@@ -227,7 +225,6 @@
                     app:layout_constraintStart_toEndOf="@+id/hzs_expand_item_tally_icon"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.372" />
-
                 <TextView
                     android:id="@+id/hzs_expand_item_tally_time"
                     android:layout_width="wrap_content"
@@ -236,7 +233,6 @@
                     android:textSize="15dp"
                     app:layout_constraintStart_toStartOf="@+id/hzs_expand_item_tally_classname"
                     app:layout_constraintTop_toBottomOf="@+id/hzs_expand_item_tally_classname" />
-
                 <TextView
                     android:id="@+id/hzs_expand_item_tally_account"
                     android:layout_width="wrap_content"
@@ -249,7 +245,6 @@
                     app:layout_constraintStart_toEndOf="@+id/hzs_expand_item_tally_time"
                     app:layout_constraintTop_toBottomOf="@+id/hzs_expand_item_tally_classname"
                     app:layout_constraintVertical_bias="1.0" />
-
                 <TextView
                     android:id="@+id/hzs_expand_item_tally_money"
                     android:layout_width="wrap_content"

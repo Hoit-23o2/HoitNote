@@ -83,6 +83,8 @@
                     </androidx.cardview.widget.CardView>
 
                     <TextView
+                        android:singleLine="true"
+                        android:ellipsize="marquee"
                         android:id="@+id/money"
                         style="@style/TallyMoneyText"
                         android:layout_width="0dp"

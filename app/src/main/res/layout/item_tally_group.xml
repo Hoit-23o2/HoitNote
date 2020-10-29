@@ -17,6 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <TextView
+                android:singleLine="true"
+                android:ellipsize="marquee"
                 android:layout_weight="1"
                 style="@style/HoitGroupText"
                 android:text="2020-10-14"
@@ -40,6 +42,8 @@
                 app:mvInterval="3000"
                 app:mvGravity="center"
                 app:mvTextSize="14sp"
+                android:singleLine="true"
+                android:ellipsize="marquee"
                 app:mvTextColor="?attr/textColorSecondary"
                 style="@style/HoitSubTitleText"
                 app:mvSingleLine="true"/>

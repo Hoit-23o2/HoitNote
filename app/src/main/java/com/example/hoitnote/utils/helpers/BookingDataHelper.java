@@ -321,6 +321,7 @@ public class BookingDataHelper {
                         false
                 );
         dialogNormalBinding.setTally(binding.getTally());
+        dialogNormalBinding.detailMoney.setSelected(true);
         final AlertDialog alertDialog =
                 DialogHelper.buildDialog(context, dialogNormalBinding);
         dialogNormalBinding.hzsExpandItemTallyIcon.setBackgroundColor(ThemeHelper.generateColor(context));

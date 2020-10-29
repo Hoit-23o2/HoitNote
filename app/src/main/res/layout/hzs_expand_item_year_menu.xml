@@ -16,6 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
             <TextView
+                android:singleLine="true"
+                android:ellipsize="marquee"
                 android:id="@+id/header"
                 android:layout_weight="1"
                 style="@style/HoitGroupText"
@@ -28,6 +30,8 @@
                 tools:ignore="RtlSymmetry" />
 
             <com.sunfusheng.marqueeview.MarqueeView
+                android:singleLine="true"
+                android:ellipsize="marquee"
                 android:layout_weight="1"
                 android:clickable="false"
                 android:focusable="false"
@@ -59,7 +63,6 @@
 
     </LinearLayout>
     <!--<androidx.constraintlayout.widget.ConstraintLayout
-
         android:layout_width="match_parent"
         android:layout_height="50dp">
     <ImageView
@@ -78,7 +81,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
         android:id="@+id/hzs_expand_item_sub_menu_jieyu"
         android:layout_width="wrap_content"
@@ -90,7 +92,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/hzs_expand_item_sub_menu_header"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/hzs_expand_item_sub_menu_header" />
-
     <TextView
         android:id="@+id/hzs_expand_item_sub_menu_balance"
         android:layout_width="wrap_content"
@@ -103,7 +104,6 @@
         app:layout_constraintStart_toEndOf="@+id/hzs_expand_item_sub_menu_jieyu"
         app:layout_constraintTop_toTopOf="@+id/hzs_expand_item_sub_menu_jieyu"
         app:layout_constraintVertical_bias="0.0" />
-
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="0.5dp"

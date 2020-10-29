@@ -49,6 +49,8 @@
             android:text="@string/account_remain_money"
             style="@style/HoitTitleText"/>
         <TextView
+            android:singleLine="true"
+            android:ellipsize="marquee"
             android:layout_marginHorizontal="10dp"
             android:id="@+id/hzs_history_content_as_month_balance"
             android:layout_width="wrap_content"

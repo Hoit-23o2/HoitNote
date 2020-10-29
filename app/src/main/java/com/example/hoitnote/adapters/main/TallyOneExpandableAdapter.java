@@ -101,7 +101,10 @@ public class TallyOneExpandableAdapter extends BaseExpandableListAdapter {
             groupBinding = (ItemTallyGroupBinding) convertView.getTag();
         }
         String groupIdStr = this.groupsTitle.get(groupId);
+
         groupBinding.groupTitle.setText(groupIdStr);
+        /*groupBinding.groupTitle.setSelected(true);*/
+
         ArrayList<TallyViewModel> tallyViewModels = talliesWithGroup.get(groupIdStr);
         if(tallyViewModels != null){
             int remains;
@@ -153,7 +156,9 @@ public class TallyOneExpandableAdapter extends BaseExpandableListAdapter {
         ArrayList<TallyViewModel> group = talliesWithGroup.get(this.groupsTitle.get(groupId));
         if(group != null){
             binding.setTallyViewModel(group.get(childId));
+            /*binding.money.setSelected(true);*/
         }
+
         PopupwindowTallyInfoBinding dialogNormalBinding =
                 DataBindingUtil.inflate(
                         LayoutInflater.from(context),
@@ -164,7 +169,9 @@ public class TallyOneExpandableAdapter extends BaseExpandableListAdapter {
         dialogNormalBinding.setTally(new HzsTally(group.get(childId).getTally(), 0));
         final AlertDialog alertDialog =
                 DialogHelper.buildDialog(context, dialogNormalBinding);
+
         dialogNormalBinding.hzsExpandItemTallyIcon.setBackgroundColor(ThemeHelper.generateColor(context));
+        dialogNormalBinding.detailMoney.setSelected(true);
 
         int height = DeviceHelper.getDeviceHeight(context);
         FrameLayout.LayoutParams layoutParams =

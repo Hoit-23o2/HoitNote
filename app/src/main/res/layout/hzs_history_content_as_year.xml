@@ -42,6 +42,8 @@
             style="@style/HoitTitleText"
             android:gravity="center"/>
         <TextView
+            android:singleLine="true"
+            android:ellipsize="marquee"
             android:id="@+id/hzs_history_content_as_year_balance"
             android:layout_width="wrap_content"
             android:layout_marginHorizontal="10dp"

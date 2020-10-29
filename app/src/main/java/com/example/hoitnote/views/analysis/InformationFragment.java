@@ -62,6 +62,10 @@ public class InformationFragment extends Fragment{
 
         binding.setAccountCardViewModel(accountCardViewModel);
         binding.informationContainer.setAlpha(0);
+        /*可水平滚动*/
+        binding.moneyIncome.setSelected(true);
+        binding.moneyOutcome.setSelected(true);
+        binding.moneyRemain.setSelected(true);
 
         /*初始化1：1Container*/
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams)

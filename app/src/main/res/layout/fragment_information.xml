@@ -102,6 +102,9 @@
                                 android:layout_height="wrap_content"/>
 
                             <TextView
+                                android:id="@+id/money_remain"
+                                android:singleLine="true"
+                                android:ellipsize="marquee"
                                 android:layout_margin="10dp"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -124,6 +127,9 @@
                                 android:layout_height="wrap_content"/>
 
                             <TextView
+                                android:id="@+id/money_income"
+                                android:singleLine="true"
+                                android:ellipsize="marquee"
                                 android:layout_margin="10dp"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -145,6 +151,9 @@
                                 android:layout_height="wrap_content"/>
 
                             <TextView
+                                android:id="@+id/money_outcome"
+                                android:singleLine="true"
+                                android:ellipsize="marquee"
                                 android:layout_margin="10dp"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"

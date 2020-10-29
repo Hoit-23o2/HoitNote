@@ -48,6 +48,8 @@
             android:text="结余"
             style="@style/HoitTitleText"/>
         <TextView
+            android:singleLine="true"
+            android:ellipsize="marquee"
             android:id="@+id/hzs_history_content_as_season_balance"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

@@ -91,6 +91,8 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
+            android:singleLine="true"
+            android:ellipsize="marquee"
             android:layout_gravity="center_vertical"
             style="@style/HoitTitleText"
             android:id="@+id/hzs_history_content_as_day_balance"
