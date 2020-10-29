@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+
+    </data>
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:singleLine="true"
+                android:ellipsize="marquee"
+                android:id="@+id/header"
+                android:layout_weight="1"
+                style="@style/HoitGroupText"
+                android:text="2020-10-14"
+                android:paddingRight="?android:attr/expandableListPreferredChildIndicatorRight"
+                android:layout_margin="10dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingEnd="?android:attr/expandableListPreferredChildIndicatorRight"
+                tools:ignore="RtlSymmetry" />
+
+            <com.sunfusheng.marqueeview.MarqueeView
+                android:singleLine="true"
+                android:ellipsize="marquee"
+                android:layout_weight="1"
+                android:clickable="false"
+                android:focusable="false"
+                android:id="@+id/tipsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:mvAnimDuration="1000"
+                app:mvDirection="bottom_to_top"
+                app:mvInterval="3000"
+                app:mvGravity="center"
+                app:mvTextSize="14sp"
+                app:mvTextColor="?attr/textColorSecondary"
+                style="@style/HoitSubTitleText"
+                app:mvSingleLine="true"/>
+
+            <com.example.hoitnote.customviews.FontAwesome
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:id="@+id/expandableArrow"
+                android:paddingRight="20dp"
+                android:layout_width="0dp"
+                style="@style/HoitGroupText"
+                android:textAlignment="viewEnd"
+                android:textColor="?attr/textColorSecondary"
+                android:layout_height="wrap_content"
+                android:text="@string/right_arrow"
+                android:gravity="end" />
+        </LinearLayout>
+
+    </LinearLayout>
+    <!--<androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/colorSweetPrimaryDark"
+        app:layout_constraintBottom_toTopOf="parent" />
+    <TextView
+        android:id="@+id/hzs_expand_item_sub_menu_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginLeft="28dp"
+        android:text="2020年"
+        android:textSize="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/hzs_expand_item_sub_menu_jieyu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="144dp"
+        android:layout_marginLeft="144dp"
+        android:text="结余"
+        android:textSize="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/hzs_expand_item_sub_menu_header"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/hzs_expand_item_sub_menu_header" />
+    <TextView
+        android:id="@+id/hzs_expand_item_sub_menu_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="@={hzsYearData.balance}"
+        android:textSize="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/hzs_expand_item_sub_menu_jieyu"
+        app:layout_constraintStart_toEndOf="@+id/hzs_expand_item_sub_menu_jieyu"
+        app:layout_constraintTop_toTopOf="@+id/hzs_expand_item_sub_menu_jieyu"
+        app:layout_constraintVertical_bias="0.0" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/colorSweetPrimaryDark"
+        app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>-->
+</layout>

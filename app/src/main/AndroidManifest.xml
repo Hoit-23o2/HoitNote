@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.hoitnote">
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/HoitNote.DefaultTheme">
+        <activity
+            android:name=".views.settings.RecycleActivity"
+            android:parentActivityName=".views.settings.SettingsActivity" />
+
+        <activity android:name=".views.flow.ManageOptionActivity" />
+        <activity android:name=".views.flow.ChooseIconActivity" />
+        <activity android:name=".views.flow.AddOptionActivity" />
+        <activity android:name=".views.flow.ManageClassActivity" />
+
+        <activity
+            android:name=".views.analysis.AnalysisActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".views.settings.PasswordSettingDetailActivity"
+            android:parentActivityName=".views.settings.PasswordSettingActivity" />
+
+        <activity android:name=".views.settings.SyncSettingActivity"
+            android:parentActivityName=".views.settings.SettingsActivity"/>
+
+        <activity
+            android:name=".views.settings.PasswordSettingActivity"
+            android:parentActivityName=".views.settings.SettingsActivity" />
+
+        <activity
+            android:name=".views.settings.ThemeSettingActivity"
+            android:parentActivityName=".views.settings.SettingsActivity" />
+
+        <activity android:name=".views.locks.LockCountDownActivity" />
+
+        <activity
+            android:name=".views.locks.LockActivity"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity android:name=".views.SampleActivity" />
+
+        <activity android:name=".SplashActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:windowSoftInputMode="adjustNothing" />
+
+        <activity
+            android:name=".views.settings.SettingsActivity"
+            android:parentActivityName=".MainActivity" /> <!-- 账单相关 -->
+
+        <activity
+            android:name=".views.tallyadd.BookingActivity"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".views.flow.HistoryActivity"
+            android:parentActivityName=".MainActivity" />
+    </application>
+
+</manifest>

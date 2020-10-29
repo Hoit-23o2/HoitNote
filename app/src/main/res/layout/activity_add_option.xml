@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".views.flow.AddOptionActivity"
+    android:background="@color/colorSweetPrimary">
+    <LinearLayout
+        android:paddingHorizontal="10dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorSweetPrimaryLight">
+
+        <TextView
+            android:id="@+id/text_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="商家名称"
+            style="@style/HoitTitleText"/>
+
+        <EditText
+            android:id="@+id/option_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="end|center_vertical"
+            style="@style/HoitSubTitleText"
+            android:hint="输入名称"
+            android:background="@null"/>
+    </LinearLayout>
+    <LinearLayout
+        android:paddingHorizontal="10dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorSweetPrimaryLight"
+        android:id="@+id/choose_icon">
+
+        <TextView
+            android:id="@+id/text_icon"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="默认商家图标"
+            style="@style/HoitTitleText" />
+
+        <com.example.hoitnote.customviews.FontAwesome
+            android:id="@+id/icon_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="@string/finger_print_icon"
+            style="@style/HoitIconUnclickable"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:tint="@android:color/holo_blue_light" />
+
+        <com.example.hoitnote.customviews.FontAwesome
+            android:id="@+id/right_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            style="@style/HoitIconUnclickable"
+            android:text="@string/circle_arrow_right"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </LinearLayout>
+
+</LinearLayout>

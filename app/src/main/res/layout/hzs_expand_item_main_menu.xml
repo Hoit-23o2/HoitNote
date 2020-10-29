@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="70dp">
+
+    <TextView
+        android:id="@+id/hzs_expand_item_main_menu_first_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="12月"
+        android:textSize="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/hzs_expand_item_second_line"
+        app:layout_constraintHorizontal_bias="0.468"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.105" />
+
+    <TextView
+        android:id="@+id/hzs_expand_item_main_menu_second_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2020年"
+        android:textSize="18dp"
+        app:layout_constraintEnd_toEndOf="@+id/hzs_expand_item_main_menu_first_header"
+        app:layout_constraintStart_toStartOf="@+id/hzs_expand_item_main_menu_first_header"
+        app:layout_constraintTop_toBottomOf="@+id/hzs_expand_item_main_menu_first_header" />
+
+    <ImageView
+        android:id="@+id/hzs_expand_item_second_line"
+        android:layout_width="1dp"
+        android:layout_height="60dp"
+        android:background="@android:color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.239"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/hzs_expand_item_main_menu_balance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="0.0"
+        android:textSize="30dp"
+        app:layout_constraintBottom_toBottomOf="@+id/hzs_expand_item_main_menu_jieyu"
+        app:layout_constraintStart_toEndOf="@+id/hzs_expand_item_main_menu_jieyu"
+        app:layout_constraintTop_toTopOf="@+id/hzs_expand_item_main_menu_jieyu"
+        app:layout_constraintVertical_bias="0.6" />
+
+    <TextView
+        android:id="@+id/hzs_expand_item_main_menu_jieyu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="结余"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/hzs_expand_item_main_menu_zhichu"
+        app:layout_constraintEnd_toEndOf="@+id/hzs_expand_item_main_menu_zhichu"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/hzs_expand_item_main_menu_zhichu" />
+
+    <TextView
+        android:id="@+id/hzs_expand_item_main_menu_shouru"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="108dp"
+        android:layout_marginLeft="108dp"
+        android:text="收入"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/hzs_expand_item_main_menu_zhichu"
+        app:layout_constraintStart_toStartOf="@+id/hzs_expand_item_main_menu_zhichu"
+        app:layout_constraintTop_toTopOf="@+id/hzs_expand_item_main_menu_zhichu"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/hzs_expand_item_main_menu_income"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="1000.0"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/hzs_expand_item_main_menu_shouru"
+        app:layout_constraintStart_toEndOf="@+id/hzs_expand_item_main_menu_shouru"
+        app:layout_constraintTop_toTopOf="@+id/hzs_expand_item_main_menu_shouru" />
+
+    <TextView
+        android:id="@+id/hzs_expand_item_main_menu_zhichu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="支出"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.187"
+        app:layout_constraintStart_toEndOf="@+id/hzs_expand_item_second_line"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.8" />
+
+    <TextView
+        android:id="@+id/hzs_expand_item_main_menu_outcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="1000.0"
+        android:textSize="15dp"
+        app:layout_constraintBottom_toBottomOf="@+id/hzs_expand_item_main_menu_zhichu"
+        app:layout_constraintStart_toEndOf="@+id/hzs_expand_item_main_menu_zhichu"
+        app:layout_constraintTop_toTopOf="@+id/hzs_expand_item_main_menu_zhichu" />
+
+    <ImageView
+        android:id="@+id/hzs_expand_item_main_menu_image_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:src="@drawable/hzs_down"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.958"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@android:color/black" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

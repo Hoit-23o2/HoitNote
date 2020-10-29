@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:singleLine="true"
+                android:ellipsize="marquee"
+                android:layout_weight="1"
+                style="@style/HoitGroupText"
+                android:text="2020-10-14"
+                android:paddingRight="?android:attr/expandableListPreferredChildIndicatorRight"
+                android:layout_margin="10dp"
+                android:id="@+id/groupTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingEnd="?android:attr/expandableListPreferredChildIndicatorRight"
+                tools:ignore="RtlSymmetry" />
+
+            <com.sunfusheng.marqueeview.MarqueeView
+                android:layout_weight="1"
+                android:clickable="false"
+                android:focusable="false"
+                android:id="@+id/tipsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:mvAnimDuration="1000"
+                app:mvDirection="bottom_to_top"
+                app:mvInterval="3000"
+                app:mvGravity="center"
+                app:mvTextSize="14sp"
+                android:singleLine="true"
+                android:ellipsize="marquee"
+                app:mvTextColor="?attr/textColorSecondary"
+                style="@style/HoitSubTitleText"
+                app:mvSingleLine="true"/>
+
+            <com.example.hoitnote.customviews.FontAwesome
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:id="@+id/expandableArrow"
+                android:paddingRight="20dp"
+                android:layout_width="0dp"
+                style="@style/HoitGroupText"
+                android:textAlignment="viewEnd"
+                android:textColor="?attr/textColorSecondary"
+                android:layout_height="wrap_content"
+                android:text="@string/right_arrow"
+                android:gravity="end" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</layout>

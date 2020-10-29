@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent">
+            <Button
+                android:id="@+id/hzs_history_content_as_month_year"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="2020年"
+                style="@style/HoitTitleText"
+                android:background="@android:color/transparent"/>
+
+            <Button
+                android:id="@+id/hzs_history_content_as_month_month"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="10月"
+                style="@style/HoitTitleText"
+                android:gravity="center"
+                android:background="@android:color/transparent"/>
+
+            <com.example.hoitnote.customviews.FontAwesome
+                android:id="@+id/expandableArrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/hzs_history_content_as_month_month"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="\uf107"/>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/hzs_history_content_as_month_jieyu"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:text="@string/account_remain_money"
+            style="@style/HoitTitleText"/>
+        <TextView
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:layout_marginHorizontal="10dp"
+            android:id="@+id/hzs_history_content_as_month_balance"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            style="@style/HoitTitleText"
+            android:text="1000.0￥"/>
+
+
+    </LinearLayout>
+
+    <ExpandableListView
+        android:divider="@null"
+        android:groupIndicator="@null"
+        android:orientation="vertical"
+        android:id="@+id/hzs_history_content_as_month_expandable_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

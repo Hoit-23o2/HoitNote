@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="HoitNoteClView">
+        <attr name="clTextColor" format="color" />
+        <attr name="clBackgroundColor" format="color"/>
+        <attr name="clBackgroundInsideColor" format="color"/>
+        <attr name="clGridColor" format="color"/>
+    </declare-styleable>
+</resources>

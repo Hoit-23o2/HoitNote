@@ -1,0 +1,56 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 29
+
+    defaultConfig {
+        applicationId "com.example.hoitnote"
+        minSdkVersion 16
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    dataBinding{
+        enabled = true
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation 'com.github.bumptech.glide:glide:4.11.0' //Glide依赖，图片库
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    implementation 'com.wuyr:rippleanimation:1.0.0' //RippleAnim
+    implementation 'com.andrognito.patternlockview:patternlockview:1.0.0'//手势解锁
+    implementation 'androidx.biometric:biometric:1.0.1'//指纹相关
+    implementation 'com.airbnb.android:lottie:3.4.3'//Lottie Animation
+    implementation 'androidx.preference:preference:1.1.1'
+    implementation 'com.contrarywind:Android-PickerView:4.1.9' //PickerView
+    implementation 'com.android.support:support-v4:20.+'
+    implementation "com.daimajia.swipelayout:library:1.2.0@aar" //滑动删除控件
+    implementation 'com.caverock:androidsvg-aar:1.4' //SVG
+    implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar' //TabLayout
+    implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2' //可展开控件
+    implementation 'com.sunfusheng:marqueeview:1.3.3' //垂直跑马灯
+    implementation 'com.nambimobile.widgets:expandable-fab:1.0.0'//可展开actionButton
+    compileOnly 'com.android.support:appcompat-v7:25.3.1'
+    implementation 'com.github.huburt-Hu:NewbieGuide:v2.4.0'    //new user guide
+
+}
