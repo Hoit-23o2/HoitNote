@@ -32,12 +32,13 @@
                 style="@style/HoitTitleText"
                 android:background="@android:color/transparent"/>
 
-            <ImageView
+            <com.example.hoitnote.customviews.FontAwesome
+                android:layout_marginHorizontal="10dp"
                 android:layout_gravity="center_vertical"
-                android:id="@+id/imageView"
+                android:id="@+id/expandableArrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/hzs_down" />
+                android:text="\uf107"/>
         </LinearLayout>
 
         <TextView

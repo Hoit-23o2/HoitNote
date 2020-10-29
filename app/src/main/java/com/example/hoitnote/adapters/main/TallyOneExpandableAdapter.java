@@ -132,9 +132,9 @@ public class TallyOneExpandableAdapter extends BaseExpandableListAdapter {
 
         /*设置展开图标*/
         if (isExpanded) {
-            groupBinding.expandableArrow.setText(Constants.IconDownArrow);
-        } else {
             groupBinding.expandableArrow.setText(Constants.IconUpArrow);
+        } else {
+            groupBinding.expandableArrow.setText(Constants.IconDownArrow);
         }
 
         return groupBinding.getRoot();

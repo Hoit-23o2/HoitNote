@@ -107,10 +107,10 @@ public class HzsFirstExpandableListViewAdapter extends BaseExpandableListAdapter
             firstHolders.add(i, holder);
         }
         if(isExpand){
-            holder.binding.expandableArrow.setText(Constants.IconDownArrow);
+            holder.binding.expandableArrow.setText(Constants.IconUpArrow);
         }
         else{
-            holder.binding.expandableArrow.setText(Constants.IconUpArrow);
+            holder.binding.expandableArrow.setText(Constants.IconDownArrow);
         }
         holder.binding.header.setText(getYears().get(i).getYear()+"年");
         List<String> info = new ArrayList<>();

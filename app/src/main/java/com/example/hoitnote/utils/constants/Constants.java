@@ -235,8 +235,8 @@ public class Constants {
         IconFonts.add("\uf51e");
     }
     public static final String IconAdd = "\uf067";
-    public static final String IconUpArrow = "\uf107";
-    public static final String IconDownArrow = "\uf106";
+    public static final String IconUpArrow = "\uf106";
+    public static final String IconDownArrow = "\uf107";
     public static final String IconPhone = "\uf3cd";
     public static final String IconComputer = "\uf108";
     public static final String IconEarphone = "\uf58f";

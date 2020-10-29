@@ -3,6 +3,8 @@ package com.example.hoitnote.views.tallyadd;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -154,6 +156,7 @@ public class BookingBaseFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        restoreTempTally();
         refreshPickerView();
     }
     protected void refreshPickerView(){
@@ -163,8 +166,14 @@ public class BookingBaseFragment extends Fragment {
             classifications2.clear();
             classifications2.addAll(BookingDataHelper.getClassifications2WithIcons(bookingType));
             pvClassificationOptions.setPicker(classifications1,classifications2);
-            firstClassString = classifications1.get(0);
-            secondClassString = classifications2.get(0).get(0);
+            if(!classifications1.contains(firstClassString)){
+                firstClassString = classifications1.get(0);
+                secondClassString = classifications2.get(0).get(0);
+            }else{
+                if(!classifications2.get(classifications1.indexOf(firstClassString)).contains(secondClassString)){
+                    secondClassString = classifications2.get(classifications1.indexOf(firstClassString)).get(0);
+                }
+            }
             firstClassTextView.setText(firstClassString);
             secondClassTextView.setText(secondClassString);
         }
@@ -172,21 +181,27 @@ public class BookingBaseFragment extends Fragment {
             personItems.clear();
             personItems.addAll(BookingDataHelper.getPersons());
             pvPersonOptions.setPicker(personItems);
-            personString = personItems.get(0);
+            if(!personItems.contains(personString)){
+                personString = personItems.get(0);
+            }
             personTextView.setText(personString);
         }
         if(pvProjectOptions != null){
             projectItems.clear();
             projectItems.addAll(BookingDataHelper.getProjects());
             pvProjectOptions.setPicker(projectItems);
-            projectString = projectItems.get(0);
+            if(!projectItems.contains(projectString)){
+                projectString = projectItems.get(0);
+            }
             projectTextView.setText(projectString);
         }
         if(pvStoreOptions != null){
             storeItems.clear();
             storeItems.addAll(BookingDataHelper.getStores());
             pvStoreOptions.setPicker(storeItems);
-            storeString = storeItems.get(0);
+            if(!storeItems.contains(storeString)){
+                storeString = storeItems.get(0);
+            }
             storeTextView.setText(storeString);
         }
 
@@ -459,6 +474,45 @@ public class BookingBaseFragment extends Fragment {
     protected void editTextInit(View view){
         noteEditText = view.findViewById(R.id.hzs_booking_note_button);
         moneyEditText = view.findViewById(R.id.hzs_booking_money_button);
+        moneyEditText.addTextChangedListener(new TextWatcher() {
+            public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {}
+
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {}
+
+            public void afterTextChanged(Editable arg0) {
+                String str = moneyEditText.getText().toString();
+                if (str.isEmpty()) return;
+                String str2 = PerfectDecimal(str, 8, 2);
+
+                if (!str2.equals(str)) {
+                    moneyEditText.setText(str2);
+                    moneyEditText.setSelection(str2.length());
+                }
+            }
+        });
+    }
+    private String PerfectDecimal(String str, int MAX_BEFORE_POINT, int MAX_DECIMAL){
+        if(str.charAt(0) == '.') str = "0"+str;
+        int max = str.length();
+
+        String rFinal = "";
+        boolean after = false;
+        int i = 0, up = 0, decimal = 0; char t;
+        while(i < max){
+            t = str.charAt(i);
+            if(t != '.' && after == false){
+                up++;
+                if(up > MAX_BEFORE_POINT) return rFinal;
+            }else if(t == '.'){
+                after = true;
+            }else{
+                decimal++;
+                if(decimal > MAX_DECIMAL)
+                    return rFinal;
+            }
+            rFinal = rFinal + t;
+            i++;
+        }return rFinal;
     }
     protected void storeButtonInit(View view){
         final View chooseStoreButton = view.findViewById(R.id.hzs_booking_store_button);

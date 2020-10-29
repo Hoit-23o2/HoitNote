@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.CustomListener;
+import com.bigkoo.pickerview.listener.OnDismissListener;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
@@ -80,6 +81,10 @@ public class HistoryActivity extends BaseActivity{
     private OptionsPickerView pvBottomTimeFrameOptions;
     private OptionsPickerView pvBottomProjectOptions;
     private OptionsPickerView pvBottomAccountOptions;
+    private OptionsPickerView pvContentYearOptions;
+    private OptionsPickerView pvContentSeasonOptions;
+    private OptionsPickerView pvContentMonthOptions;
+    private TimePickerView pvContentDayOptions;
     private View totalContentView;
     private View yearContentView;
     private View seasonContentView;
@@ -327,6 +332,7 @@ public class HistoryActivity extends BaseActivity{
             out += data.getOut();
         }
         showMainData();
+
     }
     private void showDataAsSeason(){
         contentLayout.removeAllViews();
@@ -375,7 +381,7 @@ public class HistoryActivity extends BaseActivity{
         ((TextView)dayContentView.findViewById(R.id.hzs_history_content_as_day_year)).setText(String.valueOf(year)+"年");
         ((TextView)dayContentView.findViewById(R.id.hzs_history_content_as_day_month)).setText(String.valueOf(month)+"日");
         ((TextView)dayContentView.findViewById(R.id.hzs_history_content_as_day_day)).setText(String.valueOf(day)+"日");
-        HzsContentDayRecyclerViewAdapter adapter = new HzsContentDayRecyclerViewAdapter(dayData, HzsTally.TIME,null);
+        HzsContentDayRecyclerViewAdapter adapter = new HzsContentDayRecyclerViewAdapter(dayData, HzsTally.TIME,this);
         RecyclerView recyclerView = (RecyclerView)dayContentView.findViewById(R.id.hzs_history_content_as_day_recyclerview);
         recyclerView.setAdapter(adapter);
         LinearLayoutManager linearLayout = new LinearLayoutManager(this);
@@ -396,7 +402,7 @@ public class HistoryActivity extends BaseActivity{
         }
         showMainData();
     }
-    private void initDayContentButton(View view){
+    private void initDayContentButton(final View view){
         View chooseButton = (View) view.findViewById(R.id.hzs_history_content_as_day_button);
         final TextView yearTextView = (TextView) view.findViewById(R.id.hzs_history_content_as_day_year);
         final TextView monthTextView = (TextView) view.findViewById(R.id.hzs_history_content_as_day_month);
@@ -409,7 +415,7 @@ public class HistoryActivity extends BaseActivity{
         startDate.set(1970,0,1);
         endDate.set(2020,11,31);
         //时间选择器
-        final TimePickerView pvTime = new TimePickerBuilder(this, new OnTimeSelectListener() {
+        pvContentDayOptions = new TimePickerBuilder(this, new OnTimeSelectListener() {
             @Override
             public void onTimeSelect(java.util.Date date, View v) {
                 yearTextView.setText(String.valueOf(date.getYear()+1900)+"年");
@@ -421,15 +427,42 @@ public class HistoryActivity extends BaseActivity{
                 day = date.getDate();
                 showDataAsMode();
             }
-        }).setCancelText("取消")
+        }).setLayoutRes(R.layout.hzs_choose_time_pickerview, new CustomListener() {
+            @Override
+            public void customLayout(View v) {
+                //自定义布局中的控件初始化及事件处理
+                final TextView tvSubmit = v.findViewById(R.id.finish_button);
+                final TextView tvCancel = v.findViewById(R.id.cancel_button);
+
+                tvSubmit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pvContentDayOptions.returnData();
+                        pvContentDayOptions.dismiss();
+                    }
+                });
+                tvCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pvContentDayOptions.dismiss();
+                    }
+                });
+            }
+        })
                 .setDate(selectedDate)// 如果不设置的话，默认是系统时间
                 .setRangDate(startDate,endDate)//起始终止年月日设定
-                .setSubmitText("确认")
                 .build();
         chooseButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                pvTime.show();
+            public void onClick(View view1) {
+                pvContentDayOptions.show();
+                ((TextView)view.findViewById(R.id.expandableArrow)).setText(Constants.IconUpArrow);
+            }
+        });
+        pvContentDayOptions.setOnDismissListener(new OnDismissListener() {
+            @Override
+            public void onDismiss(Object o) {
+                ((TextView)view.findViewById(R.id.expandableArrow)).setText(Constants.IconDownArrow);
             }
         });
     }
@@ -444,7 +477,7 @@ public class HistoryActivity extends BaseActivity{
         for (int i=1;i<13;i++){
             monthItems.add(String.valueOf(i));
         }
-        final OptionsPickerView pvOptions = new OptionsPickerBuilder(HistoryActivity.this, new OnOptionsSelectListener() {
+        pvContentMonthOptions = new OptionsPickerBuilder(HistoryActivity.this, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                 String chosenYear = yearsItems.get(options1);
@@ -458,20 +491,47 @@ public class HistoryActivity extends BaseActivity{
                 month = Integer.parseInt(chosenMonth);
                 showDataAsMode();
             }
-        }).setSubmitText("确定")//确定按钮文字
-                .setCancelText("取消")//取消按钮文字
+        }).setLayoutRes(R.layout.hzs_time_frame_pickerview, new CustomListener() {
+            @Override
+            public void customLayout(View v) {
+                //自定义布局中的控件初始化及事件处理
+                final TextView tvSubmit = v.findViewById(R.id.finish_button);
+                final TextView tvCancel = v.findViewById(R.id.cancel_button);
+
+                tvSubmit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pvContentMonthOptions.returnData();
+                        pvContentMonthOptions.dismiss();
+                    }
+                });
+                tvCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pvContentMonthOptions.dismiss();
+                    }
+                });
+            }
+        })
                 .build();
-        pvOptions.setNPicker(yearsItems,monthItems,null);
+        pvContentMonthOptions.setNPicker(yearsItems,monthItems,null);
         chooseYearButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pvOptions.show();
+                pvContentMonthOptions.show();
             }
         });
         chooseMonthButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                pvOptions.show();
+            public void onClick(View view1) {
+                pvContentMonthOptions.show();
+                ((TextView)view.findViewById(R.id.expandableArrow)).setText(Constants.IconUpArrow);
+            }
+        });
+        pvContentMonthOptions.setOnDismissListener(new OnDismissListener() {
+            @Override
+            public void onDismiss(Object o) {
+                ((TextView)view.findViewById(R.id.expandableArrow)).setText(Constants.IconDownArrow);
             }
         });
 
@@ -483,7 +543,7 @@ public class HistoryActivity extends BaseActivity{
         for (int i=2020;i>1969;i--){
             yearsItems.add(String.valueOf(i));
         }
-        final OptionsPickerView pvOptions = new OptionsPickerBuilder(HistoryActivity.this, new OnOptionsSelectListener() {
+        pvContentYearOptions = new OptionsPickerBuilder(HistoryActivity.this, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                 String chosenYear = yearsItems.get(options1);
@@ -493,15 +553,41 @@ public class HistoryActivity extends BaseActivity{
                 year = Integer.parseInt(chosenYear);
                 showDataAsMode();
             }
-        }).setSubmitText("确定")//确定按钮文字
-                .setCancelText("取消")//取消按钮文字
-                .setTitleText("选择年份")
+        }).setLayoutRes(R.layout.hzs_time_frame_pickerview, new CustomListener() {
+            @Override
+            public void customLayout(View v) {
+                //自定义布局中的控件初始化及事件处理
+                final TextView tvSubmit = v.findViewById(R.id.finish_button);
+                final TextView tvCancel = v.findViewById(R.id.cancel_button);
+
+                tvSubmit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pvContentYearOptions.returnData();
+                        pvContentYearOptions.dismiss();
+                    }
+                });
+                tvCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pvContentYearOptions.dismiss();
+                    }
+                });
+            }
+        })
                 .build();
-        pvOptions.setPicker(yearsItems);
+        pvContentYearOptions.setPicker(yearsItems);
         chooseYearButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pvOptions.show();
+                pvContentYearOptions.show();
+                ((TextView)contentView.findViewById(R.id.expandableArrow)).setText(Constants.IconUpArrow);
+            }
+        });
+        pvContentYearOptions.setOnDismissListener(new OnDismissListener() {
+            @Override
+            public void onDismiss(Object o) {
+                ((TextView)contentView.findViewById(R.id.expandableArrow)).setText(Constants.IconDownArrow);
             }
         });
     }
@@ -517,7 +603,7 @@ public class HistoryActivity extends BaseActivity{
         seasonItems.add(Constants.SeasonSummer);
         seasonItems.add(Constants.SeasonAutumn);
         seasonItems.add(Constants.SeasonWinter);
-        final OptionsPickerView pvOptions = new OptionsPickerBuilder(HistoryActivity.this, new OnOptionsSelectListener() {
+        pvContentSeasonOptions = new OptionsPickerBuilder(HistoryActivity.this, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                 String chosenYear = yearsItems.get(options1);
@@ -531,21 +617,48 @@ public class HistoryActivity extends BaseActivity{
                 season = chosenSeason;
                 showDataAsMode();
             }
-        }).setSubmitText("确定")//确定按钮文字
+        }).setLayoutRes(R.layout.hzs_time_frame_pickerview, new CustomListener() {
+            @Override
+            public void customLayout(View v) {
+                //自定义布局中的控件初始化及事件处理
+                final TextView tvSubmit = v.findViewById(R.id.finish_button);
+                final TextView tvCancel = v.findViewById(R.id.cancel_button);
+
+                tvSubmit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pvContentSeasonOptions.returnData();
+                        pvContentSeasonOptions.dismiss();
+                    }
+                });
+                tvCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        pvContentSeasonOptions.dismiss();
+                    }
+                });
+            }
+        })
                 .setTypeface(tf)
-                .setCancelText("取消")//取消按钮文字
                 .build();
-        pvOptions.setNPicker(yearsItems,seasonItems,null);
+        pvContentSeasonOptions.setNPicker(yearsItems,seasonItems,null);
         chooseYearButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pvOptions.show();
+                pvContentSeasonOptions.show();
             }
         });
         chooseSeasonButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                pvOptions.show();
+            public void onClick(View view1) {
+                pvContentSeasonOptions.show();
+                ((TextView)view.findViewById(R.id.expandableArrow)).setText(Constants.IconUpArrow);
+            }
+        });
+        pvContentSeasonOptions.setOnDismissListener(new OnDismissListener() {
+            @Override
+            public void onDismiss(Object o) {
+                ((TextView)view.findViewById(R.id.expandableArrow)).setText(Constants.IconDownArrow);
             }
         });
 

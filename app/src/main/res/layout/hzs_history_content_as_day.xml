@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout
+        android:layout_margin="10dp"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -44,6 +45,7 @@
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
+                android:gravity="center"
                 android:layout_height="match_parent">
                 <TextView
                     android:id="@+id/hzs_history_content_as_day_day"
@@ -58,10 +60,12 @@
                     android:clickable="false"
                     android:textColor="@color/colorDefaultTextPrimary"/>
 
-                <ImageView
+                <com.example.hoitnote.customviews.FontAwesome
+                    android:layout_marginHorizontal="10dp"
+                    android:id="@+id/expandableArrow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/hzs_down" />
+                    android:text="\uf107"/>
             </LinearLayout>
 
 
@@ -106,10 +110,6 @@
 
     </LinearLayout>
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/colorSweetPrimaryDark"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/hzs_history_content_as_day_recyclerview"

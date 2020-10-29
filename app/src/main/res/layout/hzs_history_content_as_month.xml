@@ -31,14 +31,14 @@
                 android:gravity="center"
                 android:background="@android:color/transparent"/>
 
-            <ImageView
-                android:id="@+id/imageView"
+            <com.example.hoitnote.customviews.FontAwesome
+                android:id="@+id/expandableArrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/hzs_down"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/hzs_history_content_as_month_month"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="\uf107"/>
         </LinearLayout>
         <TextView
             android:id="@+id/hzs_history_content_as_month_jieyu"
