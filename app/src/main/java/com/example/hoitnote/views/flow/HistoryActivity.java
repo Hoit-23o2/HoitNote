@@ -7,19 +7,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,7 +45,6 @@ import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.ActionType;
 import com.example.hoitnote.utils.enums.BookingType;
 import com.example.hoitnote.utils.helpers.BookingDataHelper;
-import com.nambimobile.widgets.efab.ExpandableFab;
 
 
 import java.sql.Date;
@@ -627,7 +620,7 @@ public class HistoryActivity extends BaseActivity{
     }
     private void initBottomAccountButton(){
         final View bottomAccountButton = findViewById(R.id.hzs_history_account_btn);
-        final List<String> items = BookingDataHelper.getAccounts();
+        final List<String> items = BookingDataHelper.getAccountsForShow();
         pvBottomAccountOptions = new OptionsPickerBuilder(HistoryActivity.this, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {

@@ -7,27 +7,19 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
-
-import android.text.InputType;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
-import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.CustomListener;
 import com.bigkoo.pickerview.listener.OnOptionsSelectChangeListener;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
-import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
-import com.bigkoo.pickerview.view.TimePickerView;
 import com.example.hoitnote.R;
 import com.example.hoitnote.models.Account;
 import com.example.hoitnote.models.Tally;
@@ -36,14 +28,10 @@ import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.ActionType;
 import com.example.hoitnote.utils.enums.BookingType;
 import com.example.hoitnote.utils.helpers.BookingDataHelper;
+import com.example.hoitnote.utils.helpers.ConvertHelper;
 
 import java.sql.Time;
-import java.text.DateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 public class BookingTransferFragment extends BookingBaseFragment {
     private TextView outcomeAccountTextView;
@@ -52,10 +40,13 @@ public class BookingTransferFragment extends BookingBaseFragment {
     private String incomeAccountString;
     private OptionsPickerView pvOutcomeAccountOptions;
     private OptionsPickerView pvIncomeAccountOptions;
-    private Account nowAccount;
+    private Account outcomeAccount;
+    private Account incomeAccount;
     private int lockedAccount = 0; //0代表Outcome,1代表Income是用户的账户
+    private List<Account> accountList;
     public BookingTransferFragment(BookingType bookingType) {
         super(bookingType);
+        accountList = App.dataBaseHelper.getAccounts();
     }
 
 
@@ -71,7 +62,6 @@ public class BookingTransferFragment extends BookingBaseFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_booking_transfer, container, false);
         clickButtonInit(view);
-
         return view;
     }
 
@@ -92,11 +82,12 @@ public class BookingTransferFragment extends BookingBaseFragment {
     }
 
     private void initNowAccount(){
-        nowAccount = BookingDataHelper.getNowAccount();
-        if(nowAccount.getAccountCode() == null || nowAccount.getAccountCode() == ""){
-            outcomeAccountString = nowAccount.getAccountName();
+        outcomeAccount = BookingDataHelper.getNowAccount();
+        incomeAccount = accountList.get(0);
+        if(outcomeAccount.getAccountCode() == null || outcomeAccount.getAccountCode() == ""){
+            outcomeAccountString = outcomeAccount.getAccountName();
         }else{
-            outcomeAccountString = nowAccount.getAccountName()+" "+nowAccount.getAccountCode();
+            outcomeAccountString = outcomeAccount.getAccountName()+" "+ ConvertHelper.cutoffAccountCode(outcomeAccount.getAccountCode());
         }
         outcomeAccountTextView.setText(outcomeAccountString);
         lockedAccount = 0;
@@ -112,18 +103,23 @@ public class BookingTransferFragment extends BookingBaseFragment {
                 incomeAccountTextView.setText(incomeAccountString);
                 outcomeAccountTextView.setText(outcomeAccountString);
                 lockedAccount = lockedAccount ^ 1;
+                Account tempAccount = new Account();
+                tempAccount = outcomeAccount;
+                outcomeAccount = incomeAccount;
+                incomeAccount = tempAccount;
             }
         });
     }
     private void outcomeAccountButtonInit(View view){
         final View chooseClassButton = view.findViewById(R.id.hzs_booking_outcome_account);
-        final List<String> accountItems = BookingDataHelper.getAccounts();
+        final List<String> accountItems = BookingDataHelper.getAccountsForShow();
         outcomeAccountTextView = view.findViewById(R.id.hzs_booking_outcome_account);
         outcomeAccountString = accountItems.get(0);
         pvOutcomeAccountOptions = new OptionsPickerBuilder(getContext(), new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                 outcomeAccountString = accountItems.get(options1);
+                outcomeAccount = accountList.get(options1);
                 outcomeAccountTextView.setText(outcomeAccountString);
             }
         }).setOptionsSelectChangeListener(new OnOptionsSelectChangeListener() {
@@ -175,13 +171,14 @@ public class BookingTransferFragment extends BookingBaseFragment {
     private void incomeAccountButtonInit(View view){
 
         final View chooseClassButton = view.findViewById(R.id.hzs_booking_income_account);
-        final List<String> accountItems = BookingDataHelper.getAccounts();
+        final List<String> accountItems = BookingDataHelper.getAccountsForShow();
         incomeAccountTextView = view.findViewById(R.id.hzs_booking_income_account);
         incomeAccountString = accountItems.get(0);
         pvIncomeAccountOptions = new OptionsPickerBuilder(getContext(), new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                 incomeAccountString = accountItems.get(options1);
+                incomeAccount = accountList.get(options1);
                 incomeAccountTextView.setText(incomeAccountString);
             }
         }).setOptionsSelectChangeListener(new OnOptionsSelectChangeListener() {
@@ -302,34 +299,21 @@ public class BookingTransferFragment extends BookingBaseFragment {
         String classificationOutcome2 = "转至";
         String classificationIncome = "转账收入";
         String classificationIncome2 = "来自";
-        List<String> accountItems = BookingDataHelper.getAccounts();
-        String outcomeAccount = outcomeAccountTextView.getText().toString();
-        String incomeAccount = incomeAccountTextView.getText().toString();
+        List<String> accountItems = BookingDataHelper.getAccountsForShow();
+        String outcomeAccountString = outcomeAccountTextView.getText().toString();
+        String incomeAccountString = incomeAccountTextView.getText().toString();
 
-        Account outComeAcc = new Account();
-        String [] arr1 = outcomeAccount.split("\\s+");
-        outComeAcc.setAccountName(arr1[0]);
-        if(arr1.length > 1){
-            outComeAcc.setAccountCode(arr1[1]);
-        }
+        if(accountItems.contains(outcomeAccountString)){
 
-        Account incomeAcc = new Account();
-        String [] arr2 = incomeAccount.split("\\s+");
-        incomeAcc.setAccountName(arr2[0]);
-        if(arr2.length > 1){
-            incomeAcc.setAccountCode(arr2[1]);
-        }
-        if(accountItems.contains(outcomeAccount)){
-
-            Tally tally = new Tally(money,date,time,remark,outComeAcc, ActionType.OUTCOME,
-                    classificationOutcome,classificationOutcome2+incomeAcc.getAccountName(),memeber,project,vendor);
+            Tally tally = new Tally(money,date,time,remark,outcomeAccount, ActionType.OUTCOME,
+                    classificationOutcome,classificationOutcome2+incomeAccount.getAccountName(),memeber,project,vendor);
             Toast.makeText(getContext(),tally.getDate().toString(),Toast.LENGTH_SHORT).show();
             App.dataBaseHelper.addTally(tally);
         }
-        if(accountItems.contains(incomeAccount)){
+        if(accountItems.contains(incomeAccountString)){
 
-            Tally tally = new Tally(money,date,time,remark,incomeAcc, ActionType.INCOME,
-                    classificationIncome,classificationIncome2+outComeAcc.getAccountName(),memeber,project,vendor);
+            Tally tally = new Tally(money,date,time,remark,incomeAccount, ActionType.INCOME,
+                    classificationIncome,classificationIncome2+outcomeAccount.getAccountName(),memeber,project,vendor);
             Toast.makeText(getContext(),tally.getDate().toString(),Toast.LENGTH_SHORT).show();
             App.dataBaseHelper.addTally(tally);
         }

@@ -35,16 +35,18 @@ public class PasswordSettingDetailActivity extends BaseActivity {
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
         BaseLockViewModel baseLockViewModel = new BaseLockViewModel(context);
-        for (Config config :
-                App.configs) {
-            if(config.getPasswordStyle() == PasswordStyle.FINGERPRINT){
-                this.fingerprintConfig = config;
-            }
-            else if(config.getPasswordStyle() == PasswordStyle.PIN){
-                this.pinConfig = config;
-            }
-            else {
-                this.traditionalConfig = config;
+        if(App.configs != null){
+            for (Config config :
+                    App.configs) {
+                if(config.getPasswordStyle() == PasswordStyle.FINGERPRINT){
+                    this.fingerprintConfig = config;
+                }
+                else if(config.getPasswordStyle() == PasswordStyle.PIN){
+                    this.pinConfig = config;
+                }
+                else {
+                    this.traditionalConfig = config;
+                }
             }
         }
         Bundle bundle = getIntent().getExtras();

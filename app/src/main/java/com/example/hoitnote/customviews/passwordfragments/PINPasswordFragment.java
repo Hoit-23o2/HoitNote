@@ -105,7 +105,7 @@ public class PINPasswordFragment extends BasePasswordFragment {
                         if(!isComeFromSetting){
                             if(isSaved){
                                 ToastHelper.showToast(context,Constants.registrationSuccess,Toast.LENGTH_SHORT);
-                                NavigationHelper.navigationClosedCurrentActivity(context, MainActivity.class);
+                                NavigationHelper.closeCurrentActivity(context);
                             }
                             else{
                                 ToastHelper.showToast(context,Constants.registrationFalse,Toast.LENGTH_LONG);

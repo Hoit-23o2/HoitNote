@@ -39,7 +39,7 @@ public class SplashActivity extends AppCompatActivity {
         App.backupDataBaseHelper = new DataBaseHelper(this, Constants.backupDatabaseFileName, null, Constants.databaseVersion);
         App.backupDataBaseHelper.setSqLiteDatabase(App.backupDataBaseHelper.getReadableDatabase());
         /*初始化BookingStatic*/
-        BookingDataHelper.getAccounts();
+        BookingDataHelper.getAccountsForShow();
 
         //Test();
 
@@ -77,7 +77,7 @@ public class SplashActivity extends AppCompatActivity {
         Tally mockTally = new Tally(1,new Date(System.currentTimeMillis()),
                 new Time(System.currentTimeMillis())," ",mockAccount, ActionType.OUTCOME,
                 "食品酒水","无","无","无","无");
-        for (int i = 0; i < 10000; i++){
+        for (int i = 0; i < 1000; i++){
             App.dataBaseHelper.addTally(mockTally);
         }
     }

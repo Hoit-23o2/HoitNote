@@ -111,12 +111,12 @@ public class BookingDataHelper {
     }
 
 
-    public static List<String> getAccounts() {
+    public static List<String> getAccountsForShow() {
 
         List<Account> list = App.dataBaseHelper.getAccounts();
         List<String> accountsList = new ArrayList<>();
         for(Account account:list){
-            if(account.getAccountCode() == null || account.getAccountCode() == ""){
+            if(account.getAccountCode() == null || account.getAccountCode().equals("")){
                 accountsList.add(account.getAccountName());
             }else{
                 accountsList.add(account.getAccountName()+" "+ConvertHelper.cutoffAccountCode(account.getAccountCode()));
@@ -124,7 +124,6 @@ public class BookingDataHelper {
         }
         return accountsList;
     }
-
     public static List<String> getPersons() {
         return App.dataBaseHelper.getThirdParties(ThirdPartyType.MEMBER);
     }
