@@ -75,6 +75,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this,R.layout.activity_main);
         mainViewModel = new MainViewModel(context);
+        initAnim();
         initActivity();
     }
 
@@ -87,9 +88,7 @@ public class MainActivity extends BaseActivity {
             accountCardFragment.setLongClickListener(new AccountCardFragment.LongClickListener() {
                 @Override
                 public void onLongClick(final AccountCardFragment accountCardFragment, View v) {
-
                    onLongClickImplement(accountCardFragment, v);
-
                 }
             });
         }
@@ -98,7 +97,38 @@ public class MainActivity extends BaseActivity {
                 accountCardFragments);
         /*准备ViewModel*/
         binding.setMainViewModel(mainViewModel);
-        binding.accountCardBanner.setAdapter(accountCardAdapter);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                binding.accountCardBanner.setAdapter(accountCardAdapter);
+            }
+        });
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void initAnim(){
+        /*调整最近列表的高度*/
+        float cardFragmentRatio = 0.6f;
+        int deviceHeight = DeviceHelper.getDeviceHeight(context);
+        int deviceWidth = DeviceHelper.getDeviceWidth(context);
+        int statueBarHeight = DeviceHelper.getStatueBarHeight(context);
+        int actionBarHeight = DeviceHelper.getActionBarHeight(context);
+        float cardFragmentHeight = deviceWidth * cardFragmentRatio;
+        float recentTalliesContainerHeight = deviceHeight - cardFragmentHeight
+                - statueBarHeight - actionBarHeight;
+        ConstraintLayout.LayoutParams layoutParams =
+                (ConstraintLayout.LayoutParams) binding.recentTalliesContainer.getLayoutParams();
+        layoutParams.height = (int) recentTalliesContainerHeight;
+        binding.recentTalliesContainer.setLayoutParams(layoutParams);
+        /*上移动画*/
+        binding.recentTalliesContainer.setTranslationY(2000);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                binding.recentTalliesContainer.animate().translationY(0).start();
+            }
+        }, Constants.delayDuration / 4);
+        /*列表加载动画*/
         binding.accountCardBanner.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -115,7 +145,15 @@ public class MainActivity extends BaseActivity {
                     binding.floatingButton.setVisibility(View.VISIBLE);
                     binding.emptyHintTextView.setVisibility(View.INVISIBLE);
                     currentAccountCardFragment = accountCardAdapter.getFragment(position);
-                    updateCurrentAccountCardListView();
+                    /*增加Loading效果*/
+                    DialogHelper.showLoading(context);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateCurrentAccountCardListView();
+                            DialogHelper.hideLoading();
+                        }
+                    }).start();
                 }
 
             }
@@ -156,30 +194,6 @@ public class MainActivity extends BaseActivity {
         int color = ThemeHelper.getPrimaryLightColor(context);
         ThemeHelper.changeColorOfNavigationBar(this,
                 color);
-
-
-
-        /*调整最近列表的高度*/
-        float cardFragmentRatio = 0.6f;
-        int deviceHeight = DeviceHelper.getDeviceHeight(context);
-        int deviceWidth = DeviceHelper.getDeviceWidth(context);
-        int statueBarHeight = DeviceHelper.getStatueBarHeight(context);
-        int actionBarHeight = DeviceHelper.getActionBarHeight(context);
-        float cardFragmentHeight = deviceWidth * cardFragmentRatio;
-        float recentTalliesContainerHeight = deviceHeight - cardFragmentHeight
-                - statueBarHeight - actionBarHeight;
-        ConstraintLayout.LayoutParams layoutParams =
-                (ConstraintLayout.LayoutParams) binding.recentTalliesContainer.getLayoutParams();
-        layoutParams.height = (int) recentTalliesContainerHeight;
-        binding.recentTalliesContainer.setLayoutParams(layoutParams);
-        /*上移动画*/
-        binding.recentTalliesContainer.setTranslationY(2000);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                binding.recentTalliesContainer.animate().translationY(0).start();
-            }
-        }, Constants.delayDuration / 4);
     }
 
     @Override
@@ -195,22 +209,37 @@ public class MainActivity extends BaseActivity {
             if(currentAccountCardFragment.getBinding() != null){
                 ArrayList<TallyViewModel> tallyViewModels = mainViewModel.getRecentTallyViewModelsByCardFragment(currentAccountCardFragment);
                 if(tallyViewModels.size() == 0){
-                    binding.recentTalliesExpandableListView.setVisibility(View.INVISIBLE);
-                    binding.recentHintTextView.setVisibility(View.INVISIBLE);
-                    binding.emptyHintTextView.setVisibility(View.VISIBLE);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            binding.recentTalliesExpandableListView.setVisibility(View.INVISIBLE);
+                            binding.recentHintTextView.setVisibility(View.INVISIBLE);
+                            binding.emptyHintTextView.setVisibility(View.VISIBLE);
+                        }
+                    });
                 }
                 else{
-                    binding.recentTalliesExpandableListView.setVisibility(View.VISIBLE);
-                    binding.recentHintTextView.setVisibility(View.VISIBLE);
-                    binding.emptyHintTextView.setVisibility(View.INVISIBLE);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            binding.recentTalliesExpandableListView.setVisibility(View.VISIBLE);
+                            binding.recentHintTextView.setVisibility(View.VISIBLE);
+                            binding.emptyHintTextView.setVisibility(View.INVISIBLE);
+                        }
+                    });
                 }
                 /*分组*/
                 TreeMap<String, ArrayList<TallyViewModel>> tallyViewModelWithGroups = mainViewModel.
                         groupTallyViewModel(tallyViewModels, GroupType.DATE);
                 tallyOneExpandableAdapter = new TallyOneExpandableAdapter(context, tallyViewModelWithGroups);
-                binding.recentTalliesExpandableListView.setAdapter(tallyOneExpandableAdapter);
-                /*展开所有分组*/
-                tallyOneExpandableAdapter.expandAllGroup(binding.recentTalliesExpandableListView);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        binding.recentTalliesExpandableListView.setAdapter(tallyOneExpandableAdapter);
+                        /*展开所有分组*/
+                        tallyOneExpandableAdapter.expandAllGroup(binding.recentTalliesExpandableListView);
+                    }
+                });
             }
         }
 
@@ -311,27 +340,39 @@ public class MainActivity extends BaseActivity {
         dialogNormalBinding.confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                accountCardAdapter.removeAccountCard(binding.accountCardBanner,
-                        accountCardFragments.indexOf(accountCardFragment));
-                AccountCardViewModel accountCardViewModel =
-                        accountCardFragment.getBinding().getAccountCardViewModel();
-                if(accountCardViewModel != null){
-                    Account account = accountCardViewModel.getAccount();
-                    ArrayList<Tally> tallies = App.dataBaseHelper.getTallies(new DataBaseFilter(
-                            null,
-                            null,
-                            DataBaseFilter.IDInvalid,
-                            null,
-                            account,
-                            null
-                    ));
-                    for (Tally tally:
-                            tallies) {
-                        App.backupDataBaseHelper.addTally(tally);
-                        App.dataBaseHelper.delTally(tally);
+                DialogHelper.showLoading(context);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AccountCardViewModel accountCardViewModel =
+                                accountCardFragment.getBinding().getAccountCardViewModel();
+                        if(accountCardViewModel != null){
+                            Account account = accountCardViewModel.getAccount();
+                            ArrayList<Tally> tallies = App.dataBaseHelper.getTallies(new DataBaseFilter(
+                                    null,
+                                    null,
+                                    DataBaseFilter.IDInvalid,
+                                    null,
+                                    account,
+                                    null
+                            ));
+                            for (Tally tally:
+                                    tallies) {
+                                App.backupDataBaseHelper.addTally(tally);
+                                App.dataBaseHelper.delTally(tally);
+                            }
+                            App.dataBaseHelper.delAccount(account);
+                        }
+                        DialogHelper.hideLoading();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                accountCardAdapter.removeAccountCard(binding.accountCardBanner,
+                                        accountCardFragments.indexOf(accountCardFragment));
+                            }
+                        });
                     }
-                    App.dataBaseHelper.delAccount(account);
-                }
+                }).start();
                 alertDialog.dismiss();
             }
         });

@@ -18,10 +18,12 @@ public class Constants {
     public static String theme = "theme";
 
     public static String defaultColorPrimary = "#F6F6F6";
+    public static String defaultColorPrimaryDark= "#757575";
     public static String defaultColorAccent = "#FFD100";
     public static String defaultColorPrimaryLight = "#FFFFFF";
 
     public static String sweetColorPrimary = "#F6F6F6";
+    public static String sweetColorPrimaryDark = "#757575";
     public static String sweetColorAccent = "#EFC7C2";
     public static String sweetColorPrimaryLight = "#FFFFFF";
 

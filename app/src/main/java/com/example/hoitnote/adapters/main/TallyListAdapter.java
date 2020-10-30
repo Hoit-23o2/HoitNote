@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class TallyListAdapter extends BaseAdapter {
     ItemTallyBinding binding;
     ArrayList<TallyViewModel> tallyViewModels;
-    ArrayList<View> views = new ArrayList<>();
+   /* ArrayList<View> views = new ArrayList<>();*/
     Context context;
     SparseBooleanArray selectedTallysIds;
 
@@ -58,15 +58,12 @@ public class TallyListAdapter extends BaseAdapter {
             binding = (ItemTallyBinding) convertView.getTag();
         }
         binding.setTallyViewModel(tallyViewModels.get(pos));
-        View rootView = binding.getRoot();
-        views.add(rootView);
-        return rootView;
+        /*views.add(binding.getRoot());*/
+        return binding.getRoot();
     }
 
     public void remove(int pos){
         tallyViewModels.remove(pos);
-        views.remove(pos);
-        notifyDataSetChanged();
     }
 
     public void toggleSelection(int position) {
@@ -76,12 +73,12 @@ public class TallyListAdapter extends BaseAdapter {
     public void selectView(int position, boolean value) {
         if (value){
             selectedTallysIds.put(position, true);
-            views.get(position).setBackgroundColor(ThemeHelper.getAccentColor(context));
+            /*views.get(position).setBackgroundColor(ThemeHelper.getAccentColor(context));*/
         }
         else
         {
             selectedTallysIds.delete(position);
-            views.get(position).setBackgroundColor(Color.TRANSPARENT);
+            /*views.get(position).setBackgroundColor(Color.TRANSPARENT);*/
         }
         notifyDataSetChanged();
     }
@@ -92,10 +89,10 @@ public class TallyListAdapter extends BaseAdapter {
 
     public void removeSelection() {
         selectedTallysIds = new SparseBooleanArray();
-        for (View view:
+        /*for (View view:
              views) {
             view.setBackgroundColor(Color.TRANSPARENT);
-        }
+        }*/
         notifyDataSetChanged();
     }
 

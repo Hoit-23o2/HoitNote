@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -16,6 +17,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -39,6 +42,7 @@ import com.example.hoitnote.utils.enums.LockViewType;
 import com.example.hoitnote.utils.helpers.BlueToothHelper;
 import com.example.hoitnote.utils.helpers.DeviceHelper;
 import com.example.hoitnote.utils.helpers.NavigationHelper;
+import com.example.hoitnote.utils.helpers.ThemeHelper;
 import com.example.hoitnote.utils.helpers.ToastHelper;
 import com.example.hoitnote.viewmodels.BlueToothViewModel;
 import com.example.hoitnote.viewmodels.DataSyncViewModel;
@@ -151,7 +155,9 @@ public class DataSyncFragment extends Fragment {
             @Override
             public void onConnectSuccess() {
                 dataSyncViewModel.setCurrentStatue(BluetoothStatue.SENDING);
-                binding.senderBtnText.setText(dataSyncViewModel.context.getString(R.string.datasync_sending_hint));
+                toggleBtn(dataSyncViewModel.context.getString(R.string.datasync_sending_hint)
+                        ,binding.senderBtnText,
+                        false);
                 App.blueToothHelper.sendDataPackage(dataPackage);
                 ToastHelper.showToast(context, "连接成功",Toast.LENGTH_SHORT);
             }
@@ -159,7 +165,9 @@ public class DataSyncFragment extends Fragment {
             @Override
             public void onDataSendSuccessful(ReceiveInfo receiveInfo) {
                 dataSyncViewModel.setCurrentStatue(BluetoothStatue.SENDED);
-                binding.senderBtnText.setText(dataSyncViewModel.context.getString(R.string.datasync_sended_hint));
+                toggleBtn(dataSyncViewModel.context.getString(R.string.datasync_sended_hint),
+                        binding.senderBtnText,
+                        false);
                 ToastHelper.showToast(context, receiveInfo.getMessage(),Toast.LENGTH_SHORT);
                 Log.d("蓝牙：",receiveInfo.getMessage());
             }
@@ -170,7 +178,9 @@ public class DataSyncFragment extends Fragment {
     /*接受方*/
     public void ReceiveDataPackage(View v){
         /*修改为正在连接*/
-        binding.receiverBtnText.setText(dataSyncViewModel.context.getString(R.string.datasync_connecting_hint));
+        toggleBtn(dataSyncViewModel.context.getString(R.string.datasync_connecting_hint),
+                binding.receiverBtnText,
+                false);
         /*开启服务器*/
         App.blueToothHelper.startServer(context);
         /*接受回调*/
@@ -178,13 +188,17 @@ public class DataSyncFragment extends Fragment {
             @Override
             public void onConnectSuccess() {
                 dataSyncViewModel.setCurrentStatue(BluetoothStatue.RECEIVING);
-                binding.receiverBtnText.setText(dataSyncViewModel.context.getString(R.string.datasync_receiving_hint));
+                toggleBtn(dataSyncViewModel.context.getString(R.string.datasync_receiving_hint),
+                        binding.receiverBtnText,
+                        false);
             }
 
             @Override
             public void onDataReceived(DataPackage dataPackage) {
                 dataSyncViewModel.setCurrentStatue(BluetoothStatue.RECEIVED);
-                binding.receiverBtnText.setText(dataSyncViewModel.context.getString(R.string.datasync_received_hint));
+                toggleBtn(dataSyncViewModel.context.getString(R.string.datasync_received_hint),
+                        binding.receiverBtnText,
+                        false);
                 ToastHelper.showToast(context, dataPackage.toString(), Toast.LENGTH_SHORT);
                 App.dataBaseHelper.saveDataPackage(dataPackage);
                 /*重启App*/
@@ -227,5 +241,15 @@ public class DataSyncFragment extends Fragment {
         },500);
     }
 
-
+    private void toggleBtn(String hint, TextView textViewButton, boolean isEnable){
+        textViewButton.setText(hint);
+        if(isEnable){
+            textViewButton.setTextColor(Color.BLACK);
+            textViewButton.setEnabled(true);
+        }
+        else {
+            textViewButton.setTextColor(ThemeHelper.getPrimaryDarkColor(context));
+            textViewButton.setEnabled(false);
+        }
+    }
 }

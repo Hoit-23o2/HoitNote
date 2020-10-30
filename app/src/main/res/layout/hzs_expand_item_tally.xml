@@ -125,7 +125,7 @@
                                 android:id="@+id/money"
                                 style="@style/TallyMoneyText"
                                 android:layout_width="0dp"
-                                android:layout_weight="0.3"
+                                android:layout_weight="0.5"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:gravity="end"

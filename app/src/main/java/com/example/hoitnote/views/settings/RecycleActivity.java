@@ -9,6 +9,7 @@ import android.app.ActionBar;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ import com.example.hoitnote.databinding.ActivityRecycleBinding;
 import com.example.hoitnote.models.Tally;
 import com.example.hoitnote.utils.App;
 import com.example.hoitnote.utils.constants.Constants;
+import com.example.hoitnote.utils.helpers.DialogHelper;
 import com.example.hoitnote.utils.helpers.NavigationHelper;
 import com.example.hoitnote.utils.helpers.ThemeHelper;
 import com.example.hoitnote.viewmodels.RecycleViewModel;
@@ -43,6 +45,7 @@ public class RecycleActivity extends BaseActivity {
     RecycleViewModel recycleViewModel;
     ArrayList<TallyViewModel> tallyViewModels;
     ViewGroup decorView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,11 +53,25 @@ public class RecycleActivity extends BaseActivity {
         recycleViewModel = new RecycleViewModel(context);
 
         decorView = (ViewGroup) this.getWindow().getDecorView();
+
         /*暂时测试所有账单*/
-        ArrayList<Tally> backupTallies = App.backupDataBaseHelper.getTallies(null);
-        tallyViewModels = recycleViewModel.parseTalliesToViewModel(backupTallies);
-        tallyListAdapter = new TallyListAdapter(context, tallyViewModels);
-        binding.recycleListView.setAdapter(tallyListAdapter);
+        DialogHelper.showLoading(context);
+        /*添加加载动画*/
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<Tally> backupTallies = App.backupDataBaseHelper.getTallies(null);
+                tallyViewModels = recycleViewModel.parseTalliesToViewModel(backupTallies);
+                tallyListAdapter = new TallyListAdapter(context, tallyViewModels);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        binding.recycleListView.setAdapter(tallyListAdapter);
+                    }
+                });
+                DialogHelper.hideLoading();
+            }
+        }).start();
         initActivity();
     }
 
@@ -108,9 +125,9 @@ public class RecycleActivity extends BaseActivity {
             }
 
             @Override
-            public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+            public boolean onActionItemClicked(final ActionMode actionMode, MenuItem menuItem) {
                 /*Calls getSelectedIds method from ListViewAdapter Class*/
-                SparseBooleanArray selected = tallyListAdapter
+                final SparseBooleanArray selected = tallyListAdapter
                         .getSelectedIds();
                 switch (menuItem.getItemId()) {
                     /*全选/取消全选*/
@@ -127,8 +144,7 @@ public class RecycleActivity extends BaseActivity {
                         }
                         else{
                             for(int pos = 0; pos < count; pos++){
-                                if(pos != 0)
-                                    binding.recycleListView.setItemChecked(pos, false);
+                                binding.recycleListView.setItemChecked(pos, false);
                             }
                             menuItem.setTitle(getString(R.string.recycle_select_all));
                             isSelectedAll = false;
@@ -139,38 +155,65 @@ public class RecycleActivity extends BaseActivity {
                     /*删除*/
                     case R.id.recycle_delete:
                         /*Captures all selected ids with a loop*/
-                        for (int i = (selected.size() - 1); i >= 0; i--) {
-                            if (selected.valueAt(i)) {
-                               /* Remove selected items following the ids*/
-                                TallyViewModel tallyViewModel = (TallyViewModel)
-                                        tallyListAdapter.getItem(selected.keyAt(i));
-                                tallyListAdapter.remove(selected.keyAt(i));
-                                App.backupDataBaseHelper.delTally(tallyViewModel.getTally());
+                        DialogHelper.showLoading(context);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                for (int i = (selected.size() - 1); i >= 0; i--) {
+                                    if (selected.valueAt(i)) {
+                                        /* Remove selected items following the ids*/
+                                        TallyViewModel tallyViewModel = (TallyViewModel)
+                                                tallyListAdapter.getItem(selected.keyAt(i));
+                                        tallyListAdapter.remove(selected.keyAt(i));
+                                        App.backupDataBaseHelper.delTally(tallyViewModel.getTally());
+                                    }
+                                }
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        tallyListAdapter.notifyDataSetChanged();
+                                        DialogHelper.hideLoading();
+                                        actionMode.finish();
+                                    }
+                                });
                             }
-                        }
+                        }).start();
+
                         /*Close CAB*/
-                        actionMode.finish();
                         return true;
                     /*恢复*/
                     case R.id.recycle_recover:
-                        for (int i = (selected.size() - 1); i >= 0; i--) {
-                            if (selected.valueAt(i)) {
-                                TallyViewModel tallyViewModel = (TallyViewModel)
-                                        tallyListAdapter.getItem(selected.keyAt(i));
-                                tallyListAdapter.remove(selected.keyAt(i));
-                                App.backupDataBaseHelper.delTally(tallyViewModel.getTally());
-                                App.dataBaseHelper.addTally(tallyViewModel.getTally());
-                                App.dataBaseHelper.addAccount(tallyViewModel.getTally().getAccount());
+                        DialogHelper.showLoading(context);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                for (int i = (selected.size() - 1); i >= 0; i--) {
+                                    if (selected.valueAt(i)) {
+                                        TallyViewModel tallyViewModel = (TallyViewModel)
+                                                tallyListAdapter.getItem(selected.keyAt(i));
+                                        tallyListAdapter.remove(selected.keyAt(i));
+                                        App.backupDataBaseHelper.delTally(tallyViewModel.getTally());
+                                        App.dataBaseHelper.addTally(tallyViewModel.getTally());
+                                        App.dataBaseHelper.addAccount(tallyViewModel.getTally().getAccount());
+                                    }
+                                }
+                                for (BaseActivity baseActivity:
+                                        NavigationHelper.navigationStack) {
+                                    if(baseActivity instanceof MainActivity){
+                                        ((MainActivity) baseActivity).initActivity();
+                                    }
+                                }
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        tallyListAdapter.notifyDataSetChanged();
+                                        DialogHelper.hideLoading();
+                                        /*Close CAB*/
+                                        actionMode.finish();
+                                    }
+                                });
                             }
-                        }
-                        for (BaseActivity baseActivity:
-                                NavigationHelper.navigationStack) {
-                            if(baseActivity instanceof MainActivity){
-                                ((MainActivity) baseActivity).initActivity();
-                            }
-                        }
-                        /*Close CAB*/
-                        actionMode.finish();
+                        }).start();
                         return true;
                     default:
                         return false;

@@ -41,7 +41,6 @@ public class SplashActivity extends AppCompatActivity {
         /*初始化BookingStatic*/
         BookingDataHelper.getAccountsForShow();
 
-        //Test();
 
         App.fileHelper = new FileHelper();
 

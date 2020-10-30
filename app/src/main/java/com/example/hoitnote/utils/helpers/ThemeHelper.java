@@ -83,6 +83,15 @@ public class ThemeHelper {
         return colorPrimary;
     }
 
+    public static int getPrimaryDarkColor(Context context){
+        int colorPrimary;
+        if(getCurrentTheme(context) == Theme.SWEET)
+            colorPrimary = Color.parseColor(Constants.sweetColorPrimaryDark);
+        else
+            colorPrimary = Color.parseColor(Constants.defaultColorPrimaryDark);
+        return colorPrimary;
+    }
+
 
     public static int getAccentColor(Context context){
         int colorAccent;

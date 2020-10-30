@@ -13,6 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <RelativeLayout
+                android:clickable="false"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="?attr/colorPrimaryLight">
@@ -28,9 +29,13 @@
                     android:layout_marginLeft="17dp"
                     android:padding="8dp"
                     android:text="取消"
-                    style="@style/HoitTitleText"/>
+                    style="@style/HoitTitleText"
+                    android:focusable="true"
+                    android:clickable="true"/>
 
                 <TextView
+                    android:focusable="true"
+                    android:clickable="true"
                     android:id="@+id/finish_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
