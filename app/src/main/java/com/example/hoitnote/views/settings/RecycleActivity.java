@@ -78,6 +78,8 @@ public class RecycleActivity extends BaseActivity {
     private boolean isSelectedAll = false;
     private void initActivity() {
         showBackButton();
+        ThemeHelper.changeColorOfNavigationBar(this,
+                ThemeHelper.getPrimaryLightColor(context));
         binding.recycleListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
         binding.recycleListView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
             @Override

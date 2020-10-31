@@ -133,9 +133,9 @@ public class FingerprintPasswordFragment extends BasePasswordFragment {
         });
 
         promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Biometric login for my app")
-                .setSubtitle("Log in using your biometric credential")
-                .setNegativeButtonText("Use account password")
+                .setTitle("指纹登录HoitNote")
+                .setSubtitle("")
+                .setNegativeButtonText("本机账号登录")
                 .build();
     }
 

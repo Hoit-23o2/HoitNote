@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.TextView;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -47,6 +47,7 @@ import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.enums.ActionType;
 import com.example.hoitnote.utils.enums.BookingType;
 import com.example.hoitnote.utils.helpers.BookingDataHelper;
+import com.example.hoitnote.utils.helpers.ThemeHelper;
 import com.example.hoitnote.utils.helpers.ToastHelper;
 
 
@@ -64,7 +65,8 @@ public class HistoryActivity extends BaseActivity{
     private int year = calendar.get(Calendar.YEAR);
     private int month = calendar.get(Calendar.MONTH)+1;
     private int day = calendar.get(Calendar.DATE);
-    private String season = Constants.SeasonAutumn;
+    private String season = "秋";
+    private String seasonWithIcon = Constants.SeasonAutumn;
     private String classification1 = null;
     private String classification2 = null;
     private BookingType bookingType = BookingType.OUTCOME;
@@ -138,6 +140,8 @@ public class HistoryActivity extends BaseActivity{
         findViewById(R.id.floatingButton).setOnTouchListener(
                 new BaseActionButtonDraggableLisener()
         );
+        ThemeHelper.changeColorOfNavigationBar(this,
+                ThemeHelper.getPrimaryLightColor(context));
 
         initBottomTimeFrameButton();
         initBottomClassButton();
@@ -198,7 +202,7 @@ public class HistoryActivity extends BaseActivity{
             case SEASON:
                 Date startDate3;
                 Date endDate3;
-                switch (season){
+                switch (seasonWithIcon){
                     case Constants.SeasonSpring:
                         startDate3 = new Date(year-1900,1,1);
                         endDate3 = new Date(year-1900,3,31);
@@ -209,7 +213,7 @@ public class HistoryActivity extends BaseActivity{
                         break;
                     case Constants.SeasonAutumn:
                         startDate3 = new Date(year-1900,7,1);
-                        endDate3 = new Date(year-1900,9,30);
+                        endDate3 = new Date(year-1900,9,31);
                         break;
                     default:
                         startDate3 = new Date(year-1900,10,1);
@@ -226,7 +230,7 @@ public class HistoryActivity extends BaseActivity{
                 break;
             case MONTH:
                 Date startDate4 = new Date(year-1900,month-1,1);
-                Date endDate4 = new Date(year-1900,month-1,getDaysOfMonth(year,month));
+                Date endDate4 = new Date(year-1900,month-1,getDaysOfMonth(year,month-1));
                 DataBaseFilter filter4 = new DataBaseFilter(startDate4,endDate4,-1,getFilterClassifications(),getFilterAccount(),filterActionType,project,member,vendor);
                 monthData = getMonthData(filter4);
                 for(HzsDayData data:monthData){
@@ -319,7 +323,7 @@ public class HistoryActivity extends BaseActivity{
     private void showDataAsYear(){
         contentLayout.removeAllViews();
         yearContentView = LayoutInflater.from(this).inflate(R.layout.hzs_history_content_as_year,contentLayout,false);
-        ((Button)yearContentView.findViewById(R.id.hzs_history_content_as_year_year)).setText(String.valueOf(year)+"年");
+        ((TextView)yearContentView.findViewById(R.id.hzs_history_content_as_year_year)).setText(String.valueOf(year)+"年");
         HzsSecondExpandableListViewAdapter adapter = new HzsSecondExpandableListViewAdapter(yearData,this);
         ExpandableListView yearListView = (ExpandableListView)yearContentView.findViewById(R.id.hzs_history_content_as_year_expandable_listview);
         yearListView.setAdapter(adapter);
@@ -339,8 +343,8 @@ public class HistoryActivity extends BaseActivity{
     private void showDataAsSeason(){
         contentLayout.removeAllViews();
         seasonContentView = LayoutInflater.from(this).inflate(R.layout.hzs_history_content_as_season,contentLayout,false);
-        ((Button)seasonContentView.findViewById(R.id.hzs_history_content_as_season_year)).setText(String.valueOf(year)+"年");
-        ((FontAwesome)seasonContentView.findViewById(R.id.hzs_history_content_as_season_season)).setText(season);
+        ((TextView)seasonContentView.findViewById(R.id.hzs_history_content_as_season_year)).setText(String.valueOf(year)+"年");
+        ((FontAwesome)seasonContentView.findViewById(R.id.hzs_history_content_as_season_season)).setText(seasonWithIcon);
 
         HzsSecondExpandableListViewAdapter adapter = new HzsSecondExpandableListViewAdapter(seasonData,this);
         ExpandableListView seasonListView = (ExpandableListView)seasonContentView.findViewById(R.id.hzs_history_content_as_season_expandable_listview);
@@ -360,8 +364,8 @@ public class HistoryActivity extends BaseActivity{
     private void showDataAsMonth(){
         contentLayout.removeAllViews();
         monthContentView = LayoutInflater.from(this).inflate(R.layout.hzs_history_content_as_month,contentLayout,false);
-        ((Button)monthContentView.findViewById(R.id.hzs_history_content_as_month_year)).setText(String.valueOf(year)+"年");
-        ((Button)monthContentView.findViewById(R.id.hzs_history_content_as_month_month)).setText(String.valueOf(month)+"月");
+        ((TextView)monthContentView.findViewById(R.id.hzs_history_content_as_month_year)).setText(String.valueOf(year)+"年");
+        ((TextView)monthContentView.findViewById(R.id.hzs_history_content_as_month_month)).setText(String.valueOf(month)+"月");
         HzsThirdExpandableListViewAdapter adapter = new HzsThirdExpandableListViewAdapter(monthData,this);
         ExpandableListView seasonListView = (ExpandableListView)monthContentView.findViewById(R.id.hzs_history_content_as_month_expandable_listview);
         seasonListView.setAdapter(adapter);
@@ -472,8 +476,8 @@ public class HistoryActivity extends BaseActivity{
         });
     }
     private void initMonthContentButton(final View view){
-        Button chooseYearButton = (Button)view.findViewById(R.id.hzs_history_content_as_month_year);
-        Button chooseMonthButton = (Button)view.findViewById(R.id.hzs_history_content_as_month_month);
+        TextView chooseYearButton = (TextView)view.findViewById(R.id.hzs_history_content_as_month_year);
+        TextView chooseMonthButton = (TextView)view.findViewById(R.id.hzs_history_content_as_month_month);
         final List<String> yearsItems = new ArrayList<>();
         final List<String> monthItems = new ArrayList<>();
         for (int i=2020;i>1969;i--){
@@ -548,28 +552,49 @@ public class HistoryActivity extends BaseActivity{
     }
 
     private void initYearContentButton(final View contentView){
-        final Button chooseYearButton = (Button)contentView.findViewById(R.id.hzs_history_content_as_year_year);
+        final TextView chooseYearButton = (TextView)contentView.findViewById(R.id.hzs_history_content_as_year_year);
         final List<String> yearsItems = new ArrayList<>();
         for (int i=2020;i>1969;i--){
             yearsItems.add(String.valueOf(i));
         }
-        pvContentYearOptions = new OptionsPickerBuilder(contentView.getContext(), new OnOptionsSelectListener() {
-            @Override
-            public void onOptionsSelect(int options1, int options2, int options3, View v) {
-                String chosenYear = yearsItems.get(options1);
-                TextView yearTextView = (TextView)contentView.findViewById(R.id.hzs_history_content_as_year_year);
-                yearTextView.setText(chosenYear + "年");
-                mode = YEAR;
-                year = Integer.parseInt(chosenYear);
-                showDataAsMode();
-            }
-        })
-                .setSubmitColor(Color.BLACK)//确定按钮文字颜色
-                .setCancelColor(Color.BLACK)
-                .setTitleBgColor(Color.WHITE)
-                .setCancelText("取消")
-                .setSubmitText("完成")
-                .build();
+        if(pvContentYearOptions == null){
+            pvContentYearOptions = new OptionsPickerBuilder(contentView.getContext(), new OnOptionsSelectListener() {
+                @Override
+                public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                    String chosenYear = yearsItems.get(options1);
+                    TextView yearTextView = (TextView)contentView.findViewById(R.id.hzs_history_content_as_year_year);
+                    yearTextView.setText(chosenYear + "年");
+                    mode = YEAR;
+                    year = Integer.parseInt(chosenYear);
+                    showDataAsMode();
+                }
+            })
+                    .setLayoutRes(R.layout.hzs_time_frame_pickerview, new CustomListener() {
+                        @Override
+                        public void customLayout(View v) {
+                            //自定义布局中的控件初始化及事件处理
+                            final TextView tvSubmit = v.findViewById(R.id.finish_button);
+                            final TextView tvCancel = v.findViewById(R.id.cancel_button);
+
+                            tvSubmit.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    pvContentYearOptions.returnData();
+                                    pvContentYearOptions.dismiss();
+                                    //pvContentMonthOptions.dismissImmediately();
+                                }
+                            });
+                            tvCancel.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    pvContentYearOptions.dismiss();
+                                }
+                            });
+                        }
+                    })
+                    .build();
+        }
+
         pvContentYearOptions.setPicker(yearsItems);
         chooseYearButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -586,7 +611,7 @@ public class HistoryActivity extends BaseActivity{
         });
     }
     private void initSeasonContentButton(final View view){
-        Button chooseYearButton = (Button)view.findViewById(R.id.hzs_history_content_as_season_year);
+        TextView chooseYearButton = (TextView)view.findViewById(R.id.hzs_history_content_as_season_year);
         FontAwesome chooseSeasonButton = view.findViewById(R.id.hzs_history_content_as_season_season);
         final List<String> yearsItems = new ArrayList<>();
         final List<String> seasonItems = new ArrayList<>();
@@ -603,14 +628,14 @@ public class HistoryActivity extends BaseActivity{
                 @Override
                 public void onOptionsSelect(int options1, int options2, int options3, View v) {
                     String chosenYear = yearsItems.get(options1);
-                    String chosenSeason = seasonItems.get(options2);
+                    seasonWithIcon = seasonItems.get(options2);
                     TextView yearTextView = (TextView)view.findViewById(R.id.hzs_history_content_as_season_year);
                     TextView seasonTextView = (TextView)view.findViewById(R.id.hzs_history_content_as_season_season);
                     yearTextView.setText(chosenYear + "年");
-                    seasonTextView.setText(chosenSeason);
+                    seasonTextView.setText(seasonWithIcon);
                     mode = SEASON;
                     year = Integer.parseInt(chosenYear);
-                    season = chosenSeason;
+                    season = BookingDataHelper.getSeasons().get(options2);
                     showDataAsMode();
                 }
             })

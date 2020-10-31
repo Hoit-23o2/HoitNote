@@ -2,6 +2,7 @@ package com.example.hoitnote.views.locks;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.RectF;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,6 +28,7 @@ import com.example.hoitnote.R;
 import com.example.hoitnote.adapters.locks.LockFragmentAdapter;
 import com.example.hoitnote.databinding.FragmentLockBinding;
 import com.example.hoitnote.utils.commuications.Config;
+import com.example.hoitnote.utils.helpers.ThemeHelper;
 import com.example.hoitnote.viewmodels.BaseLockViewModel;
 
 import java.util.ArrayList;
@@ -115,12 +118,14 @@ public class LockFragment extends Fragment {
                 icon.animate().scaleX(1.3f).scaleY(1.3f).start();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     icon.setElevation(10.0f);
+                    ((TextView)icon).setTextColor(ThemeHelper.generateColor(context) | 0xFF000000);
                 }
             }
             else{
                 icon.animate().scaleX(1).scaleY(1).start();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     icon.setElevation(0);
+                    ((TextView)icon).setTextColor(Color.BLACK);
                 }
             }
 

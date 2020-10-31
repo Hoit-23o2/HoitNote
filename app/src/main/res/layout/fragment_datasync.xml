@@ -97,22 +97,28 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="end">
+                    android:gravity="center">
                     <com.example.hoitnote.customviews.FontAwesome
                         android:id="@+id/closeBtn"
                         android:layout_marginHorizontal="10dp"
                         android:text="@string/close_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/HoitIcon"/>
+                        style="@style/HoitIconUnclickable"/>
                 </LinearLayout>
-                <ListView
-                    android:id="@+id/pairedDeviceListView"
+                <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                    android:id="@+id/refreshContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clickable="true"
-                    android:divider="@null"
-                    android:focusable="true" />
+                    android:layout_height="match_parent">
+                    <ListView
+                        android:id="@+id/pairedDeviceListView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clickable="true"
+                        android:divider="@null"
+                        android:focusable="true" />
+                </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
             </LinearLayout>
 
         </LinearLayout>

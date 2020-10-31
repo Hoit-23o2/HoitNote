@@ -341,4 +341,13 @@ public class BookingDataHelper {
 
 
     }
+
+    public static List<String> getSeasons(){
+        List<String> seasons = new ArrayList<>();
+        seasons.add("春");
+        seasons.add("夏");
+        seasons.add("秋");
+        seasons.add("冬");
+        return seasons;
+    }
 }

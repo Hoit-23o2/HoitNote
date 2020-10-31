@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
+import com.example.hoitnote.utils.App;
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.helpers.BlueToothHelper;
 
@@ -54,6 +55,7 @@ public class ClientThread extends Thread{
                         is = socket.getInputStream();//输入到本机设备的数据流
                         os = socket.getOutputStream();//输出到远端设备的数据流
                         receiveMessageThread = new ReceiveMessageThread(is,os,mHandler,blueToothHelper);
+                        App.ReceiveThreadFlag = true;
                         receiveMessageThread.start();
                         break;
                     }

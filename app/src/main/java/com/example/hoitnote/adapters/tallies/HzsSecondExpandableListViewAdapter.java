@@ -124,7 +124,11 @@ public class HzsSecondExpandableListViewAdapter extends BaseExpandableListAdapte
         HzsExpandItemTallyBinding binding = null;
         TextView delete = null;
         if(view == null){
-            binding = DataBindingUtil.inflate(LayoutInflater.from(context),R.layout.hzs_expand_item_tally,viewGroup,false);
+            binding = DataBindingUtil.inflate(
+                    LayoutInflater.from(context),
+                    R.layout.hzs_expand_item_tally,
+                    viewGroup,
+                    false);
             holder = new ThirdHolder(binding);
             view = binding.getRoot();
             view.setTag(holder);

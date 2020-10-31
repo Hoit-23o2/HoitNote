@@ -1,64 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="50dp">
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.cardview.widget.CardView android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="0dp">
         <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-            <Button
-                android:id="@+id/hzs_history_content_as_year_year"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="2020年"
-                style="@style/HoitTitleText"
-                android:background="@android:color/transparent"/>
+            android:background="?attr/colorPrimaryLight"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_margin="10dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+                    <TextView
+                        android:id="@+id/hzs_history_content_as_year_year"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2020年"
+                        style="@style/HoitGroupText"
+                        android:background="@android:color/transparent"/>
 
-            <com.example.hoitnote.customviews.FontAwesome
-                android:id="@+id/expandableArrow"
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:text="\uf107"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/hzs_history_content_as_year_year"
-                app:layout_constraintTop_toTopOf="parent" />
+                    <com.example.hoitnote.customviews.FontAwesome
+                        android:layout_marginHorizontal="10dp"
+                        android:id="@+id/expandableArrow"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/HoitIconUnclickable"
+                        android:textSize="12sp"
+                        android:text="\uf107"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/hzs_history_content_as_year_year"
+                        app:layout_constraintTop_toTopOf="parent" />
 
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/hzs_history_content_as_year_jieyu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="@string/account_remain_money"
+                    style="@style/HoitGroupText"
+                    android:gravity="center"/>
+                <TextView
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:id="@+id/hzs_history_content_as_year_balance"
+                    android:layout_width="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_height="match_parent"
+                    android:text="1000.0￥"
+                    style="@style/HoitGroupText"
+                    android:gravity="center"/>
+            </LinearLayout>
+
+            <include layout="@layout/divider_normal"/>
         </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/hzs_history_content_as_year_jieyu"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/account_remain_money"
-            style="@style/HoitTitleText"
-            android:gravity="center"/>
-        <TextView
-            android:singleLine="true"
-            android:ellipsize="marquee"
-            android:id="@+id/hzs_history_content_as_year_balance"
-            android:layout_width="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_height="match_parent"
-            android:text="1000.0￥"
-            style="@style/HoitTitleText"
-            android:gravity="center"/>
-    </LinearLayout>
     <ExpandableListView
         android:divider="@null"
         android:groupIndicator="@null"
         android:id="@+id/hzs_history_content_as_year_expandable_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-
 </LinearLayout>

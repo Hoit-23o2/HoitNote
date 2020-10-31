@@ -75,7 +75,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this,R.layout.activity_main);
         mainViewModel = new MainViewModel(context);
-        initAnim();
+        initAnimAndUI();
         initActivity();
     }
 
@@ -106,7 +106,7 @@ public class MainActivity extends BaseActivity {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void initAnim(){
+    private void initAnimAndUI(){
         /*调整最近列表的高度*/
         float cardFragmentRatio = 0.6f;
         int deviceHeight = DeviceHelper.getDeviceHeight(context);
@@ -138,6 +138,7 @@ public class MainActivity extends BaseActivity {
                     binding.recentHintTextView.setVisibility(View.INVISIBLE);
                     binding.floatingButton.setVisibility(View.INVISIBLE);
                     binding.emptyHintTextView.setVisibility(View.VISIBLE);
+                    currentAccountCardFragment = accountCardAdapter.getFragment(position);
                 }
                 else{
                     binding.recentTalliesExpandableListView.setVisibility(View.VISIBLE);

@@ -5,4 +5,5 @@
     <attr name="colorPrimaryLight" format="color"/>
     <attr name="colorDivider" format="color"/>
     <attr name="colorAccentOpacity" format="color"/>
+    <attr name="colorAccentLight" format="color"/>
 </resources>

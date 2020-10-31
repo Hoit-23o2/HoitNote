@@ -20,6 +20,7 @@ import com.example.hoitnote.databinding.HzsExpandItemYearMenuBinding;
 import com.example.hoitnote.models.flow.HzsDayData;
 import com.example.hoitnote.models.flow.HzsTally;
 import com.example.hoitnote.utils.App;
+import com.example.hoitnote.utils.helpers.BookingDataHelper;
 import com.example.hoitnote.views.flow.HistoryActivity;
 
 
@@ -111,23 +112,25 @@ public class HzsThirdExpandableListViewAdapter extends BaseExpandableListAdapter
     @Override
     public View getChildView(final int i, final int i1, boolean b, View view, ViewGroup viewGroup) {
 
-        HzsSecondExpandableListViewAdapter.ThirdHolder holder = null;
+        ThirdHolder holder = null;
         HzsExpandItemTallyBinding binding = null;
         TextView delete = null;
         if(view == null){
 
-            binding = DataBindingUtil.inflate(LayoutInflater.from(context),R.layout.hzs_expand_item_tally,viewGroup,false);
-            holder = new HzsSecondExpandableListViewAdapter.ThirdHolder(binding);
+            binding = DataBindingUtil.inflate(LayoutInflater.from(context),
+                    R.layout.hzs_expand_item_tally,
+                    viewGroup,false);
+            holder = new ThirdHolder(binding);
             view = binding.getRoot();
             view.setTag(holder);
 
         }else{
-            holder = (HzsSecondExpandableListViewAdapter.ThirdHolder)view.getTag();
+            holder = (ThirdHolder)view.getTag();
         }
         holder.swipeLayout.setShowMode(SwipeLayout.ShowMode.PullOut);
         holder.swipeLayout.addDrag(SwipeLayout.DragEdge.Right, holder.swipeLayout.findViewWithTag("bottom"));
         holder.binding.setTally(new HzsTally(days.get(i).getData().get(i1),HzsTally.TIME));
-        final HzsSecondExpandableListViewAdapter.ThirdHolder finalHolder = holder;
+        final ThirdHolder finalHolder = holder;
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -143,6 +146,7 @@ public class HzsThirdExpandableListViewAdapter extends BaseExpandableListAdapter
                 HistoryActivity.getInstance().showMainData();
             }
         });
+        BookingDataHelper.setClickListener(holder.binding,context);
         return view;
     }
 

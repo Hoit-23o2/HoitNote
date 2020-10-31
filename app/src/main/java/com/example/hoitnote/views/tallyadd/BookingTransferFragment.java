@@ -244,6 +244,8 @@ public class BookingTransferFragment extends BookingBaseFragment {
             @Override
             public void onClick(View v) {
                 outcomeAccountString = editText.getText().toString();
+                outcomeAccount = new Account();
+                outcomeAccount.setAccountName(outcomeAccountString);
                 outcomeAccountTextView.setText(outcomeAccountString);
                 dialog.dismiss();
                 pvOutcomeAccountOptions.dismiss();
@@ -271,6 +273,8 @@ public class BookingTransferFragment extends BookingBaseFragment {
             @Override
             public void onClick(View v) {
                 incomeAccountString = editText.getText().toString();
+                incomeAccount = new Account();
+                incomeAccount.setAccountName(incomeAccountString);
                 incomeAccountTextView.setText(incomeAccountString);
                 dialog.dismiss();
                 pvIncomeAccountOptions.dismiss();

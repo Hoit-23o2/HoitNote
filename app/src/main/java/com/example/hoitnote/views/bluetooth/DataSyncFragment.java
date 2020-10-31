@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.app.hubert.guide.NewbieGuide;
 import com.app.hubert.guide.model.GuidePage;
@@ -54,7 +55,6 @@ public class DataSyncFragment extends Fragment {
     DataSyncViewModel dataSyncViewModel;
     Context context;
 
-
     public DataSyncFragment(Context context, DataSyncViewModel dataSyncViewModel){
         this.context = context;
         this.dataSyncViewModel = dataSyncViewModel;
@@ -77,7 +77,10 @@ public class DataSyncFragment extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
                 dataSyncViewModel.setCurrentStatue(BluetoothStatue.CONNECTING);
                 binding.senderBtnText.setText(dataSyncViewModel.context.getString(R.string.datasync_connecting_hint));
-                BluetoothDevice device = App.blueToothHelper.getPairedDeviceList().get(pos);
+                BluetoothDevice device = ((BlueToothDeviceAdapter)binding.pairedDeviceListView.getAdapter()).
+                        getBluetoothViewModels().
+                        get(pos).
+                        getBluetoothDevice();
                 DataPackage dataPackage = new DataPackage();
                 dataPackage.setConfigs(App.dataBaseHelper.getConfigs());
                 dataPackage.setAllTallies(App.dataBaseHelper.getTallies(null));
@@ -93,13 +96,27 @@ public class DataSyncFragment extends Fragment {
                 binding.pairedDeviceListViewContainer.setVisibility(View.GONE);
             }
         });
+        binding.refreshContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                App.blueToothHelper.scanDevice(context);
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(binding.refreshContainer.isRefreshing()) {
+                            binding.refreshContainer.setRefreshing(false);
+                        }
+                    }
+                }, Constants.delayDuration);
+            }
+        });
         return  binding.getRoot();
     }
 
     /*点击我要发送按钮，获取已匹配设备事件*/
     public void getPairedList(View v){
         ArrayList<BluetoothDevice> pairedList = App.blueToothHelper.getPairedDeviceList();
-        pairedList.addAll(getScanningList(v));
         ArrayList<BlueToothViewModel> blueToothViewModels = new ArrayList<>();
         for (BluetoothDevice device:
              pairedList) {
@@ -108,6 +125,7 @@ public class DataSyncFragment extends Fragment {
         BlueToothDeviceAdapter blueToothDeviceAdapter = new BlueToothDeviceAdapter(context, blueToothViewModels);
         binding.pairedDeviceListView.setAdapter(blueToothDeviceAdapter);
         binding.pairedDeviceListViewContainer.setVisibility(View.VISIBLE);
+
 
         new Handler().postDelayed(new Runnable() {
             @SuppressLint("RtlHardcoded")
@@ -121,11 +139,6 @@ public class DataSyncFragment extends Fragment {
                         .show();
             }
         },500);
-    }
-
-    /*扫描设备事件*/
-    public ArrayList<BluetoothDevice> getScanningList(View v){
-        return App.blueToothHelper.getFoundDeviceList();
     }
 
 
@@ -143,11 +156,33 @@ public class DataSyncFragment extends Fragment {
         App.blueToothHelper.openBluetooth(context);
         App.blueToothHelper.applyPermission();
         App.blueToothHelper.scanDevice(context);
+
+        App.blueToothHelper.mHandler.setDeviceFoundListener(new BlueToothHelper.BlueToothHandler.DeviceFoundListener() {
+            @Override
+            public void onFindDevice(ArrayList<BluetoothDevice> foundDeviceList) {
+                if(binding.pairedDeviceListView.getAdapter() != null){
+                    ArrayList<BlueToothViewModel> blueToothViewModels = new ArrayList<>();
+                    for (BluetoothDevice device:
+                            foundDeviceList) {
+                        blueToothViewModels.add(new BlueToothViewModel(context, device));
+                    }
+                    ((BlueToothDeviceAdapter)binding.pairedDeviceListView.getAdapter())
+                            .addBluetoothCollection(blueToothViewModels);
+                }
+            }
+        });
     }
 
 
     /*发送*/
     public void sendDataPackage(BluetoothDevice device, final DataPackage dataPackage){
+        toggleBtn(dataSyncViewModel.context.getString(R.string.datasync_connecting_hint),
+                binding.senderBtnText,
+                false);
+        toggleBtn(dataSyncViewModel.context.getString(R.string.datasync_send_hint),
+                binding.receiverBtnText,
+                false);
+        binding.pairedDeviceListViewContainer.setVisibility(View.GONE);
         /*连接设备*/
         App.blueToothHelper.connectDevice(device);
         /*发送信息*/
@@ -168,8 +203,14 @@ public class DataSyncFragment extends Fragment {
                 toggleBtn(dataSyncViewModel.context.getString(R.string.datasync_sended_hint),
                         binding.senderBtnText,
                         false);
-                ToastHelper.showToast(context, receiveInfo.getMessage(),Toast.LENGTH_SHORT);
-                Log.d("蓝牙：",receiveInfo.getMessage());
+                ToastHelper.showToast(context, "发送成功，即将返回",Toast.LENGTH_SHORT);
+                //Log.d("蓝牙：",receiveInfo.getMessage());
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        NavigationHelper.closeCurrentActivity(context);
+                    }
+                }, Constants.delayDuration);
             }
         });
 
@@ -180,6 +221,9 @@ public class DataSyncFragment extends Fragment {
         /*修改为正在连接*/
         toggleBtn(dataSyncViewModel.context.getString(R.string.datasync_connecting_hint),
                 binding.receiverBtnText,
+                false);
+        toggleBtn(dataSyncViewModel.context.getString(R.string.datasync_send_hint),
+                binding.senderBtnText,
                 false);
         /*开启服务器*/
         App.blueToothHelper.startServer(context);
@@ -199,16 +243,20 @@ public class DataSyncFragment extends Fragment {
                 toggleBtn(dataSyncViewModel.context.getString(R.string.datasync_received_hint),
                         binding.receiverBtnText,
                         false);
-                ToastHelper.showToast(context, dataPackage.toString(), Toast.LENGTH_SHORT);
                 App.dataBaseHelper.saveDataPackage(dataPackage);
+                ToastHelper.showToast(context, "即将重启App",Toast.LENGTH_SHORT);
+                Log.d("即将重启App","即将重启App");
                 /*重启App*/
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        App.blueToothHelper.cancel();
                         DeviceHelper.restartApp(context);
                     }
-                }, Constants.delayDuration);
+                }, Constants.delayDuration * 3);
             }
+
+
         });
     }
 
@@ -244,11 +292,11 @@ public class DataSyncFragment extends Fragment {
     private void toggleBtn(String hint, TextView textViewButton, boolean isEnable){
         textViewButton.setText(hint);
         if(isEnable){
-            textViewButton.setTextColor(Color.BLACK);
+            textViewButton.setAlpha(1f);
             textViewButton.setEnabled(true);
         }
         else {
-            textViewButton.setTextColor(ThemeHelper.getPrimaryDarkColor(context));
+            textViewButton.setAlpha(0.5f);
             textViewButton.setEnabled(false);
         }
     }

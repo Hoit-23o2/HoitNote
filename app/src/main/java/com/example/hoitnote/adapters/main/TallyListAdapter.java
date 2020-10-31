@@ -57,6 +57,7 @@ public class TallyListAdapter extends BaseAdapter {
         else{
             binding = (ItemTallyBinding) convertView.getTag();
         }
+
         binding.setTallyViewModel(tallyViewModels.get(pos));
         /*views.add(binding.getRoot());*/
         return binding.getRoot();

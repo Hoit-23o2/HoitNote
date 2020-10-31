@@ -11,133 +11,265 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/settings_title"
-            android:textStyle="bold"
-            android:layout_margin="20dp"
-            style="@style/HoitGroupText"
-            android:textColor="?attr/textColorPrimary"/>
-
         <LinearLayout
             android:orientation="vertical"
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".views.settings.SettingsActivity">
-            <LinearLayout
-                android:foreground="?selectableItemBackground"
-                android:onClick="goThemeSettingActivity"
-                android:layout_margin="10dp"
-                android:orientation="horizontal"
+            <androidx.cardview.widget.CardView
+                android:layout_margin="20dp"
+                app:cardCornerRadius="15dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <com.example.hoitnote.customviews.FontAwesome
-                    android:id="@+id/themeIcon"
-                    android:text="@string/theme_icon"
-                    android:transitionName="themeIcon"
-                    android:layout_margin="10dp"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    style="@style/HoitIcon"
-                    tools:targetApi="lollipop" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_margin="10dp"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:text="主题及安全"
+                            style="@style/HoitSubTitleText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                        <include layout="@layout/divider_normal"/>
+                    </LinearLayout>
 
-                <TextView
-                    android:textColor="?attr/textColorPrimary"
-                    style="@style/HoitTitleText"
-                    android:layout_margin="10dp"
-                    android:textAlignment="center"
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/settings_theme"/>
-            </LinearLayout>
 
-            <LinearLayout
-                android:foreground="?selectableItemBackground"
-                android:onClick="goPasswordSettingActivity"
-                android:layout_margin="10dp"
-                android:orientation="horizontal"
+                    <LinearLayout
+                        android:foreground="?selectableItemBackground"
+                        android:onClick="goThemeSettingActivity"
+                        android:layout_margin="10dp"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="40dp"
+                            android:focusable="false"
+                            android:layout_height="40dp"
+                            app:cardElevation="0dp"
+                            android:layout_margin="10dp"
+                            app:cardCornerRadius="25dp">
+                            <LinearLayout
+                                android:background="?attr/colorAccentOpacity"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+                                <com.example.hoitnote.customviews.FontAwesome
+                                    android:id="@+id/themeIcon"
+                                    android:text="@string/theme_icon"
+                                    android:transitionName="themeIcon"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    style="@style/HoitIcon"
+                                    tools:targetApi="lollipop" />
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+
+
+                        <TextView
+                            android:textColor="?attr/textColorPrimary"
+                            style="@style/HoitTitleText"
+                            android:layout_margin="10dp"
+                            android:textAlignment="center"
+                            android:layout_gravity="center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_theme"/>
+
+                        <com.example.hoitnote.customviews.FontAwesome
+                            android:layout_marginHorizontal="10dp"
+                            android:textAlignment="viewEnd"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/HoitIconUnclickable"
+                            android:text="@string/right_arrow"
+                            android:gravity="end" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:foreground="?selectableItemBackground"
+                        android:onClick="goPasswordSettingActivity"
+                        android:layout_margin="10dp"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="40dp"
+                            android:focusable="false"
+                            android:layout_height="40dp"
+                            app:cardElevation="0dp"
+                            android:layout_margin="10dp"
+                            app:cardCornerRadius="25dp">
+                            <LinearLayout
+                                android:background="?attr/colorAccentOpacity"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+                                <com.example.hoitnote.customviews.FontAwesome
+                                    android:id="@+id/securityIcon"
+                                    style="@style/HoitIcon"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:text="@string/security_icon"
+                                    android:transitionName="securityIcon"
+                                    tools:targetApi="lollipop" />
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+
+
+                        <TextView
+                            android:textColor="?attr/textColorPrimary"
+                            style="@style/HoitTitleText"
+                            android:layout_margin="10dp"
+                            android:textAlignment="center"
+                            android:layout_gravity="center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_security"/>
+
+                        <com.example.hoitnote.customviews.FontAwesome
+                            android:layout_marginHorizontal="10dp"
+                            android:textAlignment="viewEnd"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/HoitIconUnclickable"
+                            android:text="@string/right_arrow"
+                            android:gravity="end" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                app:cardCornerRadius="15dp"
+                android:layout_margin="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <com.example.hoitnote.customviews.FontAwesome
-                    android:id="@+id/securityIcon"
-                    android:transitionName="securityIcon"
-                    android:layout_margin="10dp"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    style="@style/HoitIcon"
-                    android:text="@string/security_icon"
-                    tools:targetApi="lollipop" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:gravity="center"
+                        android:layout_margin="10dp"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:text="其他"
+                            style="@style/HoitSubTitleText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                        <include layout="@layout/divider_normal"/>
+                    </LinearLayout>
 
-                <TextView
-                    android:textColor="?attr/textColorPrimary"
-                    style="@style/HoitTitleText"
-                    android:layout_margin="10dp"
-                    android:textAlignment="center"
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/settings_security"/>
-            </LinearLayout>
+                    <LinearLayout
+                        android:foreground="?selectableItemBackground"
+                        android:onClick="goSyncActivity"
+                        android:layout_margin="10dp"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:targetApi="m">
 
-            <LinearLayout
-                android:foreground="?selectableItemBackground"
-                android:onClick="goSyncActivity"
-                android:layout_margin="10dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:targetApi="m">
-                <com.example.hoitnote.customviews.FontAwesome
-                    android:id="@+id/syncIcon"
-                    android:transitionName="syncIcon"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_margin="10dp"
-                    android:text="@string/sync_icon"
-                    style="@style/HoitIcon"
-                    tools:targetApi="lollipop" />
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="40dp"
+                            android:focusable="false"
+                            android:layout_height="40dp"
+                            app:cardElevation="0dp"
+                            android:layout_margin="10dp"
+                            app:cardCornerRadius="25dp">
+                            <LinearLayout
+                                android:background="?attr/colorAccentOpacity"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+                                <com.example.hoitnote.customviews.FontAwesome
+                                    android:id="@+id/syncIcon"
+                                    android:transitionName="syncIcon"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:text="@string/sync_icon"
+                                    style="@style/HoitIcon"
+                                    tools:targetApi="lollipop" />
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
 
-                <TextView
-                    android:textColor="?attr/textColorPrimary"
-                    style="@style/HoitTitleText"
-                    android:layout_margin="10dp"
-                    android:textAlignment="center"
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/settings_sync"/>
-            </LinearLayout>
 
-            <LinearLayout
-                android:foreground="?selectableItemBackground"
-                android:onClick="goRecycleActivity"
-                android:layout_margin="10dp"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:targetApi="m">
-                <com.example.hoitnote.customviews.FontAwesome
-                    android:id="@+id/recycleIcon"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_margin="10dp"
-                    android:text="@string/recycleIcon"
-                    style="@style/HoitIcon"
-                    tools:targetApi="lollipop" />
 
-                <TextView
-                    android:textColor="?attr/textColorPrimary"
-                    style="@style/HoitTitleText"
-                    android:layout_margin="10dp"
-                    android:textAlignment="center"
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/settings_recycle"/>
-            </LinearLayout>
+                        <TextView
+                            android:textColor="?attr/textColorPrimary"
+                            style="@style/HoitTitleText"
+                            android:layout_margin="10dp"
+                            android:textAlignment="center"
+                            android:layout_gravity="center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_sync"/>
+
+                        <com.example.hoitnote.customviews.FontAwesome
+                            android:layout_marginHorizontal="10dp"
+                            android:textAlignment="viewEnd"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/HoitIconUnclickable"
+                            android:text="@string/right_arrow"
+                            android:gravity="end" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:foreground="?selectableItemBackground"
+                        android:onClick="goRecycleActivity"
+                        android:layout_margin="10dp"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:targetApi="m">
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="40dp"
+                            android:focusable="false"
+                            android:layout_height="40dp"
+                            app:cardElevation="0dp"
+                            android:layout_margin="10dp"
+                            app:cardCornerRadius="25dp">
+                            <LinearLayout
+                                android:background="?attr/colorAccentOpacity"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+                                <com.example.hoitnote.customviews.FontAwesome
+                                    android:id="@+id/recycleIcon"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:text="@string/recycleIcon"
+                                    style="@style/HoitIcon"
+                                    tools:targetApi="lollipop" />
+                            </LinearLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <TextView
+                            android:textColor="?attr/textColorPrimary"
+                            style="@style/HoitTitleText"
+                            android:layout_margin="10dp"
+                            android:textAlignment="center"
+                            android:layout_gravity="center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/settings_recycle"/>
+
+                        <com.example.hoitnote.customviews.FontAwesome
+                            android:layout_marginHorizontal="10dp"
+                            android:textAlignment="viewEnd"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/HoitIconUnclickable"
+                            android:text="@string/right_arrow"
+                            android:gravity="end" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
         </LinearLayout>
     </LinearLayout>
 

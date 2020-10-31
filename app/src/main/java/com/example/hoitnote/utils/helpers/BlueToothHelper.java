@@ -21,6 +21,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.hoitnote.BaseActivity;
+import com.example.hoitnote.utils.App;
 import com.example.hoitnote.utils.Interfaces.IBlueTooth;
 import com.example.hoitnote.utils.commuications.DataPackage;
 import com.example.hoitnote.utils.commuications.bluetooth.AcceptThread;
@@ -135,8 +136,11 @@ public class BlueToothHelper implements IBlueTooth {
                         Log.d("======================",device.getName()+"   "+device.getAddress());
 
                         //集合数量变化，表示有新的设备加入
-                        if(before_add_size != foundDeviceSet.size()){
-                            foundDeviceList.add(device);
+                        if(before_add_size != foundDeviceSet.size()&&device.getName()!=null){
+                            if ((device.getName().length()!=0)){
+                                foundDeviceList.add(device);
+                                mHandler.obtainMessage(Constants.MSG_DEVICE_FOUND).sendToTarget();
+                            }
                         }
                         break;
                 }
@@ -156,6 +160,7 @@ public class BlueToothHelper implements IBlueTooth {
         Context mContext;
         BlueToothHelper blueToothHelper;
 
+        /********** 接受监听 ************/
         public interface BluetoothAcceptListener {
             void onDataReceived(DataPackage dataPackage);
             void onConnectSuccess();
@@ -168,6 +173,7 @@ public class BlueToothHelper implements IBlueTooth {
             this.bluetoothAcceptListener = bluetoothAcceptListener;
         }
 
+        /********** 发送监听 ************/
         public interface BluetoothClientListener{
             void onConnectSuccess();
             void onDataSendSuccessful(ReceiveInfo receiveInfo);
@@ -179,6 +185,16 @@ public class BlueToothHelper implements IBlueTooth {
             this.bluetoothClientListener = bluetoothClientListener;
         }
 
+        /********** 发现设备监听 ************/
+        public interface DeviceFoundListener{
+            void onFindDevice(ArrayList<BluetoothDevice> foundDeviceList);
+        }
+
+        private DeviceFoundListener deviceFoundListener = null;
+
+        public void setDeviceFoundListener(DeviceFoundListener deviceFoundListener){
+            this.deviceFoundListener = deviceFoundListener;
+        }
 
         public BlueToothHandler(BaseActivity activity, BlueToothHelper blueToothHelper){
             mActivity = new WeakReference<>(activity);
@@ -197,9 +213,9 @@ public class BlueToothHelper implements IBlueTooth {
             /*variable*/
             ReceiveInfo receiveInfo = null;
             switch (msg.what){
-                /********************          Client           ***********************/
+                /********************          Client   发送方        ***********************/
                 case Constants.MSG_SEND_SUCCESS:
-                    ToastHelper.showToast(mContext,"发送成功",Toast.LENGTH_SHORT);
+                    //ToastHelper.showToast(mContext,"发送成功",Toast.LENGTH_SHORT);
                     break;
                 case Constants.MSG_SEND_FAILURE:
                     ToastHelper.showToast(mContext,"发送失败",Toast.LENGTH_SHORT);
@@ -208,15 +224,16 @@ public class BlueToothHelper implements IBlueTooth {
                     ToastHelper.showToast(mContext,"应用已经连接",Toast.LENGTH_SHORT);
                     break;
                 case Constants.MSG_Get_RECEIVEINFO:
-                    ToastHelper.showToast(mContext,"对方已接受到消息",Toast.LENGTH_SHORT);
+                    Log.d("蓝牙","对方已接受到消息");
+                    //ToastHelper.showToast(mContext,"对方已接受到消息",Toast.LENGTH_SHORT);
                     setRecieveFinished(true);
                     receiveInfo = blueToothHelper.clientThread.getReceiveMessageThread().getReceiveInfo();
                     bluetoothClientListener.onDataSendSuccessful(receiveInfo);
                     break;
 
-                /********************          Accept           ***********************/
+                /********************          Accept 接受方          ***********************/
                 case Constants.MSG_RECEIVE_SUCCESS:
-                    ToastHelper.showToast(mContext,"服务端接受成功",Toast.LENGTH_SHORT);
+                    //ToastHelper.showToast(mContext,"服务端接受成功",Toast.LENGTH_SHORT);
                     setRecieveFinished(true);
                     //生成回复信息
                     receiveInfo = new ReceiveInfo("对方接受成功");
@@ -256,6 +273,11 @@ public class BlueToothHelper implements IBlueTooth {
                         bluetoothAcceptListener.onConnectSuccess();
                     }
                     break;
+
+                /***************         device found           ********************/
+                case Constants.MSG_DEVICE_FOUND:
+                    this.deviceFoundListener.onFindDevice(blueToothHelper.getFoundDeviceList());
+                    break;
             }
         }
     }
@@ -280,7 +302,7 @@ public class BlueToothHelper implements IBlueTooth {
             doDiscovery();
         }
         bluetoothAdapter.startDiscovery();
-        ToastHelper.showToast(context,"正在搜索设备...",Toast.LENGTH_SHORT);
+        //ToastHelper.showToast(context,"正在搜索设备...",Toast.LENGTH_SHORT);
     }
 
     private void doDiscovery(){
@@ -299,7 +321,7 @@ public class BlueToothHelper implements IBlueTooth {
             //判断蓝牙是否开启
             if (bluetoothAdapter.isEnabled()) {
                 //提示语：蓝牙已开启
-                ToastHelper.showToast(context, "蓝牙已开启", Toast.LENGTH_SHORT);
+                //ToastHelper.showToast(context, "蓝牙已开启", Toast.LENGTH_SHORT);
             } else {
                 //开启蓝牙
                 bluetoothAdapter.enable();
@@ -324,7 +346,7 @@ public class BlueToothHelper implements IBlueTooth {
                     this);
 
             acceptThread.start();
-            ToastHelper.showToast(context, "服务器已开启", Toast.LENGTH_SHORT);
+            //ToastHelper.showToast(context, "服务器已开启", Toast.LENGTH_SHORT);
         }else{
             ToastHelper.showToast(context, "请先开启蓝牙", Toast.LENGTH_SHORT);
         }
@@ -364,7 +386,7 @@ public class BlueToothHelper implements IBlueTooth {
             Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
             discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION,300);
         }
-        ToastHelper.showToast(context, "300秒内可被检测", Toast.LENGTH_SHORT);
+        //ToastHelper.showToast(context, "300秒内可被检测", Toast.LENGTH_SHORT);
     }
 
     public void connectDevice(BluetoothDevice device) {
@@ -381,10 +403,10 @@ public class BlueToothHelper implements IBlueTooth {
             if (checkpermission != PackageManager.PERMISSION_GRANTED) {//没有给权限
                 Log.e("permission", "动态申请");
                 //参数分别是当前活动，权限字符串数组，requestcode
-                ToastHelper.showToast(context,"搜索回调权限未开启",Toast.LENGTH_SHORT);
+                //ToastHelper.showToast(context,"搜索回调权限未开启",Toast.LENGTH_SHORT);
                 ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
             }else{
-                ToastHelper.showToast(context,"搜索回调权限已开启",Toast.LENGTH_SHORT);
+                //ToastHelper.showToast(context,"搜索回调权限已开启",Toast.LENGTH_SHORT);
             }
         }
     }
@@ -403,6 +425,7 @@ public class BlueToothHelper implements IBlueTooth {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        setSendInfo(null);
         sendObject(dataPackage);
     }
 
@@ -436,7 +459,7 @@ public class BlueToothHelper implements IBlueTooth {
             try {
                 os.write(bytes);
                 os.flush();
-                mHandler.obtainMessage(Constants.MSG_SEND_SUCCESS).sendToTarget();
+                //mHandler.obtainMessage(Constants.MSG_SEND_SUCCESS).sendToTarget();
             } catch (IOException e) {
                 e.printStackTrace();
                 mHandler.obtainMessage(Constants.MSG_SEND_FAILURE).sendToTarget();

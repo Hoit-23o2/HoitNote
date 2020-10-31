@@ -30,7 +30,6 @@
             android:onClick="@{(v)->accountCardFragment.actionWhenCardClicked(v)}"
             android:longClickable="true"
             app:cardCornerRadius="20dp"
-            app:cardElevation="5dp"
             android:layout_margin="20dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -38,7 +37,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="?attr/colorAccent"
+                android:background="@drawable/hoit_gradient_background"
                 android:visibility="@{accountCardViewModel.card ? View.VISIBLE : View.GONE}">
 
                 <LinearLayout

@@ -36,7 +36,10 @@ public class HzsContentDayRecyclerViewAdapter extends RecyclerView.Adapter<HzsCo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        HzsExpandItemTallyBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),R.layout.hzs_expand_item_tally,parent,false);
+        HzsExpandItemTallyBinding binding = DataBindingUtil.inflate(
+                LayoutInflater.from(parent.getContext()),
+                R.layout.hzs_expand_item_tally,
+                parent,false);
         ViewHolder holder = new ViewHolder(binding);
         return holder;
     }

@@ -25,4 +25,6 @@ public class App {
     public static ArrayList<Config> configs;    //保存了除了指纹外的所有密码
     @SuppressLint("StaticFieldLeak")
     public static Builder newbieGuideBuilder;
+
+    public static boolean ReceiveThreadFlag;
 }

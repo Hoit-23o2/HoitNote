@@ -8,258 +8,276 @@
             name="tally"
             type="com.example.hoitnote.models.flow.HzsTally" />
     </data>
-    <com.daimajia.swipe.SwipeLayout
-
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:id="@+id/swipe">
-        <!-- Bottom View Start-->
-        <LinearLayout
-            android:orientation="horizontal"
-            android:background="#66ddff00"
-            android:id="@+id/bottom_wrapper"
-            android:layout_width="100dp"
-            android:weightSum="1"
-            android:layout_height="match_parent"
-            android:tag="bottom">
-            <!--What you want to show-->
-            <TextView
-                android:id="@+id/hzs_expand_item_tally_delete"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@string/delete"
-                style="@style/HoitTitleText"
-                android:background="?attr/colorAccent"/>
-        </LinearLayout>
-        <!-- Bottom View End-->
-
-        <!-- Surface View Start -->
-        <LinearLayout
-            android:foreground="?selectableItemBackground"
-            android:id="@+id/tally_more_info"
-            android:background="#ffffff"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp">
+        <com.daimajia.swipe.SwipeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <!--What you want to show in SurfaceView-->
-            <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_height="wrap_content"
+            android:id="@+id/swipe">
+            <!-- Bottom View Start-->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:id="@+id/bottom_wrapper"
+                android:layout_width="100dp"
+                android:weightSum="1"
+                android:layout_height="match_parent"
+                android:tag="bottom"
+                android:paddingLeft="10dp">
+                <!--What you want to show-->
+                <androidx.cardview.widget.CardView
+                    app:cardElevation="0dp"
+                    app:cardCornerRadius="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:id="@+id/hzs_expand_item_tally_delete"
+                        android:gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="@string/delete"
+                        style="@style/HoitTitleText"
+                        android:background="?attr/colorAccent"/>
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+            <!-- Bottom View End-->
+
+            <!-- Surface View Start -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center_vertical">
+                app:cardCornerRadius="10dp"
+                app:cardElevation="0dp">
                 <LinearLayout
-                    android:id="@+id/mainContainer"
-                    android:orientation="horizontal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:foreground="?selectableItemBackground"
+                    android:id="@+id/tally_more_info"
+                    android:background="#ffffff"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        app:cardElevation="0dp"
-                        android:layout_margin="20dp"
-                        android:layout_gravity="center"
-                        app:cardCornerRadius="25dp">
-                        <com.example.hoitnote.customviews.FontAwesome
-                            android:background="?attr/colorAccentOpacity"
-                            android:id="@+id/hzs_expand_item_tally_icon"
-                            style="@style/HoitIconUnclickable"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:text='@{tally.iconCode, default=""}'/>
-                    </androidx.cardview.widget.CardView>
-
-
+                    android:layout_height="match_parent">
+                    <!--What you want to show in SurfaceView-->
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical">
                         <LinearLayout
-                            android:id="@+id/upperContainer"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:background="?attr/colorPrimary"
+                            android:id="@+id/mainContainer"
                             android:orientation="horizontal"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
-
-                            <TextView
-                                android:id="@+id/hzs_expand_item_tally_classname"
-                                style="@style/HoitTitleText"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="10dp"
-                                android:layout_weight="1"
-                                android:textSize="14sp"
-                                android:text='@{tally.classname, default="早餐"}' />
-
-                            <androidx.cardview.widget.CardView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                app:cardCornerRadius="10dp"
-                                app:cardElevation="0dp">
-                                <LinearLayout
-                                    android:paddingHorizontal="5dp"
-                                    android:background="?attr/colorAccent"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent">
-                                    <TextView
-                                        android:background="?attr/colorAccent"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:layout_gravity="center"
-                                        android:textSize="14sp"
-                                        android:text="@{ConvertHelper.actionType2String(tally.actionType), default=支出}"
-                                        android:textAlignment="center"
-                                        android:textColor="?attr/textColorPrimary" />
-                                </LinearLayout>
-                            </androidx.cardview.widget.CardView>
-
-                            <TextView
-                                android:singleLine="true"
-                                android:ellipsize="marquee"
-                                android:textSize="14sp"
-                                android:id="@+id/money"
-                                style="@style/TallyMoneyText"
-                                android:layout_width="0dp"
-                                android:layout_weight="0.5"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:gravity="end"
-                                android:textAlignment="viewEnd"
-                                android:layout_margin="10dp"
-                                android:text='@{tally.money+"￥",default="-200￥"}' />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:orientation="horizontal"
-                            android:id="@+id/lowerContainer"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/upperContainer">
-                            <TextView
-                                android:textSize="12sp"
-                                android:layout_weight="1"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="10dp"
-                                style="@style/HoitSubTitleText"
-                                android:text='@{tally.account, default="现金"}'/>
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:cardElevation="0dp"
+                                android:layout_margin="20dp"
+                                android:layout_gravity="center"
+                                app:cardCornerRadius="25dp">
+                                <com.example.hoitnote.customviews.FontAwesome
+                                    android:background="?attr/colorAccentOpacity"
+                                    android:id="@+id/hzs_expand_item_tally_icon"
+                                    style="@style/HoitIconUnclickable"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:text='@{tally.iconCode, default=""}'/>
+                            </androidx.cardview.widget.CardView>
 
-                            <TextView
-                                android:textSize="12sp"
-                                android:layout_margin="10dp"
-                                android:layout_weight="1"
-                                android:layout_width="0dp"
-                                android:textAlignment="viewEnd"
-                                style="@style/HoitSubTitleText"
-                                android:text='@{tally.time, default="11:32"}'
-                                android:layout_height="wrap_content"
-                                android:gravity="end" />
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <LinearLayout
+                                    android:id="@+id/upperContainer"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent">
+
+                                    <TextView
+                                        android:id="@+id/hzs_expand_item_tally_classname"
+                                        style="@style/HoitTitleText"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="10dp"
+                                        android:layout_weight="1"
+                                        android:textSize="14sp"
+                                        android:text='@{tally.classname, default="早餐"}' />
+
+                                    <androidx.cardview.widget.CardView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        app:cardCornerRadius="10dp"
+                                        app:cardElevation="0dp">
+                                        <LinearLayout
+                                            android:paddingHorizontal="5dp"
+                                            android:background="?attr/colorAccentOpacity"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="match_parent">
+                                            <TextView
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:layout_gravity="center"
+                                                android:textSize="14sp"
+                                                android:text="@{ConvertHelper.actionType2String(tally.actionType), default=支出}"
+                                                android:textAlignment="center"
+                                                android:textColor="?attr/textColorPrimary" />
+                                        </LinearLayout>
+                                    </androidx.cardview.widget.CardView>
+
+                                    <TextView
+                                        android:singleLine="true"
+                                        android:ellipsize="marquee"
+                                        android:textSize="14sp"
+                                        android:id="@+id/money"
+                                        style="@style/TallyMoneyText"
+                                        android:layout_width="0dp"
+                                        android:layout_weight="0.5"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:gravity="end"
+                                        android:textAlignment="viewEnd"
+                                        android:layout_margin="10dp"
+                                        android:text='@{tally.money+"￥",default="-200￥"}' />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:orientation="horizontal"
+                                    android:id="@+id/lowerContainer"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="0dp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/upperContainer">
+                                    <TextView
+                                        android:textSize="12sp"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_margin="10dp"
+                                        style="@style/HoitSubTitleText"
+                                        android:text='@{tally.account, default="现金"}'/>
+
+                                    <TextView
+                                        android:textSize="12sp"
+                                        android:layout_margin="10dp"
+                                        android:layout_weight="1"
+                                        android:layout_width="0dp"
+                                        android:textAlignment="viewEnd"
+                                        style="@style/HoitSubTitleText"
+                                        android:text='@{tally.time, default="11:32"}'
+                                        android:layout_height="wrap_content"
+                                        android:gravity="end" />
+                                </LinearLayout>
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
                         </LinearLayout>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
+                    <!--<androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="70dp"
+                            android:layout_height="match_parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+                            <TextView
+                                android:id="@+id/hzs_expand_item_tally_day"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@={tally.day}"
+                                android:textSize="35dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintVertical_bias="0.0" />
+                            <TextView
+                                android:id="@+id/hzs_expand_item_tally_weekday"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="36dp"
+                                android:text="@={tally.weekday}"
+                                android:textSize="20dp"
+                                app:layout_constraintEnd_toEndOf="@+id/hzs_expand_item_tally_day"
+                                app:layout_constraintStart_toStartOf="@+id/hzs_expand_item_tally_day"
+                                app:layout_constraintTop_toTopOf="@+id/hzs_expand_item_tally_day" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                        <com.example.hoitnote.customviews.FontAwesome
+                            android:id="@+id/hzs_expand_item_tally_icon"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginStart="68dp"
+                            android:layout_marginLeft="68dp"
+                            android:text="@={tally.iconCode}"
+                            android:textSize="30dp"
+                            android:textColor="@android:color/holo_blue_light"
+                            android:gravity="center"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                             />
+                        <TextView
+                            android:id="@+id/hzs_expand_item_tally_classname"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="24dp"
+                            android:layout_marginLeft="24dp"
+                            android:text="@={tally.classname}"
+                            android:textSize="20dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/hzs_expand_item_tally_icon"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.372" />
+                        <TextView
+                            android:id="@+id/hzs_expand_item_tally_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@={tally.time}"
+                            android:textSize="15dp"
+                            app:layout_constraintStart_toStartOf="@+id/hzs_expand_item_tally_classname"
+                            app:layout_constraintTop_toBottomOf="@+id/hzs_expand_item_tally_classname" />
+                        <TextView
+                            android:id="@+id/hzs_expand_item_tally_account"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginLeft="8dp"
+                            android:text="@={tally.account}"
+                            android:textSize="15dp"
+                            app:layout_constraintBottom_toBottomOf="@+id/hzs_expand_item_tally_time"
+                            app:layout_constraintStart_toEndOf="@+id/hzs_expand_item_tally_time"
+                            app:layout_constraintTop_toBottomOf="@+id/hzs_expand_item_tally_classname"
+                            app:layout_constraintVertical_bias="1.0" />
+                        <TextView
+                            android:id="@+id/hzs_expand_item_tally_money"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="24dp"
+                            android:layout_marginRight="24dp"
+                            android:text="@={tally.money}"
+                            android:textSize="45dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>-->
                 </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-            <!--<androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="70dp"
-                    android:layout_height="match_parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-                    <TextView
-                        android:id="@+id/hzs_expand_item_tally_day"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@={tally.day}"
-                        android:textSize="35dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0" />
-                    <TextView
-                        android:id="@+id/hzs_expand_item_tally_weekday"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="36dp"
-                        android:text="@={tally.weekday}"
-                        android:textSize="20dp"
-                        app:layout_constraintEnd_toEndOf="@+id/hzs_expand_item_tally_day"
-                        app:layout_constraintStart_toStartOf="@+id/hzs_expand_item_tally_day"
-                        app:layout_constraintTop_toTopOf="@+id/hzs_expand_item_tally_day" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-                <com.example.hoitnote.customviews.FontAwesome
-                    android:id="@+id/hzs_expand_item_tally_icon"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginStart="68dp"
-                    android:layout_marginLeft="68dp"
-                    android:text="@={tally.iconCode}"
-                    android:textSize="30dp"
-                    android:textColor="@android:color/holo_blue_light"
-                    android:gravity="center"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                     />
-                <TextView
-                    android:id="@+id/hzs_expand_item_tally_classname"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginLeft="24dp"
-                    android:text="@={tally.classname}"
-                    android:textSize="20dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/hzs_expand_item_tally_icon"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.372" />
-                <TextView
-                    android:id="@+id/hzs_expand_item_tally_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@={tally.time}"
-                    android:textSize="15dp"
-                    app:layout_constraintStart_toStartOf="@+id/hzs_expand_item_tally_classname"
-                    app:layout_constraintTop_toBottomOf="@+id/hzs_expand_item_tally_classname" />
-                <TextView
-                    android:id="@+id/hzs_expand_item_tally_account"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:text="@={tally.account}"
-                    android:textSize="15dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/hzs_expand_item_tally_time"
-                    app:layout_constraintStart_toEndOf="@+id/hzs_expand_item_tally_time"
-                    app:layout_constraintTop_toBottomOf="@+id/hzs_expand_item_tally_classname"
-                    app:layout_constraintVertical_bias="1.0" />
-                <TextView
-                    android:id="@+id/hzs_expand_item_tally_money"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="24dp"
-                    android:layout_marginRight="24dp"
-                    android:text="@={tally.money}"
-                    android:textSize="45dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>-->
-        </LinearLayout>
-        <!-- Surface View End -->
+            <!-- Surface View End -->
 
 
-    </com.daimajia.swipe.SwipeLayout>
+        </com.daimajia.swipe.SwipeLayout>
+    </LinearLayout>
+
 </layout>

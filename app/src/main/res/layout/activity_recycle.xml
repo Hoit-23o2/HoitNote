@@ -11,9 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="?attr/colorPrimary"
+        android:background="?attr/colorPrimaryLight"
         tools:context=".views.settings.RecycleActivity">
         <ListView
+            android:listSelector="@android:color/transparent"
             android:divider="@null"
             android:id="@+id/recycleListView"
             android:layout_width="match_parent"

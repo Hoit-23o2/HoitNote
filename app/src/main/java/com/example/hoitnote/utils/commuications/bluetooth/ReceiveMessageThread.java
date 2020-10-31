@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
 import com.example.hoitnote.models.Tally;
+import com.example.hoitnote.utils.App;
 import com.example.hoitnote.utils.commuications.DataPackage;
 import com.example.hoitnote.utils.constants.Constants;
 import com.example.hoitnote.utils.helpers.BlueToothHelper;
@@ -39,17 +40,8 @@ public class ReceiveMessageThread extends Thread {
 
     @Override
     public void run(){
-        while (!BlueToothHelper.isRecieveFinished()){
-            int count=0;
-            while (count==0){
-                if(BlueToothHelper.isRecieveFinished()){
-                    break;
-                }
+        while (App.ReceiveThreadFlag){
                 try{
-                    if (is != null) {
-                        count = is.available();
-                    }
-
                     if(is != null){
                         int a = 0;
                         int a1 = 0;
@@ -65,31 +57,20 @@ public class ReceiveMessageThread extends Thread {
                         while (a1!=a){
                             a1 += is.read(buf,a1,a-a1);
                         }
-                        /*
-                        int a2 = -1;
-                        while (a != a2){
-                            a2 = a;
-                            Thread.sleep(20000);
-
-                            Log.d("size of AAAAAAA:",a+"---------------------------------");
-                        }*/
-
-                        //Thread.sleep(5000);
-                        //is.read(buf,0,buf.length);//变量分别是缓冲区，读取起始位置，缓冲长度
-
-
                         if(a != 0){
                             Object object = new Object();
                             object = BlueToothHelper.toObject(buf);
                             if(object instanceof ReceiveInfo){
                                 receiveInfo = (ReceiveInfo)object;
                                 this.mHandler.obtainMessage(Constants.MSG_Get_RECEIVEINFO).sendToTarget();
+                                App.ReceiveThreadFlag = false;
                             }else if(object instanceof SendInfo){
                                 sendInfo = (SendInfo)object;
                                 this.mHandler.obtainMessage(Constants.MSG_Get_SENDINFO).sendToTarget();
                             }else if(object instanceof DataPackage){
                                 dataPackage = (DataPackage)object;
                                 this.mHandler.obtainMessage(Constants.MSG_RECEIVE_SUCCESS).sendToTarget();
+                                App.ReceiveThreadFlag = false;
                             }
                             else {
                                 Log.d("null object","+++++++++++++++++++++++++++++++++++++");
@@ -97,17 +78,22 @@ public class ReceiveMessageThread extends Thread {
                         }
                         else{
                             Log.d("end ","+++++++++++++++++++++++++++++++++++++");
-                            break;
                         }
 
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    this.mHandler.obtainMessage(Constants.MSG_RECEIVE_FAILURE).sendToTarget();
+                    //this.mHandler.obtainMessage(Constants.MSG_RECEIVE_FAILURE).sendToTarget();
+                    try {
+                        Log.d(" ", "available" + is.available());
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                    App.ReceiveThreadFlag = false;
+                    this.mHandler.obtainMessage(Constants.MSG_Get_RECEIVEINFO).sendToTarget();
                     break;
                 }
             }
-        }
         Log.d("蓝牙","============== receiveThread is close ====================");
     }
 

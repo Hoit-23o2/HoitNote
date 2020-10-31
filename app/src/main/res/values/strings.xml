@@ -70,7 +70,7 @@
     <string name="booking_transfer_out">转出</string>
     <string name="booking_transfer_exchange"></string>
     <string name="add_tally">记一笔</string>
-    <string name="rencent_seven_hint">最&#160;&#160;&#160;近</string>
+    <string name="recent_seven_hint">最&#160;&#160;&#160;近</string>
     <string name="circle_arrow_right"></string>
     <string name="delete">删除</string>
     <string name="tips_hint">提示</string>
@@ -80,7 +80,7 @@
     <string name="datasync_connecting_hint">连接设备中…</string>
     <string name="datasync_receiving_hint">数据接受中…</string>
     <string name="datasync_received_hint">数据接受完成</string>
-    <string name="close_icon"></string>
+    <string name="close_icon">&#xf107;</string>
     <string name="datasync_sending_hint">数据发送中…</string>
     <string name="datasync_sended_hint">数据发送成功</string>
     <string name="circle_down_arrow"></string>

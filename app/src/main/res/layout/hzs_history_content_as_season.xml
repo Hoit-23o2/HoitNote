@@ -1,67 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
+    android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <LinearLayout
-        android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="0dp">
         <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-            <Button
-                android:id="@+id/hzs_history_content_as_season_year"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2020年"
-                style="@style/HoitTitleText"
-                android:background="@android:color/transparent"/>
+            android:background="?attr/colorPrimaryLight"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_margin="10dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_weight="1">
+                    <TextView
+                        android:id="@+id/hzs_history_content_as_season_year"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="2020年"
+                        style="@style/HoitGroupText"
+                        android:background="@android:color/transparent"/>
 
-            <com.example.hoitnote.customviews.FontAwesome
-                android:id="@+id/hzs_history_content_as_season_season"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="春"
-                android:gravity="center"
-                style="@style/HoitTitleText"
-                android:background="@android:color/transparent"/>
+                    <com.example.hoitnote.customviews.FontAwesome
+                        android:layout_marginHorizontal="10dp"
+                        android:id="@+id/hzs_history_content_as_season_season"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="春"
+                        android:gravity="center"
+                        style="@style/HoitGroupText"
+                        android:background="@android:color/transparent"/>
 
-            <com.example.hoitnote.customviews.FontAwesome
-                android:layout_marginHorizontal="10dp"
-                android:layout_gravity="center_vertical"
-                android:id="@+id/expandableArrow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="\uf107"/>
+                    <com.example.hoitnote.customviews.FontAwesome
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_gravity="center_vertical"
+                        style="@style/HoitIconUnclickable"
+                        android:textSize="12sp"
+                        android:id="@+id/expandableArrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="\uf107"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/hzs_history_content_as_season_jieyu"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="结余"
+                    style="@style/HoitGroupText"/>
+                <TextView
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:id="@+id/hzs_history_content_as_season_balance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="1000.0￥"
+                    android:layout_marginHorizontal="10dp"
+                    style="@style/HoitGroupText"/>
+
+
+            </LinearLayout>
+            <include layout="@layout/divider_normal"/>
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/hzs_history_content_as_season_jieyu"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="结余"
-            style="@style/HoitTitleText"/>
-        <TextView
-            android:singleLine="true"
-            android:ellipsize="marquee"
-            android:id="@+id/hzs_history_content_as_season_balance"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="1000.0￥"
-            android:layout_marginHorizontal="10dp"
-            style="@style/HoitTitleText"/>
-
-
-    </LinearLayout>
-
+    </androidx.cardview.widget.CardView>
     <ExpandableListView
         android:divider="@null"
         android:groupIndicator="@null"
@@ -69,5 +87,4 @@
         android:id="@+id/hzs_history_content_as_season_expandable_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
 </LinearLayout>

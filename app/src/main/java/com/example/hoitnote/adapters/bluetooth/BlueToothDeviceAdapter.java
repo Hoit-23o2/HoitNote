@@ -23,6 +23,16 @@ public class BlueToothDeviceAdapter extends BaseAdapter {
         this.context = context;
         this.bluetoothViewModels = bluetoothViewModels;
     }
+
+    public void addBluetoothCollection(ArrayList<BlueToothViewModel> _blueToothViewModels){
+        bluetoothViewModels.addAll(_blueToothViewModels);
+        notifyDataSetChanged();
+    }
+
+    public ArrayList<BlueToothViewModel> getBluetoothViewModels(){
+        return this.bluetoothViewModels;
+    }
+
     @Override
     public int getCount() {
         return bluetoothViewModels.size();

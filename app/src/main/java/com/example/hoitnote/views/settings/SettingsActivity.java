@@ -29,6 +29,10 @@ public class SettingsActivity extends BaseActivity {
 
     private void initActivity() {
         showBackButton();
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setTitle(getString(R.string.settings_title));
+        }
     }
 
     public void goThemeSettingActivity(View view) {
