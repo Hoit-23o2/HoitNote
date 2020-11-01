@@ -2,7 +2,7 @@
 
 This is a No.1 Android Based Note from HITSZ.
 
-![Logo](./hoit_logo.png =100x100)
+![<img src="hoit_logo.png" width="100" height="100"/>](./hoit_logo.png)
 
 ## Features
 
