@@ -1,7 +1,8 @@
 # HoitNote
 
 This is a No.1 Android Based Note from HITSZ.
-[Logo](./hoit_logo.png)
+
+![Logo](./hoit_logo.png)
 
 ## Features
 
