@@ -1,6 +1,6 @@
 # HoitNote
 
-========
+===
 
 This is a No.1 Android Based Note from HITSZ.
 
@@ -10,51 +10,51 @@ Please Check our vedio [Intro Video Here](./HoitNote.mp4)
 
 ### Uncentralized
 
-> With no Third party, you can totally control your own note.
+1. With no Third party, you can totally control your own note.
 
 ### Basic local Login/Register logic
 
-> Login/register with traditional password
-> Login/register with pattern
-> Login with fingerprint
+1. Login/register with traditional password
+2. Login/register with pattern
+3. Login with fingerprint
 
 ### Swipe Account Card
 
-> Swipe Account Card to swith Account
-> Add account in MainPage
+1. Swipe Account Card to swith Account
+2. Add account in MainPage
 
 ### Draggable panel & Draggable fab
 
-> a little code
+1. a little code
 
 ### Awesome anim using simple logic
 
-> Roation happens when you click the account card
-> Draw a long line when you click expandable arrow
+1. Roation happens when you click the account card
+2. Draw a long line when you click expandable arrow
 
 ### Recycle Bin
 
-> recover deleted tally from recycle bin
-> delete completely the tally in recycle bin
+1. recover deleted tally from recycle bin
+2. delete completely the tally in recycle bin
 
 ### Data sync
 
-> sync data if you want to change a phone to use
-> we use bluetooth to achieve that
+1. sync data if you want to change a phone to use
+2. we use bluetooth to achieve that
 
 ## Dependency
 
-> [picture loading] com.github.bumptech.glide:glide:4.11.0
-> [change color with ripple effects] com.wuyr:rippleanimation:1.0.0
-> [pattern lock] com.andrognito.patternlockview:patternlockview:1.0.0
-> [lottie anim] com.airbnb.android:lottie:3.4.3
-> [picker view] com.contrarywind:Android-PickerView:4.1.9
-> [swipe left layout] com.daimajia.swipelayout:library:1.2.0@aar
-> [expandable layout] net.cachapa.expandablelayout:expandablelayout:2.9.2
-> [slide tab layout] com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar
-> [vertical marqueeview] com.sunfusheng:marqueeview:1.3.3
-> [expandable fab] com.nambimobile.widgets:expandable-fab:1.0.0
-> [guide mask] com.github.huburt-Hu:NewbieGuide:v2.4.0
+1. [picture loading] com.github.bumptech.glide:glide:4.11.0
+2. [change color with ripple effects] com.wuyr:rippleanimation:1.0.0
+3. [pattern lock] com.andrognito.patternlockview:patternlockview:1.0.0
+4. [lottie anim] com.airbnb.android:lottie:3.4.3
+5. [picker view] com.contrarywind:Android-PickerView:4.1.9
+6. [swipe left layout] com.daimajia.swipelayout:library:1.2.0@aar
+7. [expandable layout] net.cachapa.expandablelayout:expandablelayout:2.9.2
+8. [slide tab layout] com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar
+9. [vertical marqueeview] com.sunfusheng:marqueeview:1.3.3
+10. [expandable fab] com.nambimobile.widgets:expandable-fab:1.0.0
+11. [guide mask] com.github.huburt-Hu:NewbieGuide:v2.4.0
 
 ## Update at 2020-10-31: Final
 
